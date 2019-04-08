@@ -19,13 +19,13 @@ namespace HRCoreCountriesWebAPI.Controllers
         }
         // GET api/countries
         [HttpGet]
-        public async Task<IEnumerable<HRCountryModel>> GetAsync()
+        public async Task<ActionResult> GetAsync()
         {
             if (_countryService != null)
             {
                 Task<IEnumerable<HRCountryModel>> countriesTask = _countryService.GetCountriesAsync();
                 IEnumerable<HRCountryModel> retour = await countriesTask;
-                return retour;
+                return JSON(retour);
             }
             else
             {
