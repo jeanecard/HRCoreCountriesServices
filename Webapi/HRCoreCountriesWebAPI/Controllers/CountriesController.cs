@@ -19,7 +19,7 @@ namespace HRCoreCountriesWebAPI.Controllers
         }
         // GET api/countries
         [HttpGet]
-        public async Task<ActionResult> GetAsync()
+        public async Task<ActionResult> GetCountiresAsync()
         {
             if (_countryService != null)
             {

@@ -10,11 +10,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Services\HRCoreCountriesServices\HRCoreCountriesServices.csproj" />
-        <ProjectReference Include="..\..\DAL\HRCoreCountriesRepository\HRCoreCountriesRepository.csproj" />
-    <!-- <PackageReference Include="HRCoreCountriesService" Version="1.0.0" /> -->
-    <PackageReference Include="HRCountryModel" Version="1.0.0" />
+    <ProjectReference Include="..\..\DAL\HRCoreCountriesRepository\HRCoreCountriesRepository.csproj" />
+    <ProjectReference Include="..\..\Models\HRCoreCountriesModel\HRCoreCountriesModel.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" PrivateAssets="All" />
   </ItemGroup>
 
 

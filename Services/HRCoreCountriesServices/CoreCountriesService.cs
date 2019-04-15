@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using HRCoreCountriesModel;
 using HRCoreCountriesRepository;
+using QuickType;
 
 namespace HRCoreCountriesServices
 {
@@ -24,15 +24,15 @@ namespace HRCoreCountriesServices
         //  1.2- Give back thread availability waiting for result
         //  1.3- Get back result when wee get it.
         //2- Else, return basic Exception in this very first version.
-        public async Task<IEnumerable<HRCountryModel>> GetCountriesAsync()
+        public async Task<IEnumerable<HRCountry>> GetCountriesAsync()
         {
             //1-
             if (_repository != null)
             {
                 //1.1-
-                Task<IEnumerable<HRCountryModel>> countriesTask = _repository.GetCountriesAsync();
+                Task<IEnumerable<HRCountry>> countriesTask = _repository.GetCountriesAsync();
                 //1.2-
-                IEnumerable<HRCountryModel> retour = await countriesTask;
+                IEnumerable<HRCountry> retour = await countriesTask;
                 //1.3-
                 return retour;
             }

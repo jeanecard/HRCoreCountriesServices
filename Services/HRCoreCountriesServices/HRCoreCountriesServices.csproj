@@ -11,5 +11,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Models\HRCoreCountriesModel\HRCoreCountriesModel.csproj" />
     <ProjectReference Include="..\..\DAL\HRCoreCountriesRepository\HRCoreCountriesRepository.csproj" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.2.0" />
   </ItemGroup>
 </Project>
