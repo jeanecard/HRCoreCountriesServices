@@ -14,12 +14,12 @@ namespace HRCoreCountriesRepository
         private static String _MONGO_DATABASE_KEY = "MongoDBDataBaseName";
         private static String _MONGO_COUNTRIES_COLLECTION_KEY = "Countries";
 
-        //Private Constructor for DI
+        //Default Constructor
         public MongoDBCountriesRepository()
         {
         }
         //Constructor for DI with Configuration
-        private MongoDBCountriesRepository(IConfiguration injectedMongoConfig)
+        public MongoDBCountriesRepository(IConfiguration injectedMongoConfig)
         {
             _config = injectedMongoConfig;
         }
@@ -90,7 +90,7 @@ namespace HRCoreCountriesRepository
                 //2-
                 String dataBaseName = _config[_MONGO_DATABASE_KEY];
                 String connectionString = _config.GetConnectionString(dataBaseName);
-                if (!String.IsNullOrEmpty(connectionString))
+                if (!String.IsNullOrEmpty(connectionString) && !String.IsNullOrEmpty(dataBaseName))
                 {
                     //3-
                     MongoClient client = new MongoClient(connectionString);
