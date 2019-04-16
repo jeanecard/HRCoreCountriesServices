@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using HRCoreCountriesModel;
 using HRCoreCountriesServices;
-using Microsoft.AspNetCore.Mvc;
+using QuickType;
 
 namespace HRCoreCountriesWebAPI.Controllers
 {
@@ -12,14 +11,15 @@ namespace HRCoreCountriesWebAPI.Controllers
     [ApiController]
     public class CountriesController : ControllerBase
     {
+        private IConfiguration _config = null;
         private ICoreCountriesService _countryService = null;
-        public CountriesController(ICoreCountriesService cService)
+        public CountriesController(ICoreCountriesService cService, IConfiguration configuration)
         {
             _countryService = cService;
         }
         // GET api/countries
         [HttpGet]
-        public async Task<ActionResult> GetCountiresAsync()
+        public async Task<ActionResult> GetCountriesAsync()
         {
             if (_countryService != null)
             {

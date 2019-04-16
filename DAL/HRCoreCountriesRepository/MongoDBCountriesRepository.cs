@@ -16,19 +16,13 @@ namespace HRCoreCountriesRepository
         private static String _MONGO_COUNTRIES_COLLECTION_KEY = "Countries";
 
         //Private Constructor for DI
-        private MongoDBCountriesRepository()
+        public MongoDBCountriesRepository()
         {
         }
         //Constructor for DI with Configuration
         private MongoDBCountriesRepository(IConfiguration injectedMongoConfig)
         {
             _config = injectedMongoConfig;
-        }
-        private static void ThrowException(String message, String code)
-        {
-            HRDALException exception = new HRDALException(message);
-            exception.Code = code;
-            throw exception;
         }
         private IMongoCollection<HRCountry> GetCountriesCollection()
         {
@@ -47,12 +41,12 @@ namespace HRCoreCountriesRepository
                     }
                     else
                     {
-                        MongoDBCountriesRepository.ThrowException("", "");
+                        HRDALException.ThrowException("", "");
                     }
                 }
                 else
                 {
-                    MongoDBCountriesRepository.ThrowException("", "");
+                    HRDALException.ThrowException("", "");
                 }
             }
             return retour;

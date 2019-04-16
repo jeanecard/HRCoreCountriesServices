@@ -9,6 +9,12 @@ namespace HRDALExceptionLib
         {
 
         }
+        public static void ThrowException(String message, String code)
+        {
+            HRDALException exception = new HRDALException(message);
+            exception.Code = code;
+            throw exception;
+        }
 
         private HRDALException()
         {
