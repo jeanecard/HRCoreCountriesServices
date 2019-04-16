@@ -2,6 +2,9 @@
 
 namespace HRDALExceptionLib
 {
+    /// <summary>
+    /// Class to manage specific Error.
+    /// </summary>
     public class HRDALException : Exception
     {
         private String _code = String.Empty;
@@ -9,6 +12,11 @@ namespace HRDALExceptionLib
         {
 
         }
+        /// <summary>
+        /// Static factory.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="code"></param>
         public static void ThrowException(String message, String code)
         {
             HRDALException exception = new HRDALException(message);
@@ -19,6 +27,9 @@ namespace HRDALExceptionLib
         private HRDALException()
         {
         }
+        /// <summary>
+        /// Internal HR Code
+        /// </summary>
         public String Code
         {
             get { return _code; }

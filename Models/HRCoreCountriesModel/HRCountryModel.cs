@@ -4,7 +4,7 @@
 //
 //    using QuickType;
 //
-//    var counrties = Welcome.FromJson(jsonString);
+//    var counrties = HRCountry.FromJson(jsonString);
 
 namespace QuickType
 {

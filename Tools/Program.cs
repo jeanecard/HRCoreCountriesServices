@@ -46,6 +46,9 @@ namespace Tools
                 }
             }
         }
+        /// <summary>
+        /// 
+        /// </summary>
         static void ReadAllCountriesFromMongoDB()
         {
             String connectionString = "mongodb+srv://hradmin:C%40mben71@hrmongodbcluster-wtmqq.gcp.mongodb.net/test?retryWrites=true";

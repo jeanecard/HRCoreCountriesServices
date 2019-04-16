@@ -1,21 +1,24 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.IO;
-using System.Threading.Tasks;
 using QuickType;
-using Microsoft.Extensions.Configuration;
-using HRDALExceptionLib;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace HRCoreCountriesRepository
 {
+    /// <summary>
+    /// Class available for tests.
+    /// </summary>
     public class HardCodeCountriesRepository : ICountriesRepository
     {
         //Default Constructor. 
         public HardCodeCountriesRepository()
         {
+            //Dummy.
         }
-
+        /// <summary>
+        /// Return a list with one dummy Element.
+        /// Async is simulated with Task.delay(1)
+        /// </summary>
+        /// <returns></returns>
         public async Task<IEnumerable<HRCountry>> GetCountriesAsync()
         {
             await Task.Delay(1);
