@@ -6,8 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using QuickType;
 using HRCoreCountriesServices;
 using HRCoreCountriesRepository;
-
-
+using Microsoft.Extensions.Configuration;
 
 namespace HRCoreCountriesWebAPI2.Controllers
 {
@@ -17,9 +16,11 @@ namespace HRCoreCountriesWebAPI2.Controllers
     public class HRCountriesController : ControllerBase
     {
         private readonly ICoreCountriesService _service = null;
-        public HRCountriesController(ICoreCountriesService service)
+        private readonly IConfiguration _config;
+        public HRCountriesController(ICoreCountriesService service, IConfiguration config)
         {
             _service = service;//new CoreCountriesService(new HardCodeCountriesRepository());
+            _config = config;
         }
 
 

@@ -11,11 +11,12 @@ namespace HRCoreCountriesRepository
     public class MongoDBCountriesRepository : ICountriesRepository
     {
         private IConfiguration _config = null;//
-        private static String _MONGO_DATABASE_KEY = "MongoDBDataBaseName";
-        private static String _MONGO_COUNTRIES_COLLECTION_KEY = "Countries";
+        private static String _MONGO_CX_STRING = "MongoDBDataBaseName:ConnectionString";
+        private static String _MONGO_CLUSTER = "MongoDBDataBaseName:ClusterName";
+        private static String _MONGO_COUNTRIES_COLLECTION_KEY = "MongoDBDataBaseName:CountriesCollection";
 
         //Default Constructor
-        public MongoDBCountriesRepository()
+        private MongoDBCountriesRepository()
         {
         }
         //Constructor for DI with Configuration
@@ -88,17 +89,18 @@ namespace HRCoreCountriesRepository
             if (_config != null)
             {
                 //2-
-                String dataBaseName = _config[_MONGO_DATABASE_KEY];
-                String connectionString = _config.GetConnectionString(dataBaseName);
-                if (!String.IsNullOrEmpty(connectionString) && !String.IsNullOrEmpty(dataBaseName))
+                String connectionString = _config[_MONGO_CX_STRING];
+                String clusterName = _config[_MONGO_CLUSTER];
+                if (!String.IsNullOrEmpty(connectionString) && !String.IsNullOrEmpty(clusterName))
                 {
                     //3-
                     MongoClient client = new MongoClient(connectionString);
-                    IMongoDatabase database = client.GetDatabase(dataBaseName);
+                    IMongoDatabase database = client.GetDatabase(clusterName);
                     if (database != null)
                     {
                         //4-
-                        retour = database.GetCollection<HRCountry>(_config[_MONGO_COUNTRIES_COLLECTION_KEY]);
+                        String collectionName = _config[_MONGO_COUNTRIES_COLLECTION_KEY];
+                        retour = database.GetCollection<HRCountry>(collectionName);
                     }
                 }
             }
