@@ -6,6 +6,8 @@ using GeoJSON.Net.Feature;
 using GeoJSON.Net.Converters;
 using System.Collections.Generic;
 using QuickType;
+using Npgsql;
+using GeoJSON.Net.Geometry;
 
 namespace Tools
 {
@@ -13,7 +15,8 @@ namespace Tools
     {
         static void Main(string[] args)
         {
-            ReadAllCountriesFromMongoDB();
+            //ReadAllCountriesFromMongoDB();
+            ConnectToPostGis();
         }
         static void ImportAllCountriesInMongoDB()
         {
@@ -52,22 +55,45 @@ namespace Tools
         static void ReadAllCountriesFromMongoDB()
         {
             String connectionString = "mongodb+srv://hradmin:C%40mben71@hrmongodbcluster-wtmqq.gcp.mongodb.net/test?retryWrites=true";
-            MongoClient client = new MongoClient(connectionString);
-            var database = client.GetDatabase("HRMongoDBCluster");
-            IMongoCollection<HRCountry> collection = database.GetCollection<HRCountry>("Countries");
+
             try
             {
+                MongoClient client = new MongoClient(connectionString);
+                var database = client.GetDatabase("HRMongoDBCluster");
+                IMongoCollection<HRCountry> collection = database.GetCollection<HRCountry>("Countries");
                 FilterDefinitionBuilder<HRCountry> bld = new FilterDefinitionBuilder<HRCountry>();
                 List<HRCountry> retour = collection.Find(bld.Empty).ToList();
                 foreach (HRCountry iterator in retour)
                 {
                     Console.WriteLine(iterator.Name);
                 }
+
             }
             catch (Exception ex)
             {
+
                 Console.WriteLine(ex.Message);
             }
+        }
+        static void ConnectToPostGis()
+        {
+
+            var connString = "host = db.qgiscloud.com; Username = gxxawt_obddnf; Password = 8d2b58e2; Database = gxxawt_obddnf";
+            //Host = myserver; Username = mylogin; Password = mypass; Database = mydatabase
+            using (var conn = new NpgsqlConnection(connString))
+            {
+
+                conn.Open();
+                //conn.TypeMapper.UseLegacyPostgis();
+                // Retrieve all rows
+                using (var cmd = new NpgsqlCommand("SELECT name, wkb_geometry FROM boundaries", conn))
+                using (NpgsqlDataReader reader = cmd.ExecuteReader())
+                    while (reader.Read())
+                    {
+                        IGeometryObject geoNetGeom = HRConverterPostGisToGeoJsonNet.ConvertFrom(reader);
+                    }
+            }
+            Console.ReadKey();
         }
     }
 }
