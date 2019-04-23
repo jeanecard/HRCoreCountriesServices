@@ -39,6 +39,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{9BC23B36
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tools", "Tools\Tools.csproj", "{522866B5-197A-4EBB-B4C3-A35680631DBD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XUnitPostGis", "..\HRCoreCountriesServices\Tools\XUnitPostGis\XUnitPostGis.csproj", "{CCDD26BE-8B93-4767-AC98-A6720BD6DAC9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -85,6 +87,10 @@ Global
 		{522866B5-197A-4EBB-B4C3-A35680631DBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{522866B5-197A-4EBB-B4C3-A35680631DBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{522866B5-197A-4EBB-B4C3-A35680631DBD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCDD26BE-8B93-4767-AC98-A6720BD6DAC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCDD26BE-8B93-4767-AC98-A6720BD6DAC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCDD26BE-8B93-4767-AC98-A6720BD6DAC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCDD26BE-8B93-4767-AC98-A6720BD6DAC9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -100,6 +106,7 @@ Global
 		{0A7C3D70-FEDD-420E-8BD2-55F630DA993F} = {84FA5D1E-814A-4CA4-921E-979AE2FE1813}
 		{662AA9FD-A248-41B9-AF54-AAB39B30DCDC} = {84FA5D1E-814A-4CA4-921E-979AE2FE1813}
 		{522866B5-197A-4EBB-B4C3-A35680631DBD} = {9BC23B36-70FB-42DB-A812-C087D6A66E0A}
+		{CCDD26BE-8B93-4767-AC98-A6720BD6DAC9} = {9BC23B36-70FB-42DB-A812-C087D6A66E0A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {957C32EA-3969-49BE-B6E6-621527318496}

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using QuickType;
 using Npgsql;
 using GeoJSON.Net.Geometry;
+using NetTopologySuite.Geometries;
 
 namespace Tools
 {
@@ -84,14 +85,18 @@ namespace Tools
             {
 
                 conn.Open();
+                conn.TypeMapper.UseLegacyPostgis();
                 //conn.TypeMapper.UseLegacyPostgis();
                 // Retrieve all rows
                 using (var cmd = new NpgsqlCommand("SELECT name, wkb_geometry FROM boundaries", conn))
                 using (NpgsqlDataReader reader = cmd.ExecuteReader())
+                {
+                    PostGisFieldValueGetter readerFacade = new PostGisFieldValueGetter(reader);
                     while (reader.Read())
                     {
-                        IGeometryObject geoNetGeom = HRConverterPostGisToGeoJsonNet.ConvertFrom(reader);
+                        Geometry geo = HRConverterPostGisToNetTopologySuite.ConvertFrom(readerFacade);
                     }
+                }
             }
             Console.ReadKey();
         }
