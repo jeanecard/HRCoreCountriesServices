@@ -21,7 +21,8 @@ namespace Tools
         /// Convert the first PostGis Geometry column or the column specified by geomOrdinal into the corresponding NetTopologyGeometry
         /// Can throw the following Exceptions
         /// - ArgumentNullException
-        /// - InvalidCastException in case of SRID not compatible for example or if no converter is available.
+        /// - InvalidCastException in case of SRID not compatible for example.
+        /// - NotImplementedException if no converter is avaialble for this type.
         /// </summary>
         /// <param name="pgCursor">The cursor where to look for the Geometry column</param>
         /// <param name="geomOrdinal">optionnal, geom. column index if known, otherwise will be search for.</param>
@@ -31,46 +32,36 @@ namespace Tools
             Geometry retour = null;
             if (pgCursor != null)
             {
-                int geomColumnIndex = GetGeomtryColumnIndex(pgCursor, geomOrdinal);
-                int cols = pgCursor.FieldCount;
-                for(int i = 0; i < cols; i++)
+                PostgisGeometry geometry = pgCursor.GetFieldValue<PostgisGeometry>(GetGeomtryColumnIndex(pgCursor, geomOrdinal));
+                if(geometry is PostgisPoint)
                 {
-                    PostgresType typei = pgCursor.GetPostgresType(i);
-                    if(typei != null && !String.IsNullOrEmpty(typei.Name) && typei.Name.ToUpper() == POSTGIS_GEOMETRY_TYPE)
-                    {
-                       PostgisGeometry geometry = pgCursor.GetFieldValue<PostgisGeometry>(i);
-                        if(geometry is PostgisPoint)
-                        {
-                            retour = ProcessPoint((PostgisPoint)geometry);
-                        }
-                        else if (geometry is PostgisMultiPoint)
-                        {
-                            retour = ProcessMultiPoint((PostgisMultiPoint)geometry);
-                        }
-                        else if (geometry is PostgisLineString)
-                        {
-                            retour = ProcessLineString((PostgisLineString)geometry);
-                        }
-                        else if (geometry is PostgisMultiLineString)
-                        {
-                            retour = ProcessMultiLineString((PostgisMultiLineString)geometry);
-                        }
-                        else if (geometry is PostgisPolygon)
-                        {
-                            retour = ProcessPolygon((PostgisPolygon)geometry);
-                        }
-                        else if (geometry is PostgisMultiPolygon)
-                        {
-                            retour = ProcessMultiPolygon((PostgisMultiPolygon)geometry);
-                        }
-                        else
-                        {
-                            throw new InvalidCastException();
-                        }
-                        SetSRID(retour, geometry);
-                        break;
-                    }
+                    retour = ProcessPoint((PostgisPoint)geometry);
                 }
+                else if (geometry is PostgisMultiPoint)
+                {
+                    retour = ProcessMultiPoint((PostgisMultiPoint)geometry);
+                }
+                else if (geometry is PostgisLineString)
+                {
+                    retour = ProcessLineString((PostgisLineString)geometry);
+                }
+                else if (geometry is PostgisMultiLineString)
+                {
+                    retour = ProcessMultiLineString((PostgisMultiLineString)geometry);
+                }
+                else if (geometry is PostgisPolygon)
+                {
+                    retour = ProcessPolygon((PostgisPolygon)geometry);
+                }
+                else if (geometry is PostgisMultiPolygon)
+                {
+                    retour = ProcessMultiPolygon((PostgisMultiPolygon)geometry);
+                }
+                else
+                {
+                    throw new  NotImplementedException();
+                }
+                SetSRID(retour, geometry);
             }
             else
             {
