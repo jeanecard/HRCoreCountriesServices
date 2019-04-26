@@ -1,4 +1,5 @@
-﻿using Npgsql.PostgresTypes;
+﻿using Npgsql.LegacyPostgis;
+using Npgsql.PostgresTypes;
 using System;
 using System.Collections.Generic;
 using System.Text;

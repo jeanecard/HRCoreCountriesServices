@@ -16,6 +16,7 @@ namespace Tools
 
         public int FieldCount => throw new NotImplementedException();
 
+
         private PostGisFieldValueGetter()
         {
 
@@ -24,11 +25,11 @@ namespace Tools
         {
             _reader = reader;
         }
-        public T GetFieldValue<T>(int ordinal)
+        public PostgisGeometry GetFieldValue<PostgisGeometry>(int ordinal)
         {
             if(_reader != null)
             {
-                return _reader.GetFieldValue<T>(ordinal);
+                return _reader.GetFieldValue<PostgisGeometry>(ordinal);
             }
             else
             {
@@ -47,5 +48,15 @@ namespace Tools
             }
 
         }
+
+        //PostgisGeometry IFieldValueGetter.GetFieldValue<PostgisGeometry>(int ordinal)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        //PostgresType IFieldValueGetter.GetPostgresType(int ordinal)
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }
