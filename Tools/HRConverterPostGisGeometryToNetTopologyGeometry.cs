@@ -1,6 +1,4 @@
-﻿//using GeoJSON.Net.Feature;
-//using GeoJSON.Net.Geometry;
-using GeoAPI.Geometries;
+﻿using GeoAPI.Geometries;
 using NetTopologySuite.Geometries; //C'est la geometrie se rapprochant le plus du standard dans le mode .net
 using Npgsql.LegacyPostgis;
 using Npgsql.PostgresTypes;
@@ -163,48 +161,94 @@ namespace Tools
             }
         }
         /// <summary>
-        /// TODO
+        /// From OpenGIS : http://schemas.opengis.net/sf/1.0/simple_features_geometries.rdf
+        /// A Polygon is a planar Surface defined by 1 exterior boundary (counterclock) and 0 or more interior boundaries(reverse counterclock). 
+        /// Each interior boundary defines a hole in the Polygon. 
+        ///     a) Polygons are topologically closed; 
+        ///     b) The boundary of a Polygon consists of a set of LinearRings that make up its exterior and interior boundaries; 
+        ///     c) No two Rings in the boundary cross and the Rings in the boundary of a Polygon may intersect at a Point but only as a tangent. 
+        ///     d) A Polygon may not have cut lines, spikes or punctures. 
+        ///     e) The interior of every Polygon is a connected point set; 
+        ///     f) The exterior of a Polygon with 1 or more holes is not connected. Each hole defines a connected component of the exterior
+        ///     Can throw the following Exceptions :
+        ///         - ArgumentNullException
         /// </summary>
-        /// <param name="geometry"></param>
-        /// <returns></returns>
+        /// <param name="geometry">a PostGisPolygon</param>
+        /// <returns>a NetTopology Polygon</returns>
         private static Geometry ProcessPolygon(PostgisPolygon geometry)
         {
             if (geometry != null)
             {
                 int ringCount = geometry.RingCount;
-                LinearRing exteriorRing = null;
-                LinearRing[] netLRings = null;
-                if (ringCount > 0)
-                {
-                    netLRings = new LinearRing[ringCount -1 ];
-                }
+                LinearRing exteriorNetTopoRing = null;
+                LinearRing[] holeNetTopoRings = null;
                 //First is exterior, others are considered as holes
                 for (int i = 0; i < ringCount; i++)
                 {
-                    Coordinate2D[] pgCoords = geometry[i];
-                    int coordCounti = pgCoords.Length;
-                    Coordinate[] netTopoCoord = new Coordinate[pgCoords.Length];
-                    for (int j = 0; j < coordCounti; j++)
-                    {
-                        netTopoCoord[j] = new Coordinate(pgCoords[j].X, pgCoords[j].Y);
-                    }
+                    Coordinate[] netTopoCoord = ConvertCoordinates2D(geometry[i]);
                     if (i == 0)
                     {
-                        exteriorRing = new LinearRing(netTopoCoord);
+                        exteriorNetTopoRing = new LinearRing(netTopoCoord);
                     }
                     else
                     {
-                        netLRings[i-1] = new LinearRing(netTopoCoord);
+                        if(holeNetTopoRings == null)
+                        {
+                            holeNetTopoRings = new LinearRing[ringCount-1];
+                        }
+                        holeNetTopoRings[i-1] = new LinearRing(netTopoCoord);
                     }
                 }
-                NetTopologySuite.Geometries.Polygon retour = new NetTopologySuite.Geometries.Polygon(exteriorRing, netLRings);
+                Polygon retour = new Polygon(exteriorNetTopoRing, holeNetTopoRings);
                 return retour;
             }
             else
             {
                 throw new ArgumentNullException();
             }
+        }
 
+        /// <summary>
+        /// TODO
+        /// </summary>
+        /// <param name="postGisCoord"></param>
+        /// <returns></returns>
+        private static Coordinate ConvertCoordinate2D(Coordinate2D postGisCoord)
+        {
+            if(postGisCoord != null)
+            {
+                return new Coordinate(postGisCoord.X, postGisCoord.Y);
+            }
+            else
+            {
+                throw new ArgumentNullException();
+            }
+        }
+        /// <summary>
+        /// TODO
+        /// </summary>
+        /// <param name="postGisCoords"></param>
+        /// <returns></returns>
+        private static Coordinate[] ConvertCoordinates2D(Coordinate2D[] postGisCoords)
+        {
+            if (postGisCoords != null)
+            {
+                int coordsCount = postGisCoords.Length;
+                Coordinate[] retour = null;
+                if (coordsCount > 0)
+                {
+                    retour = new Coordinate[coordsCount];
+                    for (int i = 0; i < coordsCount; i++)
+                    {
+                        retour[i] = ConvertCoordinate2D(postGisCoords[i]);
+                    }
+                }
+                return retour;
+            }
+            else
+            {
+                throw new ArgumentNullException();
+            }
         }
         /// <summary>
         /// TODO
@@ -291,7 +335,25 @@ namespace Tools
         /// <returns></returns>
         private static Geometry ProcessMultiPolygon(PostgisMultiPolygon geometry)
         {
-            throw new NotImplementedException();
+            if(geometry != null)
+            {
+                int polygonCount = geometry.PolygonCount;
+                MultiPolygon retour = null;
+                if (polygonCount > 0)
+                {
+                    IPolygon[] netTopoPolygons = new Polygon[polygonCount];
+                    for (int i = 0; i < polygonCount; i++)
+                    {
+                        netTopoPolygons[i] = (Polygon)ProcessPolygon(geometry[i]);
+                    }
+                    retour = new MultiPolygon(netTopoPolygons);
+                }
+                return retour;
+            }
+            else
+            {
+                throw new ArgumentNullException();
+            }
         }
         /// <summary>
         /// TODO
@@ -302,8 +364,7 @@ namespace Tools
         {
             if (geometry != null)
             {
-                Point retour = new Point(geometry.X, geometry.Y);
-                return retour;
+                return new Point(geometry.X, geometry.Y);
             }
             else
             {
