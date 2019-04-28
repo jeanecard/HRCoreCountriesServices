@@ -39,8 +39,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{9BC23B36
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tools", "Tools\Tools.csproj", "{522866B5-197A-4EBB-B4C3-A35680631DBD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XUnitPostGis", "..\HRCoreCountriesServices\Tools\XUnitPostGis\XUnitPostGis.csproj", "{CCDD26BE-8B93-4767-AC98-A6720BD6DAC9}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XUnitTestPodtGISToNetTopology", "XUnitTest¨PodtGISToNetTopology\XUnitTestPodtGISToNetTopology.csproj", "{6F953416-3F4B-4FD6-9790-DFE3AF780EA9}"
 EndProject
 Global
