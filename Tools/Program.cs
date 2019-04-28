@@ -16,6 +16,8 @@ namespace Tools
     {
         static void Main(string[] args)
         {
+            int[] saucisse = new int[0];
+            int length = saucisse.Length;
             //ReadAllCountriesFromMongoDB();
             ConnectToPostGis();
         }
