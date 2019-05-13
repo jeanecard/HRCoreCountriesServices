@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Tools.Interfaces
+namespace HRConverters.Interfaces
 {
     public interface IFieldValueGetter
     {

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using HRCoreBordersModel;
+using HRCoreBordersRepository;
+using HRCoreBordersServices;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HRCoreBordersWebAPI.Controllers
@@ -11,18 +13,62 @@ namespace HRCoreBordersWebAPI.Controllers
     [ApiController]
     public class BordersController : ControllerBase
     {
-        // GET api/values
-        [HttpGet]
-        public ActionResult<IEnumerable<HRBorder>> Get()
+        //!TODO use DI
+        private ICoreBordersService _borderService;// = new CoreBordersService(new CoreBordersRepository());
+        public BordersController(/*ICoreBordersService service PLEASE use Fucking Microsoft DI*/)
         {
-            return null;;
+            //_borderService = service;
+        }
+
+        /// <summary>
+        /// Private to force construction with service injection.
+        /// </summary>
+        //private BordersController()
+        //{
+
+        //}
+        // GET api/values
+        /// <summary>
+        /// Return all Feature from Borders Layer.
+        /// throw MemberAccessException if borderService is not available.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<HRBorder>>> Get()
+        {
+            _borderService = new CoreBordersService(new CoreBordersRepository());
+            if(_borderService != null)
+            {
+                Task<IEnumerable<HRBorder>> bordersAction = _borderService.GetBorders();
+                await bordersAction;
+                return bordersAction.Result.ToList();
+            }
+            else
+            {
+                throw new MemberAccessException();
+            }
         }
 
         // GET api/values/5
+        /// <summary>
+        /// throw MemberAccessException if borderService is not available.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}")]
-        public ActionResult<HRBorder> Get(int id)
+        public async Task<ActionResult<HRBorder>> Get(int id)
         {
-            return null;
+            if (_borderService != null)
+            {
+                Task<IEnumerable<HRBorder>> bordersAction = _borderService.GetBorders(id);
+                await bordersAction;
+                return bordersAction.Result.FirstOrDefault();
+            }
+            else
+            {
+                throw new MemberAccessException();
+            }
+
         }
 
         // POST api/values

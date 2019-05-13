@@ -5,16 +5,29 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Tools.Interfaces;
+using HRConverters.Interfaces;
 
-namespace Tools
+namespace HRConverters
 {
     //Act like a facade over a NpgsqlDataReader
     public class PostGisFieldValueGetter : IFieldValueGetter
     {
         private NpgsqlDataReader _reader = null;
 
-        public int FieldCount => throw new NotImplementedException();
+        public int FieldCount
+        {
+            get {
+                if (_reader != null)
+                {
+                    return _reader.FieldCount;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+        }
+        
 
 
         private PostGisFieldValueGetter()

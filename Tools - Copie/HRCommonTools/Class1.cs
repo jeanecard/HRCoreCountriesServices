@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HRCoreBordersRepository
+namespace HRCommonTools
 {
     public class Class1
     {

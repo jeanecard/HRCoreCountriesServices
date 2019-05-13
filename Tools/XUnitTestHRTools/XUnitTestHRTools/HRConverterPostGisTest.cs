@@ -1,8 +1,8 @@
 using GeoAPI.Geometries;
+using HRConverters;
 using NetTopologySuite.Geometries;
 using Npgsql.LegacyPostgis;
 using System;
-using Tools;
 using Xunit;
 
 namespace XUnitPostGis

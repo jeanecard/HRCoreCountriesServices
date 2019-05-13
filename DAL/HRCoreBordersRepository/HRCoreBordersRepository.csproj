@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -6,6 +6,13 @@
 
   <ItemGroup>
     <PackageReference Include="Npgsql" Version="4.0.6" />
+    <PackageReference Include="NetTopologySuite" Version="1.15.2" />
+    <PackageReference Include="Npgsql.LegacyPostgis" Version="4.0.6" />
+    <PackageReference Include="Npgsql" Version="4.0.6" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Models\HRCoreBordersModel\HRCoreBordersModel.csproj" />
+    <ProjectReference Include="..\..\Tools\HRGeometryConverters\HRGeometryConverters.csproj" />
   </ItemGroup>
 
 </Project>

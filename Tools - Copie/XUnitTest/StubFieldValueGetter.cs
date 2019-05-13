@@ -3,7 +3,7 @@ using Npgsql.PostgresTypes;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Tools.Interfaces;
+using HRConverters.Interfaces;
 
 namespace XUnitPostGis
 {

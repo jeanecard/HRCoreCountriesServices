@@ -7,11 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+     <ProjectReference Include="..\..\DAL\HRCoreBordersRepository\HRCoreBordersRepository.csproj" />
      <ProjectReference Include="..\..\DAL\HRCoreCountriesRepository\HRCoreCountriesRepository.csproj" />
+     <ProjectReference Include="..\..\Models\HRCoreBordersModel\HRCoreBordersModel.csproj" />
+     <ProjectReference Include="..\..\Services\HRCoreBordersServices\HRCoreBordersServices.csproj" />
      <ProjectReference Include="..\..\Services\HRCoreCountriesServices\HRCoreCountriesServices.csproj" />
      <ProjectReference Include="..\..\Models\HRCoreCountriesModel\HRCoreCountriesModel.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
     <PackageReference Include="NSwag.AspNetCore" Version="12.2.0" />
   </ItemGroup>
 

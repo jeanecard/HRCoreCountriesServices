@@ -1,14 +1,17 @@
-﻿using System;
-using System.IO;
-using MongoDB.Bson;
+﻿using MongoDB.Bson;
 using MongoDB.Driver;
-using GeoJSON.Net.Feature;
-using GeoJSON.Net.Converters;
-using System.Collections.Generic;
-using QuickType;
-using Npgsql;
-using GeoJSON.Net.Geometry;
 using NetTopologySuite.Geometries;
+using Npgsql;
+using QuickType;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using HRConverters;
+using HRCoreBordersModel;
+using System.Data.Common;
+using System.Threading.Tasks;
+using HRCoreBordersRepository;
+using HRCoreBordersServices;
 
 namespace Tools
 {
@@ -19,7 +22,8 @@ namespace Tools
             int[] saucisse = new int[0];
             int length = saucisse.Length;
             //ReadAllCountriesFromMongoDB();
-            ConnectToPostGis();
+            ConnectToPostGis2();
+            Console.ReadKey();
         }
         static void ImportAllCountriesInMongoDB()
         {
@@ -78,9 +82,9 @@ namespace Tools
                 Console.WriteLine(ex.Message);
             }
         }
-        static void ConnectToPostGis()
+        static async void ConnectToPostGis()
         {
-
+            List<HRBorder> retour = new List<HRBorder>();
             var connString = "host = db.qgiscloud.com; Username = gxxawt_obddnf; Password = 8d2b58e2; Database = gxxawt_obddnf";
             //Host = myserver; Username = mylogin; Password = mypass; Database = mydatabase
             using (var conn = new NpgsqlConnection(connString))
@@ -91,16 +95,31 @@ namespace Tools
                 //conn.TypeMapper.UseLegacyPostgis();
                 // Retrieve all rows
                 using (var cmd = new NpgsqlCommand("SELECT name, wkb_geometry FROM boundaries", conn))
-                using (NpgsqlDataReader reader = cmd.ExecuteReader())
+                using (Task<DbDataReader> readerTask = cmd.ExecuteReaderAsync())
                 {
+                    await readerTask;
+
+                    NpgsqlDataReader reader = (NpgsqlDataReader)readerTask.Result;
                     PostGisFieldValueGetter readerFacade = new PostGisFieldValueGetter(reader);
-                    while (reader.Read())
+                    Task<bool> reading = reader.ReadAsync();
+                    await reading;
+                    while (reading.Result)
                     {
                         Geometry geo = HRConverterPostGisToNetTopologySuite.ConvertFrom(readerFacade);
+                        reading = reader.ReadAsync();
                     }
                 }
             }
             Console.ReadKey();
+        }
+        static async void ConnectToPostGis2()
+        {
+            CoreBordersService _borderService = new CoreBordersService(new CoreBordersRepository());
+            Task<IEnumerable<HRBorder>> bordersAction = _borderService.GetBorders();
+            await bordersAction;
+            IEnumerable<HRBorder> t = bordersAction.Result;
+
+                Console.ReadKey();
         }
     }
 }

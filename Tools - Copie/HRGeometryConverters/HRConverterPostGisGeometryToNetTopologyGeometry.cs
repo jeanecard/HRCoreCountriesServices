@@ -4,9 +4,9 @@ using Npgsql.LegacyPostgis;
 using Npgsql.PostgresTypes;
 using System;
 using System.Collections.Generic;
-using Tools.Interfaces;
+using HRConverters.Interfaces;
 
-namespace Tools
+namespace HRConverters
 {
     //Npgsql.NetTopologySuite do this job but it's not working well with the PostGis version of QGIS.
     public class HRConverterPostGisToNetTopologySuite 
