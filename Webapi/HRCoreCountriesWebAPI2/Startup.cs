@@ -15,7 +15,11 @@ using HRCoreCountriesServices;
 //Swagger Dependencies
 using NJsonSchema;
 using NSwag.AspNetCore;
-
+using HRCommonTools.Interace;
+using HRCommonTools;
+using HRCoreBordersModel;
+using HRCoreBordersServices;
+using HRCoreBordersRepository;
 
 namespace HRCoreCountriesWebAPI2
 {
@@ -33,6 +37,9 @@ namespace HRCoreCountriesWebAPI2
         {
             //!TODO do correct DI please
             services.AddSingleton<ICoreCountriesService>(new HRCoreCountriesServices.CoreCountriesService(new MongoDBCountriesRepository(Configuration)));
+            services.AddSingleton<IHRPaginer<HRBorder>>(new HRPaginer<HRBorder>());
+            services.AddSingleton(Configuration);
+            services.AddSingleton<ICoreBordersService>(new HRCoreBordersService(new CoreBordersRepository(Configuration)));
             //services.AddTransient<HRCoreCountriesServices.CoreCountriesService>();
             services.AddScoped<HardCodeCountriesRepository>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);

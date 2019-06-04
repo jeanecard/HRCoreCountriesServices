@@ -163,20 +163,7 @@ namespace XUnitPostGis
             CheckIsPolygonRightConverted(1, (Polygon)multiPolygonResult[0]);
             CheckIsPolygonRightConverted(2, (Polygon)multiPolygonResult[1]);
         }
-        [Fact]
-        public void TestPostGisLineSegmentReturnLineSegmentWithCoordinatesAndSRS()
-        {
-            //NpgsqlLSeg
-            Assert.Equal("", "-");
-        }
-        [Fact]
-        public void TestPostGisBoxReturnEnvelopeWithCoordinatesAndSRS()
-        {
-            //NpgsqlBox
-            Assert.Equal("", "-");
-        }
-
-        private void CheckIsPolygonRightConverted(int polygonTestIndex, Polygon polygon)
+         private void CheckIsPolygonRightConverted(int polygonTestIndex, Polygon polygon)
         {
             if (polygonTestIndex == 1)
             {

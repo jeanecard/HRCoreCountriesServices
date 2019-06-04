@@ -112,7 +112,7 @@ namespace ConsoleTools
         }
         static async void ConnectToPostGis2()
         {
-            CoreBordersService _borderService = new CoreBordersService(new CoreBordersRepository());
+            HRCoreBordersService _borderService = new HRCoreBordersService(new CoreBordersRepository(null));
             Task<IEnumerable<HRBorder>> bordersAction = _borderService.GetBorders();
             await bordersAction;
             IEnumerable<HRBorder> t = bordersAction.Result;

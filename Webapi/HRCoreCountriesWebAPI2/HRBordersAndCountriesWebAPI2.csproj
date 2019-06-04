@@ -14,6 +14,7 @@
      <ProjectReference Include="..\..\Services\HRCoreBordersServices\HRCoreBordersServices.csproj" />
      <ProjectReference Include="..\..\Services\HRCoreCountriesServices\HRCoreCountriesServices.csproj" />
      <ProjectReference Include="..\..\Models\HRCoreCountriesModel\HRCoreCountriesModel.csproj" />
+     <ProjectReference Include="..\..\Tools\HRCommonTools\HRCommonTools.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />

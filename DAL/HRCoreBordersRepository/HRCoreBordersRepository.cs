@@ -1,6 +1,7 @@
 ﻿using HRConverters;
 using HRCoreBordersModel;
 using HRCoreBordersRepository.Interface;
+using Microsoft.Extensions.Configuration;
 using NetTopologySuite.Geometries;
 using Npgsql;
 using System;
@@ -10,8 +11,22 @@ using System.Threading.Tasks;
 
 namespace HRCoreBordersRepository
 {
+
     public class CoreBordersRepository : IHRCoreBordersRepository
     {
+        private IConfiguration _config = null;
+        /// <summary>
+        /// Dummy default constructor. Private for DI.
+        /// </summary>
+        private CoreBordersRepository()
+        {
+            //Dummy.
+        }
+
+        public CoreBordersRepository(IConfiguration config)
+        {
+            _config = config;
+        }
         /// <summary>
         /// //!TODO use dapper
         /// //!TODO Try Catch
@@ -21,9 +36,8 @@ namespace HRCoreBordersRepository
         public async Task<IEnumerable<HRBorder>> GetBorders(int? borderID = null)
         {
             List<HRBorder> retour = new List<HRBorder>();
-            var connString = "host = db.qgiscloud.com; Username = gxxawt_obddnf; Password = 8d2b58e2; Database = gxxawt_obddnf";
-            //Host = myserver; Username = mylogin; Password = mypass; Database = mydatabase
-            using (var conn = new NpgsqlConnection(connString))
+            String cxString = _config.GetConnectionString("BordersConnection");
+            using (var conn = new NpgsqlConnection(cxString))
             {
 
                 conn.Open();

@@ -7,11 +7,11 @@ using HRCoreBordersRepository.Interface;
 
 namespace HRCoreBordersServices
 {
-    public class CoreBordersService : ICoreBordersService
+    public class HRCoreBordersService : ICoreBordersService
     {
         private IHRCoreBordersRepository _bordersRepository = null;
 
-        public CoreBordersService(IHRCoreBordersRepository service )
+        public HRCoreBordersService(IHRCoreBordersRepository service )
         {
             _bordersRepository = service;
         }
