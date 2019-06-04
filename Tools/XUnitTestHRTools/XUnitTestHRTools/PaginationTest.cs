@@ -1,4 +1,5 @@
-﻿using HRCommonTools;
+﻿using HRCommonModel;
+using HRCommonTools;
 using HRCoreBordersModel;
 using System;
 using System.Collections.Generic;
@@ -9,10 +10,10 @@ namespace XUnitTest_PodtGISToNetTopology
 {
     public class PaginationTest
     {
-        private static IEnumerable<String> Create50Items()
+        private static IEnumerable<String> CreateItems(int count)
         {
             List<String> paginerItems = new List<String>();
-            for (int i = 0; i < 50; i++)
+            for (int i = 0; i < count; i++)
             {
                 paginerItems.Add("Items number " + i.ToString());
             }
@@ -22,79 +23,247 @@ namespace XUnitTest_PodtGISToNetTopology
         [Fact]
         void PaginateEmptyListsReturnSinglePagePaginationWithEmptyResult()
         {
-            Assert.False(true);
+            HRPaginer<String> paginer = new HRPaginer<String>();
+            PagingParameterInModel model = new PagingParameterInModel();
+            model.PageNumber = 0;
+            model.PageSize = 20;
+            List<String> paginerItems = new List<String>();
+            PagingParameterOutModel<String> retour = paginer.GetPagination(model, paginerItems);
+
+            Assert.NotNull(retour);
+            Assert.True(retour.TotalItemsCount == 0);
+            Assert.True(retour.TotalPages == 1);
+            Assert.True(retour.PageSize == 20);
+            Assert.NotNull(retour.PageItems);
+            int itemsCount = 0;
+            IEnumerator<String> enumerator = retour.PageItems.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                itemsCount++;
+            }
+            Assert.True(itemsCount == 0);
+            Assert.False(retour.HasPreviousPage);
+            Assert.False(retour.HasNextPage);
+            Assert.True(retour.CurrentPage == 0);
         }
         [Fact]
-        void PaginateNullListsReturnSinglePagePaginationWithNullResult()
+        void PaginateNullListsThrowArgumentNullException()
         {
-            Assert.False(true);
+            HRPaginer<String> paginer = new HRPaginer<String>();
+            PagingParameterInModel model = new PagingParameterInModel();
+            model.PageNumber = 0;
+            model.PageSize = 20;
+            Assert.Throws<ArgumentNullException>(() => paginer.GetPagination(model, null));
         }
         [Fact]
         void PaginateNullPaginationInThrowArgumentsNullException()
         {
-            Assert.False(true);
+            HRPaginer<String> paginer = new HRPaginer<String>();
+            Assert.Throws<ArgumentNullException>(() => paginer.GetPagination(null, PaginationTest.CreateItems(50)));
+
         }
         [Fact]
-        void PaginatePaginationInWithPageSize0ReturnPaginationOutWithPageSizeGreaterThan0()
+        void PaginatePaginationInWithPageSize0ThrowInvalidOperationException()
         {
-            Assert.False(true);
+            HRPaginer<String> paginer = new HRPaginer<String>();
+            PagingParameterInModel model = new PagingParameterInModel();
+            model.PageNumber = 0;
+            model.PageSize = 0;
+            Assert.Throws<InvalidOperationException>(() => paginer.GetPagination(model, CreateItems(50)));
+
         }
         [Fact]
         void PaginatePaginationInInvalidThrowAInvalidArgumentException()
         {
-            Assert.False(true);
+            HRPaginer<String> paginer = new HRPaginer<String>();
+            PagingParameterInModel model = new PagingParameterInModel();
+            model.PageNumber = 5;
+            model.PageSize = 100;
+            Assert.Throws<Exception>(() => paginer.GetPagination(model, CreateItems(50)));
         }
         //PARTIE IS VALID
         [Fact]
         void ValidatePaginationInWithModelNullThrowArgumentNullException()
         {
-            InOutPaginer<String> paginer = new InOutPaginer<String>();
-            Assert.Throws<ArgumentNullException>(() => paginer.IsValid(null, Create50Items()));
+            HRPaginer<String> paginer = new HRPaginer<String>();
+            Assert.Throws<ArgumentNullException>(() => paginer.IsValid(null, CreateItems(50)));
         }
         [Fact]
         void ValidatePaginationInWithEnumerableNullThrowArgumentNullException()
         {
-            InOutPaginer<String> paginer = new InOutPaginer<String>();
+            HRPaginer<String> paginer = new HRPaginer<String>();
             PagingParameterInModel model = new PagingParameterInModel();
             Assert.Throws<ArgumentNullException>(() => paginer.IsValid(model, null));
         }
         [Fact]
         void ValidatePaginationInPAgeSizeNullThrowInvalidOperationException()
         {
-            InOutPaginer<String> paginer = new InOutPaginer<String>();
+            HRPaginer<String> paginer = new HRPaginer<String>();
             PagingParameterInModel model = new PagingParameterInModel();
             model.PageSize = 0;
-            Assert.Throws<InvalidOperationException>(() => paginer.IsValid(model, Create50Items()));
+            Assert.Throws<InvalidOperationException>(() => paginer.IsValid(model, CreateItems(50)));
         }
 
         [Fact]
-        void ValidatePaginationInOutOfBoundEnumerableThrowArgumentOutOfRangeException()
+        void ValidatePaginationInWith50ItemsOutOfBoundEnumerableReturnFalse()
         {
-            InOutPaginer<String> paginer = new InOutPaginer<String>();
+            HRPaginer<String> paginer = new HRPaginer<String>();
             PagingParameterInModel model = new PagingParameterInModel();
             model.PageSize = 50;
             model.PageNumber = 2;
-            Assert.False(paginer.IsValid(model, Create50Items()));
+            Assert.False(paginer.IsValid(model, CreateItems(50)));
         }
+        void ValidatePaginationInWith49ItemsOutOfBoundEnumerableReturnFalse()
+        {
+            HRPaginer<String> paginer = new HRPaginer<String>();
+            PagingParameterInModel model = new PagingParameterInModel();
+            model.PageSize = 50;
+            model.PageNumber = 2;
+            Assert.False(paginer.IsValid(model, CreateItems(49)));
+        }
+
         [Fact]
         void ValidatePaginationInInRageOfEnumerableReturnTrue()
         {
-            Assert.False(true);
+            HRPaginer<String> paginer = new HRPaginer<String>();
+            PagingParameterInModel model = new PagingParameterInModel();
+            model.PageSize = 50;
+            model.PageNumber = 2;
+            Assert.True(paginer.IsValid(model, CreateItems(200)));
         }
         [Fact]
         void ValidatePaginationInFirstPageWithMultiplePagesEnumerableReturnTrue()
         {
-            Assert.False(true);
+            HRPaginer<String> paginer = new HRPaginer<String>();
+            PagingParameterInModel model = new PagingParameterInModel();
+            model.PageSize = 50;
+            model.PageNumber = 1;
+            Assert.True(paginer.IsValid(model, CreateItems(200)));
         }
         [Fact]
         void ValidatePaginationInLastPageWithMultiplePagesEnumerableReturnTrue()
         {
-            Assert.False(true);
+            HRPaginer<String> paginer = new HRPaginer<String>();
+            PagingParameterInModel model = new PagingParameterInModel();
+            model.PageSize = 50;
+            model.PageNumber = 3;
+            Assert.True(paginer.IsValid(model, CreateItems(200)));
         }
         [Fact]
         void ValidatePaginationInFirstPageWithSinglePageEnumerableReturnTrue()
         {
-            Assert.False(true);
+            HRPaginer<String> paginer = new HRPaginer<String>();
+            PagingParameterInModel model = new PagingParameterInModel();
+            model.PageSize = 50;
+            model.PageNumber = 0;
+            Assert.True(paginer.IsValid(model, CreateItems(200)));
+        }
+        //Partie MODEL
+        [Fact]
+        void PaginateParameterInSinglePageExpectOutModelHasPreviousAndNextPageFalse()
+        {
+            HRPaginer<String> paginer = new HRPaginer<String>();
+            PagingParameterInModel model = new PagingParameterInModel();
+            model.PageSize = 50;
+            model.PageNumber = 0;
+            PagingParameterOutModel<String> result = paginer.GetPagination(model, CreateItems(49));
+            Assert.NotNull(result);
+            Assert.False(result.HasNextPage);
+            Assert.False(result.HasPreviousPage);
+            Assert.True(result.TotalItemsCount == 49);
+            Assert.True(result.CurrentPage == 0);
+            IEnumerable<String> items = result.PageItems;
+            Assert.NotNull(items);
+            Assert.NotEmpty(items);
+            IEnumerator<String> enumerator = items.GetEnumerator();
+            int i = 0;
+            String valueExceptedi = String.Empty;
+            while (enumerator.MoveNext())
+            {
+                valueExceptedi = "Items number " + i.ToString();
+                Assert.Equal(valueExceptedi, enumerator.Current);
+                i++;
+            }
+        }
+
+        [Fact]
+        void PaginateMultiplePageOnFirstPageExpectOutModelIsConsistent()
+        {
+            HRPaginer<String> paginer = new HRPaginer<String>();
+            PagingParameterInModel model = new PagingParameterInModel();
+            model.PageSize = 50;
+            model.PageNumber = 0;
+            PagingParameterOutModel<String> result = paginer.GetPagination(model, CreateItems(200));
+            Assert.NotNull(result);
+            Assert.True(result.HasNextPage);
+            Assert.False(result.HasPreviousPage);
+            Assert.True(result.TotalItemsCount == 200);
+            Assert.True(result.CurrentPage == 0);
+            IEnumerable<String> items = result.PageItems;
+            Assert.NotNull(items);
+            Assert.NotEmpty(items);
+            IEnumerator<String> enumerator = items.GetEnumerator();
+            int i = 0;
+            String valueExceptedi = String.Empty;
+            while (enumerator.MoveNext())
+            {
+                valueExceptedi = "Items number " + i.ToString();
+                Assert.Equal(valueExceptedi, enumerator.Current);
+                i++;
+            }
+        }
+        [Fact]
+        void PaginateMultiplePageOnNotSpecificPageExpectOutModelIsConsistent()
+        {
+            HRPaginer<String> paginer = new HRPaginer<String>();
+            PagingParameterInModel model = new PagingParameterInModel();
+            model.PageSize = 50;
+            model.PageNumber = 1;
+            PagingParameterOutModel<String> result = paginer.GetPagination(model, CreateItems(200));
+            Assert.NotNull(result);
+            Assert.True(result.HasNextPage);
+            Assert.True(result.HasPreviousPage);
+            Assert.True(result.TotalItemsCount == 200);
+            Assert.True(result.CurrentPage == 1);
+            IEnumerable<String> items = result.PageItems;
+            Assert.NotNull(items);
+            Assert.NotEmpty(items);
+            IEnumerator<String> enumerator = items.GetEnumerator();
+            int i = 50;
+            String valueExceptedi = String.Empty;
+            while (enumerator.MoveNext())
+            {
+                valueExceptedi = "Items number " + i.ToString();
+                Assert.Equal(valueExceptedi, enumerator.Current);
+                i++;
+            }
+        }
+        [Fact]
+        void PaginateMultiplePageOnLastPageExpectOutModelIsConsistent()
+        {
+            HRPaginer<String> paginer = new HRPaginer<String>();
+            PagingParameterInModel model = new PagingParameterInModel();
+            model.PageSize = 50;
+            model.PageNumber = 4;
+            PagingParameterOutModel<String> result = paginer.GetPagination(model, CreateItems(210));
+            Assert.NotNull(result);
+            Assert.False(result.HasNextPage);
+            Assert.True(result.HasPreviousPage);
+            Assert.True(result.TotalItemsCount == 210);
+            Assert.True(result.CurrentPage == 4);
+            IEnumerable<String> items = result.PageItems;
+            Assert.NotNull(items);
+            Assert.NotEmpty(items);
+            IEnumerator<String> enumerator = items.GetEnumerator();
+            int i = 200;
+            String valueExceptedi = String.Empty;
+            while (enumerator.MoveNext())
+            {
+                valueExceptedi = "Items number " + i.ToString();
+                Assert.Equal(valueExceptedi, enumerator.Current);
+                i++;
+            }
+            Assert.True(i == 210);
         }
     }
- }
+}

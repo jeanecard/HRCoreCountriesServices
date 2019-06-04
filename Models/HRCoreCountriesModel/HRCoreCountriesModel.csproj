@@ -10,8 +10,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-      <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
-      <PackageReference Include="MongoDB.BSon" Version="2.8.0" />
+      <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+      <PackageReference Include="MongoDB.BSon" Version="2.8.1" />
   </ItemGroup>
 
 </Project>

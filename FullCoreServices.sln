@@ -33,7 +33,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebAPI", "WebAPI", "{84FA5D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HRCoreBordersWebAPI", "Webapi\HRCoreBordersWebAPI\HRCoreBordersWebAPI.csproj", "{0A7C3D70-FEDD-420E-8BD2-55F630DA993F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HRCoreCountriesWebAPI2", "Webapi\HRCoreCountriesWebAPI2\HRCoreCountriesWebAPI2.csproj", "{662AA9FD-A248-41B9-AF54-AAB39B30DCDC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HRBordersAndCountriesWebAPI2", "Webapi\HRCoreCountriesWebAPI2\HRBordersAndCountriesWebAPI2.csproj", "{662AA9FD-A248-41B9-AF54-AAB39B30DCDC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{78377C75-3654-4E61-A49A-029FAB5F483C}"
 EndProject
@@ -41,9 +41,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HRCommonTools", "Tools\HRCo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HRGeometryConverters", "Tools\HRGeometryConverters\HRGeometryConverters.csproj", "{21F0A20A-2AFB-4D33-825B-D8DEE26AC4F5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleTools", "Tools\ConsoleTools\ConsoleTools.csproj", "{D2CB9443-46A9-49EA-91EC-7FFC2E1FBF03}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleTools", "Tools\ConsoleTools\ConsoleTools.csproj", "{D2CB9443-46A9-49EA-91EC-7FFC2E1FBF03}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XUnitTestHRTools", "Tools\XUnitTestHRTools\XUnitTestHRTools\XUnitTestHRTools.csproj", "{3DB0ADDB-370B-493C-890F-CC8C92A8D09B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XUnitTestHRTools", "Tools\XUnitTestHRTools\XUnitTestHRTools\XUnitTestHRTools.csproj", "{3DB0ADDB-370B-493C-890F-CC8C92A8D09B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HRCommonModels", "Models\HRCommonModels\HRCommonModels.csproj", "{130456F4-E274-4C41-9EA6-B2DA863ECA65}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -103,6 +105,10 @@ Global
 		{3DB0ADDB-370B-493C-890F-CC8C92A8D09B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3DB0ADDB-370B-493C-890F-CC8C92A8D09B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3DB0ADDB-370B-493C-890F-CC8C92A8D09B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{130456F4-E274-4C41-9EA6-B2DA863ECA65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{130456F4-E274-4C41-9EA6-B2DA863ECA65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{130456F4-E274-4C41-9EA6-B2DA863ECA65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{130456F4-E274-4C41-9EA6-B2DA863ECA65}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -121,6 +127,7 @@ Global
 		{21F0A20A-2AFB-4D33-825B-D8DEE26AC4F5} = {78377C75-3654-4E61-A49A-029FAB5F483C}
 		{D2CB9443-46A9-49EA-91EC-7FFC2E1FBF03} = {78377C75-3654-4E61-A49A-029FAB5F483C}
 		{3DB0ADDB-370B-493C-890F-CC8C92A8D09B} = {78377C75-3654-4E61-A49A-029FAB5F483C}
+		{130456F4-E274-4C41-9EA6-B2DA863ECA65} = {B9391B5D-4187-4DEB-84FA-EF34BDEF9BFF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {957C32EA-3969-49BE-B6E6-621527318496}

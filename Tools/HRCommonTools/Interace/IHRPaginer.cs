@@ -1,11 +1,9 @@
-﻿using HRCoreBordersModel;
-using System;
+﻿using HRCommonModel;
 using System.Collections.Generic;
-using System.Text;
 
 namespace HRCommonTools.Interace
 {
-    public interface IInOutPaginer<T>
+    public interface IHRPaginer<T>
     {
         /// <summary>
         /// !TODO
