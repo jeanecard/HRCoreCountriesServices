@@ -35,7 +35,37 @@ namespace HRCoreCountriesWebAPI2.Controllers
         {
             //Dummy.
         }
-
+        /// <summary>
+        /// !TODO
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("{id}")]
+        public async Task<ActionResult<HRBorder>> Get( [FromRoute] String id)
+        {
+            HRBorder retour = null;
+            //1-
+            if (_borderService != null  && !String.IsNullOrEmpty(id))
+            {
+                //2-
+                Task<IEnumerable<HRBorder>> bordersAction = _borderService.GetBorders(id);
+                await bordersAction;
+                //3-
+                if(bordersAction.Result != null)
+                {
+                    IEnumerator<HRBorder> enumerator = bordersAction.Result.GetEnumerator();
+                    if(enumerator.MoveNext())
+                    {
+                        retour = enumerator.Current;
+                    }
+                }
+            }
+            else
+            {
+                throw new MemberAccessException();
+            }
+            return retour;
+        }
         /// <summary>
         /// 1- Process PagingInParameter if not supplied
         /// 2- Get the HRBorders from service
@@ -44,7 +74,7 @@ namespace HRCoreCountriesWebAPI2.Controllers
         /// <param name="pageModel">The PagingInParameter. Can be null (will be set to server Default)</param>
         /// <returns>The HRBorders corresponding to pageModel parameter. Can throw MemberAccessException if any service is not consistant.</returns>
         [HttpGet]
-        public async Task<ActionResult<PagingParameterOutModel<HRBorder>>> Get([FromQuery] PagingParameterInModel pageModel)
+        public async Task<ActionResult<PagingParameterOutModel<HRBorder>>> Get([FromQuery] PagingParameterInModel pageModel, [FromQuery] int rastor)
         {
             //1-
             if (pageModel == null)

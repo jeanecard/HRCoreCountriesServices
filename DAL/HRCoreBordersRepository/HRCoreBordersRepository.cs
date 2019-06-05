@@ -7,14 +7,16 @@ using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace HRCoreBordersRepository
 {
-
     public class CoreBordersRepository : IHRCoreBordersRepository
     {
         private IConfiguration _config = null;
+        private static String _DBUSER = "HRCountries:Username";
+        private static String _DBPASSWORD = "HRCountries:Password";
         /// <summary>
         /// Dummy default constructor. Private for DI.
         /// </summary>
@@ -33,10 +35,11 @@ namespace HRCoreBordersRepository
         /// </summary>
         /// <param name="borderID"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<HRBorder>> GetBorders(int? borderID = null)
+        public async Task<IEnumerable<HRBorder>> GetBorders(String borderID = null)
         {
             List<HRBorder> retour = new List<HRBorder>();
             String cxString = _config.GetConnectionString("BordersConnection");
+            cxString = String.Format(cxString, _config[_DBUSER], _config[_DBPASSWORD]);
             using (var conn = new NpgsqlConnection(cxString))
             {
 
@@ -44,7 +47,7 @@ namespace HRCoreBordersRepository
                 conn.TypeMapper.UseLegacyPostgis();
                 //conn.TypeMapper.UseLegacyPostgis();
                 // Retrieve all rows
-                string query = " SELECT wkb_geometry, FIPS, ISO2, ISO3, UN, NAME, AREA, POP2005, REGION, SUBREGION, LON, LAT FROM boundaries";
+                string query = GetSQLQuery(borderID); 
                 using (var cmd = new NpgsqlCommand(query, conn))
                 using (Task<DbDataReader> readerTask = cmd.ExecuteReaderAsync())
                 {
@@ -111,6 +114,23 @@ namespace HRCoreBordersRepository
                 }
             }
             return retour;
+        }
+        /// <summary>
+        /// !TODO
+        /// </summary>
+        /// <param name="borderID"></param>
+        /// <returns></returns>
+        private string GetSQLQuery(String borderID = null)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append(" SELECT wkb_geometry, FIPS, ISO2, ISO3, UN, NAME, AREA, POP2005, REGION, SUBREGION, LON, LAT FROM boundaries ");
+            if (borderID != null)
+            {
+                sb.Append("WHERE FIPS = '");
+                sb.Append("borderID");
+                sb.Append("'");
+            }
+            return sb.ToString(); ;
         }
     }
 }

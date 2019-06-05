@@ -31,7 +31,7 @@ namespace ConsoleTools
             //    HRCountry[] countries = HRCountry.FromJson(file.ReadToEnd());
             //    if (countries != null)
             //    {
-            //        String connectionString = "mongodb+srv://hradmin:C%40mben71@hrmongodbcluster-wtmqq.gcp.mongodb.net/test?retryWrites=true";
+            //        String connectionString = "TODO";
             //        MongoClient client = new MongoClient(connectionString);
             //        var database = client.GetDatabase("HRMongoDBCluster");
             //        IMongoCollection<BsonDocument> collection = database.GetCollection<BsonDocument>("Countries");
@@ -59,7 +59,7 @@ namespace ConsoleTools
         /// </summary>
         static void ReadAllCountriesFromMongoDB()
         {
-            //String connectionString = "mongodb+srv://hradmin:C%40mben71@hrmongodbcluster-wtmqq.gcp.mongodb.net/test?retryWrites=true";
+            //String connectionString = "TODO";
 
             //try
             //{
@@ -83,7 +83,7 @@ namespace ConsoleTools
         static async void ConnectToPostGis()
         {
             List<HRBorder> retour = new List<HRBorder>();
-            var connString = "host = db.qgiscloud.com; Username = gxxawt_obddnf; Password = 8d2b58e2; Database = gxxawt_obddnf";
+            var connString = "TODO";
             //Host = myserver; Username = mylogin; Password = mypass; Database = mydatabase
             using (var conn = new NpgsqlConnection(connString))
             {

@@ -19,7 +19,7 @@ namespace HRCoreCountriesWebAPI2.Controllers
         private readonly IConfiguration _config;
         public HRCountriesController(ICoreCountriesService service, IConfiguration config)
         {
-            _service = service;//new CoreCountriesService(new HardCodeCountriesRepository());
+            _service = service;
             _config = config;
         }
 

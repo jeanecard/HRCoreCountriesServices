@@ -11,9 +11,12 @@ namespace HRCoreCountriesRepository
     public class MongoDBCountriesRepository : ICountriesRepository
     {
         private IConfiguration _config = null;//
-        private static String _MONGO_CX_STRING = "MongoDBDataBaseName:ConnectionString";
+        private static String _MONGO_CX_STRING_KEY = "CountriesConnection";
         private static String _MONGO_CLUSTER = "MongoDBDataBaseName:ClusterName";
         private static String _MONGO_COUNTRIES_COLLECTION_KEY = "MongoDBDataBaseName:CountriesCollection";
+        private static String _MONGO_USERNAME = "MongoDBDataBaseName:Username";
+        private static String _MONGO_PASSWORD = "MongoDBDataBaseName:Password";
+
 
         //Default Constructor
         private MongoDBCountriesRepository()
@@ -89,7 +92,8 @@ namespace HRCoreCountriesRepository
             if (_config != null)
             {
                 //2-
-                String connectionString = _config[_MONGO_CX_STRING];
+                String connectionString = _config.GetConnectionString(_MONGO_CX_STRING_KEY);
+                connectionString = String.Format(connectionString, _config[_MONGO_USERNAME], _config[_MONGO_PASSWORD]);
                 String clusterName = _config[_MONGO_CLUSTER];
                 if (!String.IsNullOrEmpty(connectionString) && !String.IsNullOrEmpty(clusterName))
                 {

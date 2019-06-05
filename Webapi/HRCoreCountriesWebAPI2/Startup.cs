@@ -36,12 +36,10 @@ namespace HRCoreCountriesWebAPI2
         public void ConfigureServices(IServiceCollection services)
         {
             //!TODO do correct DI please
-            services.AddSingleton<ICoreCountriesService>(new HRCoreCountriesServices.CoreCountriesService(new MongoDBCountriesRepository(Configuration)));
+            services.AddSingleton<ICoreCountriesService>(new CoreCountriesService(new MongoDBCountriesRepository(Configuration)));
             services.AddSingleton<IHRPaginer<HRBorder>>(new HRPaginer<HRBorder>());
             services.AddSingleton(Configuration);
             services.AddSingleton<ICoreBordersService>(new HRCoreBordersService(new CoreBordersRepository(Configuration)));
-            //services.AddTransient<HRCoreCountriesServices.CoreCountriesService>();
-            services.AddScoped<HardCodeCountriesRepository>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             // Register the Swagger services
             services.AddSwaggerDocument();

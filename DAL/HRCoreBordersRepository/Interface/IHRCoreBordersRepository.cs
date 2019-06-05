@@ -8,6 +8,6 @@ namespace HRCoreBordersRepository.Interface
 {
     public interface IHRCoreBordersRepository
     {
-        Task<IEnumerable<HRBorder>> GetBorders(int? borderID = null);
+        Task<IEnumerable<HRBorder>> GetBorders(String borderID = null);
     }
 }

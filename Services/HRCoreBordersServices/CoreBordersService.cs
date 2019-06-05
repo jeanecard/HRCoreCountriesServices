@@ -21,7 +21,7 @@ namespace HRCoreBordersServices
         /// </summary>
         /// <param name="borderID"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<HRBorder>> GetBorders(int? borderID = null)
+        public async Task<IEnumerable<HRBorder>> GetBorders(String borderID = null)
         {
             if(_bordersRepository != null)
             {
