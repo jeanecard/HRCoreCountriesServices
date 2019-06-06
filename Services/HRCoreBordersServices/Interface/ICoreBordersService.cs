@@ -8,6 +8,6 @@ namespace HRCoreBordersServices
 {
     public interface ICoreBordersService
     {
-        Task<IEnumerable<HRBorder>> GetBorders(String borderID = null);
+        Task<IEnumerable<HRBorder>> GetBordersAsync(String borderID = null);
     }
 }

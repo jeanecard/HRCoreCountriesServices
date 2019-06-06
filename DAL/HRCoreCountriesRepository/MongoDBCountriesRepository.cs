@@ -10,7 +10,7 @@ namespace HRCoreCountriesRepository
 {
     public class MongoDBCountriesRepository : ICountriesRepository
     {
-        private IConfiguration _config = null;//
+        private IConfiguration _config = null;
         private static String _MONGO_CX_STRING_KEY = "CountriesConnection";
         private static String _MONGO_CLUSTER = "MongoDBDataBaseName:ClusterName";
         private static String _MONGO_COUNTRIES_COLLECTION_KEY = "MongoDBDataBaseName:CountriesCollection";
@@ -48,7 +48,7 @@ namespace HRCoreCountriesRepository
             {
                 //1-
                 IMongoCollection<HRCountry> collection = GetCountriesCollection();
-                if(collection !=null)
+                if (collection != null)
                 {
                     //1.2-
                     FilterDefinitionBuilder<HRCountry> bld = new FilterDefinitionBuilder<HRCountry>();

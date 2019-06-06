@@ -45,6 +45,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XUnitTestHRTools", "Tools\X
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HRCommonModels", "Models\HRCommonModels\HRCommonModels.csproj", "{130456F4-E274-4C41-9EA6-B2DA863ECA65}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XUnitTestControllers", "Webapi\XUnitTestControllers\XUnitTestControllers.csproj", "{DAE5F5E5-1537-4592-8A03-C17C8587AF23}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -103,6 +105,10 @@ Global
 		{130456F4-E274-4C41-9EA6-B2DA863ECA65}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{130456F4-E274-4C41-9EA6-B2DA863ECA65}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{130456F4-E274-4C41-9EA6-B2DA863ECA65}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DAE5F5E5-1537-4592-8A03-C17C8587AF23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DAE5F5E5-1537-4592-8A03-C17C8587AF23}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DAE5F5E5-1537-4592-8A03-C17C8587AF23}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DAE5F5E5-1537-4592-8A03-C17C8587AF23}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -121,6 +127,7 @@ Global
 		{D2CB9443-46A9-49EA-91EC-7FFC2E1FBF03} = {78377C75-3654-4E61-A49A-029FAB5F483C}
 		{3DB0ADDB-370B-493C-890F-CC8C92A8D09B} = {78377C75-3654-4E61-A49A-029FAB5F483C}
 		{130456F4-E274-4C41-9EA6-B2DA863ECA65} = {B9391B5D-4187-4DEB-84FA-EF34BDEF9BFF}
+		{DAE5F5E5-1537-4592-8A03-C17C8587AF23} = {84FA5D1E-814A-4CA4-921E-979AE2FE1813}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {957C32EA-3969-49BE-B6E6-621527318496}

@@ -21,11 +21,11 @@ namespace HRCoreBordersServices
         /// </summary>
         /// <param name="borderID"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<HRBorder>> GetBorders(String borderID = null)
+        public async Task<IEnumerable<HRBorder>> GetBordersAsync(String borderID = null)
         {
             if(_bordersRepository != null)
             {
-                Task<IEnumerable<HRBorder>> bordersTask = _bordersRepository.GetBorders(borderID);
+                Task<IEnumerable<HRBorder>> bordersTask = _bordersRepository.GetBordersAsync(borderID);
                 await bordersTask;
                 return bordersTask.Result;
             }

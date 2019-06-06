@@ -31,7 +31,7 @@ namespace ConsoleTools
             //    HRCountry[] countries = HRCountry.FromJson(file.ReadToEnd());
             //    if (countries != null)
             //    {
-            //        String connectionString = "TODO";
+            //        String connectionString = "ToGetFromAppConfig";
             //        MongoClient client = new MongoClient(connectionString);
             //        var database = client.GetDatabase("HRMongoDBCluster");
             //        IMongoCollection<BsonDocument> collection = database.GetCollection<BsonDocument>("Countries");
@@ -59,7 +59,7 @@ namespace ConsoleTools
         /// </summary>
         static void ReadAllCountriesFromMongoDB()
         {
-            //String connectionString = "TODO";
+            //String connectionString = "ToGetFromAppConfigFile";
 
             //try
             //{
@@ -83,14 +83,12 @@ namespace ConsoleTools
         static async void ConnectToPostGis()
         {
             List<HRBorder> retour = new List<HRBorder>();
-            var connString = "TODO";
-            //Host = myserver; Username = mylogin; Password = mypass; Database = mydatabase
+            var connString = "ToGetFromAppConfigFileDO";
             using (var conn = new NpgsqlConnection(connString))
             {
 
                 conn.Open();
                 conn.TypeMapper.UseLegacyPostgis();
-                //conn.TypeMapper.UseLegacyPostgis();
                 // Retrieve all rows
                 using (var cmd = new NpgsqlCommand("SELECT name, wkb_geometry FROM boundaries", conn))
                 using (Task<DbDataReader> readerTask = cmd.ExecuteReaderAsync())
@@ -113,7 +111,7 @@ namespace ConsoleTools
         static async void ConnectToPostGis2()
         {
             HRCoreBordersService _borderService = new HRCoreBordersService(new CoreBordersRepository(null));
-            Task<IEnumerable<HRBorder>> bordersAction = _borderService.GetBorders();
+            Task<IEnumerable<HRBorder>> bordersAction = _borderService.GetBordersAsync();
             await bordersAction;
             IEnumerable<HRBorder> t = bordersAction.Result;
 

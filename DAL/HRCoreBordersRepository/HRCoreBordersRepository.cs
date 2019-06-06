@@ -35,7 +35,7 @@ namespace HRCoreBordersRepository
         /// </summary>
         /// <param name="borderID"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<HRBorder>> GetBorders(String borderID = null)
+        public async Task<IEnumerable<HRBorder>> GetBordersAsync(String borderID = null)
         {
             List<HRBorder> retour = new List<HRBorder>();
             String cxString = _config.GetConnectionString("BordersConnection");
@@ -116,10 +116,10 @@ namespace HRCoreBordersRepository
             return retour;
         }
         /// <summary>
-        /// !TODO
+        /// Generate SQLQuery with WHERE clause if necessary on borderID.
         /// </summary>
-        /// <param name="borderID"></param>
-        /// <returns></returns>
+        /// <param name="borderID">borderID</param>
+        /// <returns>SQLQuery to be run</returns>
         private string GetSQLQuery(String borderID = null)
         {
             StringBuilder sb = new StringBuilder();
@@ -127,7 +127,7 @@ namespace HRCoreBordersRepository
             if (borderID != null)
             {
                 sb.Append("WHERE FIPS = '");
-                sb.Append("borderID");
+                sb.Append(borderID);
                 sb.Append("'");
             }
             return sb.ToString(); ;
