@@ -9,7 +9,7 @@ namespace HRCoreBordersServices
 {
     public class HRCoreBordersService : ICoreBordersService
     {
-        private IHRCoreBordersRepository _bordersRepository = null;
+        private readonly IHRCoreBordersRepository _bordersRepository = null;
 
         public HRCoreBordersService(IHRCoreBordersRepository service )
         {

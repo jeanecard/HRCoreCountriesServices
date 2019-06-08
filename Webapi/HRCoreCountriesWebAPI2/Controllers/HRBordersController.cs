@@ -1,7 +1,6 @@
 ﻿using HRCommonModel;
 using HRCommonTools.Interace;
 using HRCoreBordersModel;
-using HRCoreBordersRepository;
 using HRCoreBordersServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,9 +15,9 @@ namespace HRCoreCountriesWebAPI2.Controllers
     [ApiController]
     public class HRBordersController : ControllerBase
     {
-        private ICoreBordersService _borderService = null;
-        private IHRPaginer<HRBorder> _paginer = null;
-        private IConfiguration _config = null;
+        private readonly ICoreBordersService _borderService = null;
+        private readonly IHRPaginer<HRBorder> _paginer = null;
+        private readonly IConfiguration _config = null;
         /// <summary>
         /// Public constructor with services DI
         /// </summary>
@@ -222,11 +221,9 @@ namespace HRCoreCountriesWebAPI2.Controllers
         private PagingParameterInModel GetDefaultPagingInParameter()
         {
 
-            PagingParameterInModel retour = new PagingParameterInModel();
-            retour.PageNumber = 0;
+            PagingParameterInModel retour = new PagingParameterInModel() { PageNumber = 0 };
             if (_config != null)
             {
-                IConfigurationSection roger = _config.GetSection("DefaultPagingInPageSize");
                 try
                 {
                     retour.PageSize = _config.GetValue<ushort>("DefaultPagingInPageSize");

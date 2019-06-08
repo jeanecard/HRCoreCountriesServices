@@ -21,9 +21,9 @@ namespace XUnitTestControllers
         [Fact]
         public async void HRCountriesControllerOnGetByIDUnknownExpectStatusCode404()
         {
-            List<MongoDB.Bson.ObjectId> list = new List<MongoDB.Bson.ObjectId>();
-            list.Add(new MongoDB.Bson.ObjectId("507f191e810c19729de860ea"));
-            list.Add(new MongoDB.Bson.ObjectId("507f191e810c19729de860eb"));
+            List<MongoDB.Bson.ObjectId> list = new List<MongoDB.Bson.ObjectId>() {
+                new MongoDB.Bson.ObjectId("507f191e810c19729de860ea"),
+                new MongoDB.Bson.ObjectId("507f191e810c19729de860eb") };
             CoreCountriesServiceStub service = new CoreCountriesServiceStub(list);
             HRCountriesController ctrl = new HRCountriesController(service, null, new HRPaginer<HRCountry>());
 
@@ -40,9 +40,9 @@ namespace XUnitTestControllers
         [Fact]
         public async void HRCountriesControllerOnGetByIDNullExpectStatus400BadRequest()
         {
-            List<MongoDB.Bson.ObjectId> list = new List<MongoDB.Bson.ObjectId>();
-            list.Add(new MongoDB.Bson.ObjectId("507f191e810c19729de860ea"));
-            list.Add(new MongoDB.Bson.ObjectId("507f191e810c19729de860eb"));
+            List<MongoDB.Bson.ObjectId> list = new List<MongoDB.Bson.ObjectId>() {
+                new MongoDB.Bson.ObjectId("507f191e810c19729de860ea"),
+                new MongoDB.Bson.ObjectId("507f191e810c19729de860eb") };
             CoreCountriesServiceStub service = new CoreCountriesServiceStub(list);
             HRCountriesController ctrl = new HRCountriesController(service, null, new HRPaginer<HRCountry>());
             Task<(int, HRCountry)> resultService = ctrl.GetFromID(null);
@@ -58,10 +58,6 @@ namespace XUnitTestControllers
         [Fact]
         public async void HRCountriesControllerOnGetByIDWithNullServiceExpectStatus500InternalServerError()
         {
-            List<MongoDB.Bson.ObjectId> list = new List<MongoDB.Bson.ObjectId>();
-            list.Add(new MongoDB.Bson.ObjectId("507f191e810c19729de860ea"));
-            list.Add(new MongoDB.Bson.ObjectId("507f191e810c19729de860eb"));
-            CoreCountriesServiceStub service = new CoreCountriesServiceStub(list);
             HRCountriesController ctrl = new HRCountriesController(null, null, new HRPaginer<HRCountry>());
             Task<(int, HRCountry)> resultService = ctrl.GetFromID("507f191e810c19729de860ea");
             await resultService;
@@ -76,9 +72,9 @@ namespace XUnitTestControllers
         [Fact]
         public async void HRCountriesControllerOnGetByIDWithIDNotBsonIDExpectStatus500InternalServerError()
         {
-            List<MongoDB.Bson.ObjectId> list = new List<MongoDB.Bson.ObjectId>();
-            list.Add(new MongoDB.Bson.ObjectId("507f191e810c19729de860ea"));
-            list.Add(new MongoDB.Bson.ObjectId("507f191e810c19729de860eb"));
+            List<MongoDB.Bson.ObjectId> list = new List<MongoDB.Bson.ObjectId>() {
+                new MongoDB.Bson.ObjectId("507f191e810c19729de860ea"),
+                new MongoDB.Bson.ObjectId("507f191e810c19729de860eb") };
             CoreCountriesServiceStub service = new CoreCountriesServiceStub(list);
             HRCountriesController ctrl = new HRCountriesController(service, null, new HRPaginer<HRCountry>());
             Task<(int, HRCountry)> resultService = ctrl.GetFromID("507a");
@@ -92,9 +88,9 @@ namespace XUnitTestControllers
         [Fact]
         public async void HRCountriesControllerOnGetByIDWithExceptionThrownByServiceExpectStatus500InternalServerError()
         {
-            List<MongoDB.Bson.ObjectId> list = new List<MongoDB.Bson.ObjectId>();
-            list.Add(new MongoDB.Bson.ObjectId("507f191e810c19729de860ea"));
-            list.Add(new MongoDB.Bson.ObjectId("507f191e810c19729de860eb"));
+            List<MongoDB.Bson.ObjectId> list = new List<MongoDB.Bson.ObjectId>() {
+                new MongoDB.Bson.ObjectId("507f191e810c19729de860ea"),
+                new MongoDB.Bson.ObjectId("507f191e810c19729de860eb") };
             CoreCountriesServiceStub service = new CoreCountriesServiceStub(list);
             HRCountriesController ctrl = new HRCountriesController(service, null, new HRPaginer<HRCountry>());
             service.ThrowException = true;
@@ -111,9 +107,9 @@ namespace XUnitTestControllers
         [Fact]
         public async void HRCountriesControllerOnGetByIDWithExistingItemExpectItemAndCodeStatus200()
         {
-            List<MongoDB.Bson.ObjectId> list = new List<MongoDB.Bson.ObjectId>();
-            list.Add(new MongoDB.Bson.ObjectId("507f191e810c19729de860ea"));
-            list.Add(new MongoDB.Bson.ObjectId("507f191e810c19729de860eb"));
+            List<MongoDB.Bson.ObjectId> list = new List<MongoDB.Bson.ObjectId>() {
+                new MongoDB.Bson.ObjectId("507f191e810c19729de860ea"),
+                new MongoDB.Bson.ObjectId("507f191e810c19729de860eb") };
             CoreCountriesServiceStub service = new CoreCountriesServiceStub(list);
             HRCountriesController ctrl = new HRCountriesController(service, null, new HRPaginer<HRCountry>());
             Task<(int, HRCountry)> resultService = ctrl.GetFromID("507f191e810c19729de860ea");
@@ -131,14 +127,12 @@ namespace XUnitTestControllers
         [Fact]
         public async void HRCountriesControllerOnGetAllWithInvalidPagingInExpectStatus416RequestedRangeNotSatisfiable()
         {
-            List<MongoDB.Bson.ObjectId> list = new List<MongoDB.Bson.ObjectId>();
-            list.Add(new MongoDB.Bson.ObjectId("507f191e810c19729de860ea"));
-            list.Add(new MongoDB.Bson.ObjectId("507f191e810c19729de860eb"));
+            List<MongoDB.Bson.ObjectId> list = new List<MongoDB.Bson.ObjectId>() {
+                new MongoDB.Bson.ObjectId("507f191e810c19729de860ea"),
+                new MongoDB.Bson.ObjectId("507f191e810c19729de860eb") };
             CoreCountriesServiceStub service = new CoreCountriesServiceStub(list);
             HRCountriesController ctrl = new HRCountriesController(service, null, new HRPaginer<HRCountry>());
-            PagingParameterInModel invalidModel = new PagingParameterInModel();
-            invalidModel.PageNumber = 2;
-            invalidModel.PageSize = 100;
+            PagingParameterInModel invalidModel = new PagingParameterInModel() { PageNumber = 2, PageSize = 100 };
             Task<(int, PagingParameterOutModel<HRCountry>)> resultService = ctrl.GetFromPaging(invalidModel);
             await resultService;
             Assert.True(resultService.Result.Item1 == StatusCodes.Status416RequestedRangeNotSatisfiable);
@@ -152,15 +146,12 @@ namespace XUnitTestControllers
         [Fact]
         public async void HRCountriesControllerOnGetAllWithExceptionThrownByServiceExpectStatus500InternalServerError()
         {
-            List<MongoDB.Bson.ObjectId> list = new List<MongoDB.Bson.ObjectId>();
-            list.Add(new MongoDB.Bson.ObjectId("507f191e810c19729de860ea"));
-            list.Add(new MongoDB.Bson.ObjectId("507f191e810c19729de860eb"));
-            CoreCountriesServiceStub service = new CoreCountriesServiceStub(list);
-            service.ThrowException = true;
+            List<MongoDB.Bson.ObjectId> list = new List<MongoDB.Bson.ObjectId>() {
+                new MongoDB.Bson.ObjectId("507f191e810c19729de860ea"),
+                new MongoDB.Bson.ObjectId("507f191e810c19729de860eb") };
+            CoreCountriesServiceStub service = new CoreCountriesServiceStub(list) { ThrowException = true };
             HRCountriesController ctrl = new HRCountriesController(service, null, new HRPaginer<HRCountry>());
-            PagingParameterInModel invalidModel = new PagingParameterInModel();
-            invalidModel.PageNumber = 2;
-            invalidModel.PageSize = 100;
+            PagingParameterInModel invalidModel = new PagingParameterInModel() { PageNumber = 2, PageSize = 100 };
             Task<(int, PagingParameterOutModel<HRCountry>)> resultService = ctrl.GetFromPaging(invalidModel);
             await resultService;
             Assert.True(resultService.Result.Item1 == StatusCodes.Status500InternalServerError);
@@ -180,9 +171,7 @@ namespace XUnitTestControllers
             }
             CoreCountriesServiceStub service = new CoreCountriesServiceStub(list);
             HRCountriesController ctrl = new HRCountriesController(service, null, new HRPaginer<HRCountry>());
-            PagingParameterInModel invalidModel = new PagingParameterInModel();
-            invalidModel.PageNumber = 1;
-            invalidModel.PageSize = 100;
+            PagingParameterInModel invalidModel = new PagingParameterInModel() { PageNumber = 1, PageSize = 100 };
             Task<(int, PagingParameterOutModel<HRCountry>)> resultService = ctrl.GetFromPaging(invalidModel);
             await resultService;
             Assert.True(resultService.Result.Item1 == StatusCodes.Status200OK);

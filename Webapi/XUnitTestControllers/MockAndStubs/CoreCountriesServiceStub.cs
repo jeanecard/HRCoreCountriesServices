@@ -11,7 +11,7 @@ namespace XUnitTestControllers
 {
     class CoreCountriesServiceStub : ICoreCountriesService
     {
-        private List<HRCountry> _list = new List<HRCountry>();
+        private readonly List<HRCountry> _list = new List<HRCountry>();
         public bool ThrowException = false;
 
         /// <summary>
@@ -48,8 +48,7 @@ namespace XUnitTestControllers
             {
                 foreach (MongoDB.Bson.ObjectId iterator in countriesID)
                 {
-                    HRCountry countryi = new HRCountry();
-                    countryi._id = iterator;
+                    HRCountry countryi = new HRCountry() { _id = iterator };
                     _list.Add(countryi);
                 }
             }

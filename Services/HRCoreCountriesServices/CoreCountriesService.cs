@@ -8,7 +8,7 @@ namespace HRCoreCountriesServices
 {
     public class CoreCountriesService : ICoreCountriesService
     {
-        private ICountriesRepository _repository = null;
+        private readonly ICountriesRepository _repository = null;
         //Hide default constructor as we must do DI with ICountriesRepository
         private CoreCountriesService()
         {

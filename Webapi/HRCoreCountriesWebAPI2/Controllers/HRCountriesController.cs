@@ -168,11 +168,9 @@ namespace HRCoreCountriesWebAPI2.Controllers
         /// <returns></returns>
         private PagingParameterInModel GetDefaultPagingInParameter()
         {
-            PagingParameterInModel retour = new PagingParameterInModel();
-            retour.PageNumber = 0;
+            PagingParameterInModel retour = new PagingParameterInModel() { PageNumber = 0 };
             if (_config != null)
             {
-                IConfigurationSection roger = _config.GetSection("DefaultPagingInPageSize");
                 try
                 {
                     retour.PageSize = _config.GetValue<ushort>("DefaultPagingInPageSize");

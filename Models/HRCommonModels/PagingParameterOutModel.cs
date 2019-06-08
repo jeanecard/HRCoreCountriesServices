@@ -13,8 +13,6 @@ namespace HRCommonModel
         private int _pageSize = 1;
         private int _currentPage = 1;
         private int _totalPages = 1;
-        private bool _hasPreviousPage = false;
-        private bool _hasNextPage = false;
         private IEnumerable<T> _pageItems = null;
         /// <summary>
         /// Total items count in the query

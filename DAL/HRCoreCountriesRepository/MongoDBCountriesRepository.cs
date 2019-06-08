@@ -10,12 +10,12 @@ namespace HRCoreCountriesRepository
 {
     public class MongoDBCountriesRepository : ICountriesRepository
     {
-        private IConfiguration _config = null;
-        private static String _MONGO_CX_STRING_KEY = "CountriesConnection";
-        private static String _MONGO_CLUSTER = "MongoDBDataBaseName:ClusterName";
-        private static String _MONGO_COUNTRIES_COLLECTION_KEY = "MongoDBDataBaseName:CountriesCollection";
-        private static String _MONGO_USERNAME = "MongoDBDataBaseName:Username";
-        private static String _MONGO_PASSWORD = "MongoDBDataBaseName:Password";
+        private readonly IConfiguration _config = null;
+        private readonly static String _MONGO_CX_STRING_KEY = "CountriesConnection";
+        private readonly static String _MONGO_CLUSTER = "MongoDBDataBaseName:ClusterName";
+        private readonly static String _MONGO_COUNTRIES_COLLECTION_KEY = "MongoDBDataBaseName:CountriesCollection";
+        private readonly static String _MONGO_USERNAME = "MongoDBDataBaseName:Username";
+        private readonly static String _MONGO_PASSWORD = "MongoDBDataBaseName:Password";
 
 
         //Default Constructor
