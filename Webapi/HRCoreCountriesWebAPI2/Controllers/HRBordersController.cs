@@ -36,11 +36,9 @@ namespace HRCoreCountriesWebAPI2.Controllers
         {
             //Dummy.
         }
+
         /// <summary>
-        /// Get by ID Rest Method.
-        /// 1- Check input consistance
-        /// 2- Call service async
-        /// 3- Process result of action as a single HRBorder.
+        /// Get by ID Rest Method based on GetFromID(String id) method
         /// </summary>
         /// <param name="id">Border id</param>
         /// <returns>HRBorder corresponding</returns>
@@ -52,16 +50,35 @@ namespace HRCoreCountriesWebAPI2.Controllers
 
         public async Task<ActionResult<HRBorder>> Get([FromRoute] String id)
         {
-            HRBorder retour = null;
+            Task<(int, HRBorder)> result = GetFromID(id);
+            await result;
+            if (result.Result.Item2 != null)
+            {
+                return result.Result.Item2;
+            }
+            else
+            {
+                return StatusCode(result.Result.Item1);
+            }
+        }
+        /// <summary>
+        /// 1- Check input consistance
+        /// 2- Call service async
+        /// 3- Process result of action as a single HRBorder.
+        /// </summary>
+        /// <param name="id">the FIPS value searched</param>
+        /// <returns>StatusCode, HRBorder result</returns>
+        public async Task<(int, HRBorder)> GetFromID(String id)
+        {
             //1-
             if (String.IsNullOrEmpty(id))
             {
                 //Could not happen as Get(PageModel = null) exists)
-                return StatusCode(StatusCodes.Status400BadRequest);   
+                return (StatusCodes.Status400BadRequest, null);
             }
             if (_borderService == null)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return (StatusCodes.Status500InternalServerError, null);
             }
             //2-
             try
@@ -74,27 +91,20 @@ namespace HRCoreCountriesWebAPI2.Controllers
                     IEnumerator<HRBorder> enumerator = bordersAction.Result.GetEnumerator();
                     if (enumerator.MoveNext())
                     {
-                        retour = enumerator.Current;
+                        return (StatusCodes.Status200OK, enumerator.Current);
                     }
                 }
-                if (retour != null)
-                {
-                    return retour;
-                }
-                else
-                {
-                    return NotFound();
-                }
+                return (StatusCodes.Status404NotFound, null);
             }
-            catch(Exception)
+            catch (Exception)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return (StatusCodes.Status500InternalServerError, null);
             }
         }
+
+
         /// <summary>
-        /// 1- Process PagingInParameter if not supplied
-        /// 2- Get the HRBorders from service
-        /// 3- Paginate previous result
+        /// Get by PagingInParameter based on GetFromPaging method
         /// </summary>
         /// <param name="pageModel">The PagingInParameter. Can be null (will be set to server Default)</param>
         /// <returns>The HRBorders corresponding to pageModel parameter. Can throw MemberAccessException if any service is not consistant.</returns>
@@ -103,6 +113,27 @@ namespace HRCoreCountriesWebAPI2.Controllers
         [ProducesResponseType(StatusCodes.Status416RequestedRangeNotSatisfiable)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<PagingParameterOutModel<HRBorder>>> Get([FromQuery] PagingParameterInModel pageModel)
+        {
+            Task<(int, PagingParameterOutModel<HRBorder>)> result = GetFromPaging(pageModel);
+            await result;
+            if(result.Result.Item2 != null)
+            {
+                return result.Result.Item2;
+            }
+            else
+            {
+                return StatusCode(result.Result.Item1);
+            }
+        }
+
+        /// <summary>
+        /// 1- Process PagingInParameter if not supplied
+        /// 2- Get the HRBorders from service
+        /// 3- Paginate previous result
+        /// </summary>
+        /// <param name="pageModel">The Paging Model</param>
+        /// <returns>(http Status Code, PagingParameterOutModel)</returns>
+        public async Task<(int, PagingParameterOutModel<HRBorder>)> GetFromPaging([FromQuery] PagingParameterInModel pageModel)
         {
             //1-
             if (pageModel == null)
@@ -119,23 +150,24 @@ namespace HRCoreCountriesWebAPI2.Controllers
                     //3-
                     if (!_paginer.IsValid(pageModel, bordersAction.Result))
                     {
-                        return StatusCode(StatusCodes.Status416RequestedRangeNotSatisfiable);
+                        return (StatusCodes.Status416RequestedRangeNotSatisfiable, null);
                     }
                     else
                     {
                         PagingParameterOutModel<HRBorder> retour = _paginer.GetPagination(pageModel, bordersAction.Result);
-                        return retour;
+                        return (StatusCodes.Status200OK, retour);
                     }
                 }
-                catch(Exception)
+                catch (Exception)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError);
+                    return (StatusCodes.Status500InternalServerError, null);
                 }
             }
             else
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return (StatusCodes.Status500InternalServerError, null);
             }
+
         }
 
         /// <summary>

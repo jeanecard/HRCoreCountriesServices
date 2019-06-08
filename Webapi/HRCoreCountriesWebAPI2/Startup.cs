@@ -20,6 +20,7 @@ using HRCommonTools;
 using HRCoreBordersModel;
 using HRCoreBordersServices;
 using HRCoreBordersRepository;
+using QuickType;
 
 namespace HRCoreCountriesWebAPI2
 {
@@ -38,6 +39,8 @@ namespace HRCoreCountriesWebAPI2
             //!TODO do correct DI please
             services.AddSingleton<ICoreCountriesService>(new CoreCountriesService(new MongoDBCountriesRepository(Configuration)));
             services.AddSingleton<IHRPaginer<HRBorder>>(new HRPaginer<HRBorder>());
+            services.AddSingleton<IHRPaginer<HRCountry>>(new HRPaginer<HRCountry>());
+
             services.AddSingleton(Configuration);
             services.AddSingleton<ICoreBordersService>(new HRCoreBordersService(new CoreBordersRepository(Configuration)));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);

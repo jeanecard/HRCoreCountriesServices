@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using QuickType;
-using HRCoreCountriesServices;
-using HRCoreCountriesRepository;
-using Microsoft.Extensions.Configuration;
+﻿using HRCommonModel;
 using HRCommonTools.Interace;
-using HRCommonModel;
+using HRCoreCountriesServices;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using QuickType;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace HRCoreCountriesWebAPI2.Controllers
 {
@@ -30,7 +28,7 @@ namespace HRCoreCountriesWebAPI2.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult<PagingParameterOutModel<HRCountry>>> GetAllAsync([FromQuery] PagingParameterInModel pageModel)
+        public async Task<ActionResult<PagingParameterOutModel<HRCountry>>> GetAllAsync([FromQuery] PagingParameterInModel pageModel = null)
         {
             //1-
             if (pageModel == null)
