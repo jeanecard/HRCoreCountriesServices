@@ -1,4 +1,5 @@
 using QuickType;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -19,8 +20,12 @@ namespace HRCoreCountriesRepository
         /// Async is simulated with Task.delay(1)
         /// </summary>
         /// <returns></returns>
-        public async Task<IEnumerable<HRCountry>> GetCountriesAsync()
+        public async Task<IEnumerable<HRCountry>> GetCountriesAsync(string id = null)
         {
+            if(!string.IsNullOrEmpty(id))
+            {
+                throw new NotImplementedException();
+            }
             await Task.Delay(1);
             List<HRCountry> retour = new List<HRCountry>();
             HRCountry country = new HRCountry();

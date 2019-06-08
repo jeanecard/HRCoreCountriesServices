@@ -29,14 +29,13 @@ namespace HRCoreCountriesWebAPI2.Controllers
         /// <summary>
         /// Get by ID Rest Method based on GetFromID(String id) method
         /// </summary>
-        /// <param name="id">Border id</param>
-        /// <returns>HRBorder corresponding</returns>
+        /// <param name="id">Country ID (MongoDB ID as hexadedcimal).</param>
+        /// <returns>HRCountry corresponding</returns>
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-
         public async Task<ActionResult<HRCountry>> Get([FromRoute] String id)
         {
             Task<(int, HRCountry)> result = GetFromID(id);
@@ -50,10 +49,52 @@ namespace HRCoreCountriesWebAPI2.Controllers
                 return StatusCode(result.Result.Item1);
             }
         }
-
+        /// <summary>
+        /// !TODO
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<(int, HRCountry)> GetFromID(string id)
         {
-            throw new NotImplementedException();
+            //1-
+            if (String.IsNullOrEmpty(id))
+            {
+                //Could not happen as Get(PageModel = null) exists)
+                return (StatusCodes.Status400BadRequest, null);
+            }
+            if (_service == null)
+            {
+                return (StatusCodes.Status500InternalServerError, null);
+            }
+            //2-
+            try
+            {
+                Task<IEnumerable<HRCountry>> countriesAction = _service.GetCountriesAsync(id);
+                await countriesAction;
+                //3-
+                if (countriesAction.Result != null)
+                {
+                    IEnumerator<HRCountry> enumerator = countriesAction.Result.GetEnumerator();
+                    if (enumerator.MoveNext())
+                    {
+                        if (enumerator.Current != null
+                            && enumerator.Current._id != null
+                            && enumerator.Current._id.Equals(new MongoDB.Bson.ObjectId(id)))
+                        {
+                            return (StatusCodes.Status200OK, enumerator.Current);
+                        }
+                        else
+                        {
+                            return (StatusCodes.Status404NotFound, null);
+                        }
+                    }
+                }
+                return (StatusCodes.Status404NotFound, null);
+            }
+            catch (Exception)
+            {
+                return (StatusCodes.Status500InternalServerError, null);
+            }
         }
 
 

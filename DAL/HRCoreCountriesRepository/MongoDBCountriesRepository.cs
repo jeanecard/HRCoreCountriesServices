@@ -42,8 +42,12 @@ namespace HRCoreCountriesRepository
         ///     Code 101 if collection cannot be retrieved
         ///     System Exception as is if any other exception is thrown.
         /// </returns>
-        public async Task<IEnumerable<HRCountry>> GetCountriesAsync()
+        public async Task<IEnumerable<HRCountry>> GetCountriesAsync(String id = null)
         {
+            if(!String.IsNullOrEmpty(id))
+            {
+                throw new NotImplementedException();
+            }
             try
             {
                 //1-

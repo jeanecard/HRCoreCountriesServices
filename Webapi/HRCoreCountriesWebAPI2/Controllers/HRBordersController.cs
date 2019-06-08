@@ -92,7 +92,16 @@ namespace HRCoreCountriesWebAPI2.Controllers
                     IEnumerator<HRBorder> enumerator = bordersAction.Result.GetEnumerator();
                     if (enumerator.MoveNext())
                     {
-                        return (StatusCodes.Status200OK, enumerator.Current);
+                        if (enumerator.Current != null
+                            && !String.IsNullOrEmpty(enumerator.Current.FIPS)
+                            && enumerator.Current.FIPS.ToUpper() == id.ToUpper())
+                        {
+                            return (StatusCodes.Status200OK, enumerator.Current);
+                        }
+                        else
+                        {
+                            return (StatusCodes.Status404NotFound, null);
+                        }
                     }
                 }
                 return (StatusCodes.Status404NotFound, null);

@@ -18,9 +18,20 @@ namespace XUnitTestControllers
         /// Return list or raise exception.
         /// </summary>
         /// <returns></returns>
-        public async Task<IEnumerable<HRCountry>> GetCountriesAsync()
+        public async Task<IEnumerable<HRCountry>> GetCountriesAsync(string id = null)
         {
             await Task.Delay(1);
+            if(!String.IsNullOrEmpty(id))
+            {
+                List<HRCountry> retour = new List<HRCountry>();
+                foreach (HRCountry iterator in _list)
+                {
+                    if(iterator._id.Equals(new MongoDB.Bson.ObjectId(id)))
+                    {
+                        retour.Add(iterator);
+                    }
+                }
+            }
             if (ThrowException)
             {
                 throw new Exception("");

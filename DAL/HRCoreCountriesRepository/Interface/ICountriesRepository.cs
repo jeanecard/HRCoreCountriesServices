@@ -8,6 +8,6 @@ namespace HRCoreCountriesRepository
 {
     public interface ICountriesRepository
     {
-        Task<IEnumerable<HRCountry>> GetCountriesAsync();
+        Task<IEnumerable<HRCountry>> GetCountriesAsync(String id = null);
     }
 }

@@ -62,7 +62,7 @@ namespace XUnitTestControllers
             list.Add(new MongoDB.Bson.ObjectId("507f191e810c19729de860ea"));
             list.Add(new MongoDB.Bson.ObjectId("507f191e810c19729de860eb"));
             CoreCountriesServiceStub service = new CoreCountriesServiceStub(list);
-            HRCountriesController ctrl = new HRCountriesController(service, null, new HRPaginer<HRCountry>());
+            HRCountriesController ctrl = new HRCountriesController(null, null, new HRPaginer<HRCountry>());
             Task<(int, HRCountry)> resultService = ctrl.GetFromID("507f191e810c19729de860ea");
             await resultService;
             Assert.True(resultService.Result.Item1 == StatusCodes.Status500InternalServerError);
@@ -74,7 +74,7 @@ namespace XUnitTestControllers
         /// Test that GetID return status code 500 if his _service is null (problem with DI)
         /// </summary>
         [Fact]
-        public async void HRCountriesControllerOnGetByIDWithIDNotBsonIDExpectStatus416RequestedRangeNotSatisfiable()
+        public async void HRCountriesControllerOnGetByIDWithIDNotBsonIDExpectStatus500InternalServerError()
         {
             List<MongoDB.Bson.ObjectId> list = new List<MongoDB.Bson.ObjectId>();
             list.Add(new MongoDB.Bson.ObjectId("507f191e810c19729de860ea"));
@@ -83,7 +83,7 @@ namespace XUnitTestControllers
             HRCountriesController ctrl = new HRCountriesController(service, null, new HRPaginer<HRCountry>());
             Task<(int, HRCountry)> resultService = ctrl.GetFromID("507a");
             await resultService;
-            Assert.True(resultService.Result.Item1 == StatusCodes.Status416RequestedRangeNotSatisfiable);
+            Assert.True(resultService.Result.Item1 == StatusCodes.Status500InternalServerError);
             Assert.True(resultService.Result.Item2 == null);
         }
         /// <summary>

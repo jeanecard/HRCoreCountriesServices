@@ -19,18 +19,23 @@ namespace HRCoreCountriesServices
             //1-
             _repository = repo;
         }
-        //1- If reposiory is available
+
+        /// <summary>
+        /// 1- If reposiory is available
         //  1.1- Launch asynchronous GetCountries on repository
         //  1.2- Give back thread availability waiting for result
         //  1.3- Get back result when wee get it.
-        //2- Else, return basic Exception in this very first version.
-        public async Task<IEnumerable<HRCountry>> GetCountriesAsync()
+        //  2- Else, return basic Exception in this very first version
+        /// </summary>
+        /// <param name="id">the MondoDB ID (hexadecimal)</param>
+        /// <returns>The corresponding Countries. Can throw Exceptions.</returns>
+        public async Task<IEnumerable<HRCountry>> GetCountriesAsync(String id = null)
         {
             //1-
             if (_repository != null)
             {
                 //1.1-
-                Task<IEnumerable<HRCountry>> countriesTask = _repository.GetCountriesAsync();
+                Task<IEnumerable<HRCountry>> countriesTask = _repository.GetCountriesAsync(id);
                 //1.2-
                 IEnumerable<HRCountry> retour = await countriesTask;
                 //1.3-
@@ -39,7 +44,7 @@ namespace HRCoreCountriesServices
             else
             {
                 //2-
-                throw new Exception("CoreCountriesService initialization failed..");
+                throw new  Exception("CoreCountriesService initialization failed..");
             }
         }
     }
