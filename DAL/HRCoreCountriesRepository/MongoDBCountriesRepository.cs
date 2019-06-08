@@ -44,13 +44,10 @@ namespace HRCoreCountriesRepository
         /// </returns>
         public async Task<IEnumerable<HRCountry>> GetCountriesAsync(String id = null)
         {
-            if(!String.IsNullOrEmpty(id))
-            {
-                throw new NotImplementedException();
-            }
             try
             {
                 //1-
+
                 IMongoCollection<HRCountry> collection = GetCountriesCollection();
                 if (collection != null)
                 {
@@ -62,7 +59,38 @@ namespace HRCoreCountriesRepository
                         //1.3.1-
                         await retourTask;
                         //1.3.2-
-                        return retourTask.Result.ToEnumerable();
+                        //!TODO do proper filter on MongoDB
+                        if (retourTask.Result != null)
+                        {
+                            if (String.IsNullOrEmpty(id))
+                            {
+                                //Force to list to avoid return asyn enum that can be enumerate only once.
+                                return retourTask.Result.ToList();
+                            }
+                            else
+                            {
+                                List<HRCountry> fullCountries = retourTask.Result.ToList();
+                                List<HRCountry> countries = new List<HRCountry>();
+                                try
+                                {
+                                    MongoDB.Bson.ObjectId key = new MongoDB.Bson.ObjectId(id);
+                                    foreach (HRCountry iterator in fullCountries)
+                                    {
+                                        if (iterator._id != null && iterator._id.Equals(key))
+                                        {
+                                            countries.Add(iterator);
+                                            return countries;
+                                        }
+                                    }
+                                }
+                                catch(Exception)
+                                {
+                                    //Could not proceed this id as Hexadecimal
+                                    return null;
+                                }
+
+                            }
+                        }
                     }
                 }
                 //2-

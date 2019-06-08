@@ -7,7 +7,7 @@
     {
         //Arbitrary value to init.
         private ushort _pageSize = 20;
-        private ushort _pageNumber = 1;
+        private ushort _pageNumber = 0;
         /// <summary>
         /// Dummy constructor.
         /// </summary>
