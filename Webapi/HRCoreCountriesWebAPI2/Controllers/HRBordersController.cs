@@ -61,6 +61,7 @@ namespace HRCoreCountriesWebAPI2.Controllers
                 return StatusCode(result.Result.Item1);
             }
         }
+
         /// <summary>
         /// 1- Check input consistance
         /// 2- Call service async
@@ -135,16 +136,16 @@ namespace HRCoreCountriesWebAPI2.Controllers
         /// <returns>(http Status Code, PagingParameterOutModel)</returns>
         public async Task<(int, PagingParameterOutModel<HRBorder>)> GetFromPaging([FromQuery] PagingParameterInModel pageModel)
         {
-            //1-
-            if (pageModel == null)
+            if (_borderService != null && _paginer != null)
             {
-                pageModel = GetDefaultPagingInParameter();
-            }
-            if (_borderService != null && pageModel != null && _paginer != null)
-            {
-                //2-
+                //1-
+                if (pageModel == null)
+                {
+                    pageModel = GetDefaultPagingInParameter();
+                }
                 try
                 {
+                    //2-
                     Task<IEnumerable<HRBorder>> bordersAction = _borderService.GetBordersAsync();
                     await bordersAction;
                     //3-
@@ -167,7 +168,6 @@ namespace HRCoreCountriesWebAPI2.Controllers
             {
                 return (StatusCodes.Status500InternalServerError, null);
             }
-
         }
 
         /// <summary>
@@ -207,7 +207,7 @@ namespace HRCoreCountriesWebAPI2.Controllers
             return StatusCode(StatusCodes.Status501NotImplemented);
         }
         /// <summary>
-        /// Set and return the Default PagingParameter for all the class
+        /// Set and return the Default PagingParameter for all the class. Does not throw any Exception.
         /// </summary>
         /// <returns>The default PagingInParamter</returns>
         private PagingParameterInModel GetDefaultPagingInParameter()
