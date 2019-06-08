@@ -1,9 +1,7 @@
 ﻿using HRCommonModel;
 using HRCommonTools;
-using HRCoreBordersModel;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace XUnitTest_PodtGISToNetTopology
@@ -21,7 +19,7 @@ namespace XUnitTest_PodtGISToNetTopology
         }
         //PARTIE VALIDATE
         [Fact]
-        void PaginateEmptyListsReturnSinglePagePaginationWithEmptyResult()
+        private void PaginateEmptyListsReturnSinglePagePaginationWithEmptyResult()
         {
             HRPaginer<String> paginer = new HRPaginer<String>();
             PagingParameterInModel model = new PagingParameterInModel();
@@ -47,7 +45,7 @@ namespace XUnitTest_PodtGISToNetTopology
             Assert.True(retour.CurrentPage == 0);
         }
         [Fact]
-        void PaginateNullListsThrowArgumentNullException()
+        private void PaginateNullListsThrowArgumentNullException()
         {
             HRPaginer<String> paginer = new HRPaginer<String>();
             PagingParameterInModel model = new PagingParameterInModel();
@@ -56,14 +54,14 @@ namespace XUnitTest_PodtGISToNetTopology
             Assert.Throws<ArgumentNullException>(() => paginer.GetPagination(model, null));
         }
         [Fact]
-        void PaginateNullPaginationInThrowArgumentsNullException()
+        private void PaginateNullPaginationInThrowArgumentsNullException()
         {
             HRPaginer<String> paginer = new HRPaginer<String>();
             Assert.Throws<ArgumentNullException>(() => paginer.GetPagination(null, PaginationTest.CreateItems(50)));
 
         }
         [Fact]
-        void PaginatePaginationInWithPageSize0ThrowInvalidOperationException()
+        private void PaginatePaginationInWithPageSize0ThrowInvalidOperationException()
         {
             HRPaginer<String> paginer = new HRPaginer<String>();
             PagingParameterInModel model = new PagingParameterInModel();
@@ -73,7 +71,7 @@ namespace XUnitTest_PodtGISToNetTopology
 
         }
         [Fact]
-        void PaginatePaginationInInvalidThrowAInvalidArgumentException()
+        private void PaginatePaginationInInvalidThrowAInvalidArgumentException()
         {
             HRPaginer<String> paginer = new HRPaginer<String>();
             PagingParameterInModel model = new PagingParameterInModel();
@@ -83,20 +81,20 @@ namespace XUnitTest_PodtGISToNetTopology
         }
         //PARTIE IS VALID
         [Fact]
-        void ValidatePaginationInWithModelNullThrowArgumentNullException()
+        private void ValidatePaginationInWithModelNullThrowArgumentNullException()
         {
             HRPaginer<String> paginer = new HRPaginer<String>();
             Assert.Throws<ArgumentNullException>(() => paginer.IsValid(null, CreateItems(50)));
         }
         [Fact]
-        void ValidatePaginationInWithEnumerableNullThrowArgumentNullException()
+        private void ValidatePaginationInWithEnumerableNullThrowArgumentNullException()
         {
             HRPaginer<String> paginer = new HRPaginer<String>();
             PagingParameterInModel model = new PagingParameterInModel();
             Assert.Throws<ArgumentNullException>(() => paginer.IsValid(model, null));
         }
         [Fact]
-        void ValidatePaginationInPAgeSizeNullThrowInvalidOperationException()
+        private void ValidatePaginationInPAgeSizeNullThrowInvalidOperationException()
         {
             HRPaginer<String> paginer = new HRPaginer<String>();
             PagingParameterInModel model = new PagingParameterInModel();
@@ -105,7 +103,7 @@ namespace XUnitTest_PodtGISToNetTopology
         }
 
         [Fact]
-        void ValidatePaginationInWith50ItemsOutOfBoundEnumerableReturnFalse()
+        private void ValidatePaginationInWith50ItemsOutOfBoundEnumerableReturnFalse()
         {
             HRPaginer<String> paginer = new HRPaginer<String>();
             PagingParameterInModel model = new PagingParameterInModel();
@@ -113,7 +111,8 @@ namespace XUnitTest_PodtGISToNetTopology
             model.PageNumber = 2;
             Assert.False(paginer.IsValid(model, CreateItems(50)));
         }
-        void ValidatePaginationInWith49ItemsOutOfBoundEnumerableReturnFalse()
+
+        private void ValidatePaginationInWith49ItemsOutOfBoundEnumerableReturnFalse()
         {
             HRPaginer<String> paginer = new HRPaginer<String>();
             PagingParameterInModel model = new PagingParameterInModel();
@@ -123,7 +122,7 @@ namespace XUnitTest_PodtGISToNetTopology
         }
 
         [Fact]
-        void ValidatePaginationInInRageOfEnumerableReturnTrue()
+        private void ValidatePaginationInInRageOfEnumerableReturnTrue()
         {
             HRPaginer<String> paginer = new HRPaginer<String>();
             PagingParameterInModel model = new PagingParameterInModel();
@@ -132,7 +131,7 @@ namespace XUnitTest_PodtGISToNetTopology
             Assert.True(paginer.IsValid(model, CreateItems(200)));
         }
         [Fact]
-        void ValidatePaginationInFirstPageWithMultiplePagesEnumerableReturnTrue()
+        private void ValidatePaginationInFirstPageWithMultiplePagesEnumerableReturnTrue()
         {
             HRPaginer<String> paginer = new HRPaginer<String>();
             PagingParameterInModel model = new PagingParameterInModel();
@@ -141,7 +140,7 @@ namespace XUnitTest_PodtGISToNetTopology
             Assert.True(paginer.IsValid(model, CreateItems(200)));
         }
         [Fact]
-        void ValidatePaginationInLastPageWithMultiplePagesEnumerableReturnTrue()
+        private void ValidatePaginationInLastPageWithMultiplePagesEnumerableReturnTrue()
         {
             HRPaginer<String> paginer = new HRPaginer<String>();
             PagingParameterInModel model = new PagingParameterInModel();
@@ -150,7 +149,7 @@ namespace XUnitTest_PodtGISToNetTopology
             Assert.True(paginer.IsValid(model, CreateItems(200)));
         }
         [Fact]
-        void ValidatePaginationInFirstPageWithSinglePageEnumerableReturnTrue()
+        private void ValidatePaginationInFirstPageWithSinglePageEnumerableReturnTrue()
         {
             HRPaginer<String> paginer = new HRPaginer<String>();
             PagingParameterInModel model = new PagingParameterInModel();
@@ -160,7 +159,7 @@ namespace XUnitTest_PodtGISToNetTopology
         }
         //Partie MODEL
         [Fact]
-        void PaginateParameterInSinglePageExpectOutModelHasPreviousAndNextPageFalse()
+        private void PaginateParameterInSinglePageExpectOutModelHasPreviousAndNextPageFalse()
         {
             HRPaginer<String> paginer = new HRPaginer<String>();
             PagingParameterInModel model = new PagingParameterInModel();
@@ -187,7 +186,7 @@ namespace XUnitTest_PodtGISToNetTopology
         }
 
         [Fact]
-        void PaginateMultiplePageOnFirstPageExpectOutModelIsConsistent()
+        private void PaginateMultiplePageOnFirstPageExpectOutModelIsConsistent()
         {
             HRPaginer<String> paginer = new HRPaginer<String>();
             PagingParameterInModel model = new PagingParameterInModel();
@@ -213,7 +212,7 @@ namespace XUnitTest_PodtGISToNetTopology
             }
         }
         [Fact]
-        void PaginateMultiplePageOnNotSpecificPageExpectOutModelIsConsistent()
+        private void PaginateMultiplePageOnNotSpecificPageExpectOutModelIsConsistent()
         {
             HRPaginer<String> paginer = new HRPaginer<String>();
             PagingParameterInModel model = new PagingParameterInModel();
@@ -239,7 +238,7 @@ namespace XUnitTest_PodtGISToNetTopology
             }
         }
         [Fact]
-        void PaginateMultiplePageOnLastPageExpectOutModelIsConsistent()
+        private void PaginateMultiplePageOnLastPageExpectOutModelIsConsistent()
         {
             HRPaginer<String> paginer = new HRPaginer<String>();
             PagingParameterInModel model = new PagingParameterInModel();

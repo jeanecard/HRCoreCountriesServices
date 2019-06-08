@@ -1,8 +1,7 @@
-﻿using HRCommonTools.Interace;
-using HRCommonModel;
+﻿using HRCommonModel;
+using HRCommonTools.Interace;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace HRCommonTools
 {
@@ -23,7 +22,7 @@ namespace HRCommonTools
             {
                 throw new ArgumentNullException();
             }
-            else if(!IsValid(model, items))
+            else if (!IsValid(model, items))
             {
                 throw new Exception("Invalid PagingParameterInModel");
             }

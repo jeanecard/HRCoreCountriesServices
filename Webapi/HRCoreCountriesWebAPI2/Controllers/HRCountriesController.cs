@@ -148,10 +148,10 @@ namespace HRCoreCountriesWebAPI2.Controllers
                     }
                     else
                     {
-                       return (StatusCodes.Status200OK, _paginer.GetPagination(pageModel, serviceAction.Result));
+                        return (StatusCodes.Status200OK, _paginer.GetPagination(pageModel, serviceAction.Result));
                     }
                 }
-                catch(Exception)
+                catch (Exception)
                 {
                     return (StatusCodes.Status500InternalServerError, null);
                 }

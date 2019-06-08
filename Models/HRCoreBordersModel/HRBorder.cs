@@ -1,6 +1,6 @@
-﻿using System;
-using NetTopologySuite.Geometries;
+﻿using NetTopologySuite.Geometries;
 using Newtonsoft.Json;
+using System;
 
 namespace HRCoreBordersModel
 {
@@ -8,7 +8,7 @@ namespace HRCoreBordersModel
     {
         [JsonIgnore]
         public Geometry BorderGeometry { get; set; }
-        public String  WKT_GEOMETRY
+        public String WKT_GEOMETRY
         {
 
             get

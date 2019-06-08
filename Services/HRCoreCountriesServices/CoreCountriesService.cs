@@ -1,8 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using HRCoreCountriesRepository;
+﻿using HRCoreCountriesRepository;
 using QuickType;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace HRCoreCountriesServices
 {
@@ -44,7 +44,7 @@ namespace HRCoreCountriesServices
             else
             {
                 //2-
-                throw new  Exception("CoreCountriesService initialization failed..");
+                throw new Exception("CoreCountriesService initialization failed..");
             }
         }
     }

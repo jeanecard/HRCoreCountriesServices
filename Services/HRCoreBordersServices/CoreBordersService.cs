@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using HRCoreBordersModel;
+﻿using HRCoreBordersModel;
 using HRCoreBordersRepository.Interface;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace HRCoreBordersServices
 {
@@ -11,7 +10,7 @@ namespace HRCoreBordersServices
     {
         private readonly IHRCoreBordersRepository _bordersRepository = null;
 
-        public HRCoreBordersService(IHRCoreBordersRepository service )
+        public HRCoreBordersService(IHRCoreBordersRepository service)
         {
             _bordersRepository = service;
         }
@@ -23,7 +22,7 @@ namespace HRCoreBordersServices
         /// <returns></returns>
         public async Task<IEnumerable<HRBorder>> GetBordersAsync(String borderID = null)
         {
-            if(_bordersRepository != null)
+            if (_bordersRepository != null)
             {
                 Task<IEnumerable<HRBorder>> bordersTask = _bordersRepository.GetBordersAsync(borderID);
                 await bordersTask;

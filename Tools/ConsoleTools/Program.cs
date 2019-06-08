@@ -4,18 +4,16 @@ using HRCoreBordersRepository;
 using HRCoreBordersServices;
 using NetTopologySuite.Geometries;
 using Npgsql;
-using QuickType;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.IO;
 using System.Threading.Tasks;
 
 namespace ConsoleTools
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             int[] saucisse = new int[0];
             int length = saucisse.Length;
@@ -23,7 +21,8 @@ namespace ConsoleTools
             ConnectToPostGis2();
             Console.ReadKey();
         }
-        static void ImportAllCountriesInMongoDB()
+
+        private static void ImportAllCountriesInMongoDB()
         {
             //using (StreamReader file = File.OpenText(@"../Assets/allCountries.json"))
             //{
@@ -54,10 +53,11 @@ namespace ConsoleTools
             //    }
             //}
         }
+
         /// <summary>
         /// 
         /// </summary>
-        static void ReadAllCountriesFromMongoDB()
+        private static void ReadAllCountriesFromMongoDB()
         {
             //String connectionString = "ToGetFromAppConfigFile";
 
@@ -80,7 +80,8 @@ namespace ConsoleTools
             //    Console.WriteLine(ex.Message);
             //}
         }
-        static async void ConnectToPostGis()
+
+        private static async void ConnectToPostGis()
         {
             List<HRBorder> retour = new List<HRBorder>();
             var connString = "ToGetFromAppConfigFileDO";
@@ -108,7 +109,8 @@ namespace ConsoleTools
             }
             Console.ReadKey();
         }
-        static async void ConnectToPostGis2()
+
+        private static async void ConnectToPostGis2()
         {
             HRCoreBordersService _borderService = new HRCoreBordersService(new CoreBordersRepository(null));
             Task<IEnumerable<HRBorder>> bordersAction = _borderService.GetBordersAsync();

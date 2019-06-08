@@ -1,20 +1,20 @@
 ﻿using GeoAPI.Geometries;
+using HRConverters.Interfaces;
 using NetTopologySuite.Geometries; //C'est la geometrie se rapprochant le plus du standard dans le mode .net
 using Npgsql.LegacyPostgis;
 using Npgsql.PostgresTypes;
 using System;
 using System.Collections.Generic;
-using HRConverters.Interfaces;
 
 namespace HRConverters
 {
     //Npgsql.NetTopologySuite do this job but it's not working well with the PostGis version of QGIS.
-    public class HRConverterPostGisToNetTopologySuite 
+    public class HRConverterPostGisToNetTopologySuite
     {
         /// <summary>
         /// Name of geometry column in PostGis.
         /// </summary>
-        private static String POSTGIS_GEOMETRY_TYPE = "GEOMETRY";
+        private static readonly String POSTGIS_GEOMETRY_TYPE = "GEOMETRY";
         /// <summary>
         /// Convert the first PostGis Geometry column or the column specified by geomOrdinal into the corresponding NetTopologyGeometry
         /// Can throw the following Exceptions
@@ -25,13 +25,13 @@ namespace HRConverters
         /// <param name="pgCursor">The cursor where to look for the Geometry column</param>
         /// <param name="geomOrdinal">optionnal, geom. column index if known, otherwise will be search for.</param>
         /// <returns>the NetTopology geometry equivalent.</returns>
-        static public Geometry ConvertFrom(IFieldValueGetter pgCursor, int? geomOrdinal = null)
+        public static Geometry ConvertFrom(IFieldValueGetter pgCursor, int? geomOrdinal = null)
         {
             Geometry retour = null;
             if (pgCursor != null)
             {
                 PostgisGeometry geometry = pgCursor.GetFieldValue<PostgisGeometry>(GetGeomtryColumnIndex(pgCursor, geomOrdinal));
-                if(geometry is PostgisPoint)
+                if (geometry is PostgisPoint)
                 {
                     retour = ProcessPoint((PostgisPoint)geometry);
                 }
@@ -57,7 +57,7 @@ namespace HRConverters
                 }
                 else
                 {
-                    throw new  NotImplementedException();
+                    throw new NotImplementedException();
                 }
                 SetSRID(retour, geometry);
             }
@@ -84,9 +84,9 @@ namespace HRConverters
                 //1-
                 if (geomOrdinal != null)
                 {
-                    if(geomOrdinal >= 0 && geomOrdinal < cursorFieldCount)
+                    if (geomOrdinal >= 0 && geomOrdinal < cursorFieldCount)
                     {
-                        if(IsGeomColumn(pgCursor.GetPostgresType(geomOrdinal.Value)))
+                        if (IsGeomColumn(pgCursor.GetPostgresType(geomOrdinal.Value)))
                         {
                             return geomOrdinal.Value;
                         }
@@ -126,7 +126,7 @@ namespace HRConverters
         /// <returns>true if column name is geoetry.</returns>
         private static bool IsGeomColumn(PostgresType type)
         {
-            if(type != null)
+            if (type != null)
             {
                 return (type != null && !String.IsNullOrEmpty(type.Name) && type.Name.ToUpper() == POSTGIS_GEOMETRY_TYPE);
             }
@@ -199,15 +199,15 @@ namespace HRConverters
                     //1.2-
                     else
                     {
-                        if(holeNetTopoRings == null)
+                        if (holeNetTopoRings == null)
                         {
-                            holeNetTopoRings = new LinearRing[ringCount-1];
+                            holeNetTopoRings = new LinearRing[ringCount - 1];
                         }
-                        holeNetTopoRings[i-1] = new LinearRing(netTopoCoord);
+                        holeNetTopoRings[i - 1] = new LinearRing(netTopoCoord);
                     }
                 }
                 //2-
-                return  new Polygon(exteriorNetTopoRing, holeNetTopoRings);
+                return new Polygon(exteriorNetTopoRing, holeNetTopoRings);
             }
             else
             {
@@ -223,7 +223,7 @@ namespace HRConverters
         /// <returns>a NetTopology Coordinate.</returns>
         private static Coordinate ConvertCoordinate2D(Coordinate2D postGisCoord)
         {
-            if(postGisCoord != null)
+            if (postGisCoord != null)
             {
                 return new Coordinate(postGisCoord.X, postGisCoord.Y);
             }
@@ -294,13 +294,13 @@ namespace HRConverters
         /// <returns>a NetTopology LineString</returns>
         private static Geometry ProcessLineString(PostgisLineString geometry)
         {
-            if(geometry != null)
+            if (geometry != null)
             {
                 //1-
                 int pointCount = geometry.PointCount;
                 Coordinate[] coords = new Coordinate[pointCount];
 
-                for(int i = 0; i < pointCount; i++)
+                for (int i = 0; i < pointCount; i++)
                 {
                     Coordinate2D coord2D = geometry[i];
                     coords[i] = new Coordinate();
@@ -352,7 +352,7 @@ namespace HRConverters
         /// <returns>a NetTopology MultiPolygon</returns>
         private static Geometry ProcessMultiPolygon(PostgisMultiPolygon geometry)
         {
-            if(geometry != null)
+            if (geometry != null)
             {
                 //1-
                 int polygonCount = geometry.PolygonCount;

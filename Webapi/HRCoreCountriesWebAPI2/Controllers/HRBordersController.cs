@@ -125,7 +125,7 @@ namespace HRCoreCountriesWebAPI2.Controllers
         {
             Task<(int, PagingParameterOutModel<HRBorder>)> result = GetFromPaging(pageModel);
             await result;
-            if(result.Result.Item2 != null)
+            if (result.Result.Item2 != null)
             {
                 return result.Result.Item2;
             }

@@ -11,11 +11,11 @@ namespace HRCoreCountriesRepository
     public class MongoDBCountriesRepository : ICountriesRepository
     {
         private readonly IConfiguration _config = null;
-        private readonly static String _MONGO_CX_STRING_KEY = "CountriesConnection";
-        private readonly static String _MONGO_CLUSTER = "MongoDBDataBaseName:ClusterName";
-        private readonly static String _MONGO_COUNTRIES_COLLECTION_KEY = "MongoDBDataBaseName:CountriesCollection";
-        private readonly static String _MONGO_USERNAME = "MongoDBDataBaseName:Username";
-        private readonly static String _MONGO_PASSWORD = "MongoDBDataBaseName:Password";
+        private static readonly String _MONGO_CX_STRING_KEY = "CountriesConnection";
+        private static readonly String _MONGO_CLUSTER = "MongoDBDataBaseName:ClusterName";
+        private static readonly String _MONGO_COUNTRIES_COLLECTION_KEY = "MongoDBDataBaseName:CountriesCollection";
+        private static readonly String _MONGO_USERNAME = "MongoDBDataBaseName:Username";
+        private static readonly String _MONGO_PASSWORD = "MongoDBDataBaseName:Password";
 
 
         //Default Constructor
@@ -83,7 +83,7 @@ namespace HRCoreCountriesRepository
                                         }
                                     }
                                 }
-                                catch(Exception)
+                                catch (Exception)
                                 {
                                     //Could not proceed this id as Hexadecimal
                                     return null;

@@ -1,15 +1,12 @@
-﻿using HRCoreBordersModel;
-using HRCoreBordersServices;
-using HRCoreCountriesServices;
+﻿using HRCoreCountriesServices;
 using QuickType;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace XUnitTestControllers
 {
-    class CoreCountriesServiceStub : ICoreCountriesService
+    internal class CoreCountriesServiceStub : ICoreCountriesService
     {
         private readonly List<HRCountry> _list = new List<HRCountry>();
         public bool ThrowException = false;
@@ -21,12 +18,12 @@ namespace XUnitTestControllers
         public async Task<IEnumerable<HRCountry>> GetCountriesAsync(string id = null)
         {
             await Task.Delay(1);
-            if(!String.IsNullOrEmpty(id))
+            if (!String.IsNullOrEmpty(id))
             {
                 List<HRCountry> retour = new List<HRCountry>();
                 foreach (HRCountry iterator in _list)
                 {
-                    if(iterator._id.Equals(new MongoDB.Bson.ObjectId(id)))
+                    if (iterator._id.Equals(new MongoDB.Bson.ObjectId(id)))
                     {
                         retour.Add(iterator);
                     }

@@ -1,22 +1,19 @@
-﻿using Npgsql;
-using Npgsql.BackendMessages;
+﻿using HRConverters.Interfaces;
+using Npgsql;
 using Npgsql.PostgresTypes;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using HRConverters.Interfaces;
 
 namespace HRConverters
 {
     //Act like a facade over a NpgsqlDataReader
     public class PostGisFieldValueGetter : IFieldValueGetter
     {
-        private NpgsqlDataReader _reader = null;
+        private readonly NpgsqlDataReader _reader = null;
 
         public int FieldCount
         {
-            get {
+            get
+            {
                 if (_reader != null)
                 {
                     return _reader.FieldCount;
@@ -27,7 +24,7 @@ namespace HRConverters
                 }
             }
         }
-        
+
 
 
         private PostGisFieldValueGetter()
@@ -40,7 +37,7 @@ namespace HRConverters
         }
         public PostgisGeometry GetFieldValue<PostgisGeometry>(int ordinal)
         {
-            if(_reader != null)
+            if (_reader != null)
             {
                 return _reader.GetFieldValue<PostgisGeometry>(ordinal);
             }

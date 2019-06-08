@@ -2,7 +2,6 @@
 using HRCoreBordersModel;
 using HRCoreBordersRepository.Interface;
 using Microsoft.Extensions.Configuration;
-using NetTopologySuite.Geometries;
 using Npgsql;
 using System;
 using System.Collections.Generic;
@@ -14,9 +13,9 @@ namespace HRCoreBordersRepository
 {
     public class CoreBordersRepository : IHRCoreBordersRepository
     {
-        private IConfiguration _config = null;
-        private static String _DBUSER = "HRCountries:Username";
-        private static String _DBPASSWORD = "HRCountries:Password";
+        private readonly IConfiguration _config = null;
+        private static readonly String _DBUSER = "HRCountries:Username";
+        private static readonly String _DBPASSWORD = "HRCountries:Password";
         /// <summary>
         /// Dummy default constructor. Private for DI.
         /// </summary>
@@ -47,12 +46,12 @@ namespace HRCoreBordersRepository
                 conn.TypeMapper.UseLegacyPostgis();
                 //conn.TypeMapper.UseLegacyPostgis();
                 // Retrieve all rows
-                string query = GetSQLQuery(borderID); 
+                string query = GetSQLQuery(borderID);
                 using (var cmd = new NpgsqlCommand(query, conn))
                 using (Task<DbDataReader> readerTask = cmd.ExecuteReaderAsync())
                 {
                     await readerTask;
-                   
+
                     NpgsqlDataReader reader = (NpgsqlDataReader)readerTask.Result;
                     PostGisFieldValueGetter readerFacade = new PostGisFieldValueGetter(reader);
                     Task<bool> reading = reader.ReadAsync();

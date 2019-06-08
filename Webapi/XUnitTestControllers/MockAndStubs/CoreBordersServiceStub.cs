@@ -2,19 +2,18 @@
 using HRCoreBordersServices;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace XUnitTestControllers
 {
-    class CoreBordersServiceStub : ICoreBordersService
+    internal class CoreBordersServiceStub : ICoreBordersService
     {
-        private List<HRBorder> _list = new List<HRBorder>();
+        private readonly List<HRBorder> _list = new List<HRBorder>();
         public bool ThrowException = false;
         public async Task<IEnumerable<HRBorder>> GetBordersAsync(string borderID = null)
         {
             await Task.Delay(1);
-            if(ThrowException)
+            if (ThrowException)
             {
                 throw new Exception("");
             }
@@ -23,7 +22,7 @@ namespace XUnitTestControllers
                 List<HRBorder> retour = new List<HRBorder>();
                 foreach (HRBorder iterator in _list)
                 {
-                    if(iterator.FIPS == borderID)
+                    if (iterator.FIPS == borderID)
                     {
                         retour.Add(iterator);
                         break;

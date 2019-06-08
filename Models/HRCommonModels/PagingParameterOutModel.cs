@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace HRCommonModel
 {
@@ -37,7 +36,7 @@ namespace HRCommonModel
         /// <summary>
         /// Return true if current page has a next page
         /// </summary>
-        public bool HasNextPage { get => _currentPage + 1  < TotalPages;  }
+        public bool HasNextPage { get => _currentPage + 1 < TotalPages; }
         /// <summary>
         /// Return the items in the page.
         /// </summary>

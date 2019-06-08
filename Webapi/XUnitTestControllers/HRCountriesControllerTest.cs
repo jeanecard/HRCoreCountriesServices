@@ -1,10 +1,8 @@
 using HRCommonModel;
 using HRCommonTools;
-using HRCoreBordersModel;
 using HRCoreCountriesWebAPI2.Controllers;
 using Microsoft.AspNetCore.Http;
 using QuickType;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
@@ -165,7 +163,7 @@ namespace XUnitTestControllers
         public async void HRCountriesControllerOnGetAllWithValidPagingInExpectItemsAndCodeStatus200()
         {
             List<MongoDB.Bson.ObjectId> list = new List<MongoDB.Bson.ObjectId>();
-            for(int i = 0; i < 300; i++)
+            for (int i = 0; i < 300; i++)
             {
                 list.Add(new MongoDB.Bson.ObjectId("507f191e810c19729de860ea"));
             }

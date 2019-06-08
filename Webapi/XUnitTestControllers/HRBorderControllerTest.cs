@@ -21,7 +21,7 @@ namespace XUnitTestControllers
         public async void HRBorderControllerOnGetByIDUnknownExpectStatusCode404()
         {
             List<String> list = new List<String>();
-            HRBordersController ctrl = new HRBordersController(new  HRPaginer<HRBorder>(), null, new CoreBordersServiceStub(list));
+            HRBordersController ctrl = new HRBordersController(new HRPaginer<HRBorder>(), null, new CoreBordersServiceStub(list));
             Task<(int, HRBorder)> resultService = ctrl.GetFromID("XX");
             await resultService;
             Assert.True(resultService.Result.Item1 == StatusCodes.Status404NotFound);
@@ -63,7 +63,7 @@ namespace XUnitTestControllers
         /// Test that GetID return status code 500 and HRBorder Null in case of any exception raised by service
         /// </summary>
         [Fact]
-        public async  void HRBorderControllerOnGetByIDWithExceptionThrownByServiceExpectStatus500InternalServerError()
+        public async void HRBorderControllerOnGetByIDWithExceptionThrownByServiceExpectStatus500InternalServerError()
         {
             List<String> list = new List<String>();
             list.Add("XX");
@@ -145,7 +145,7 @@ namespace XUnitTestControllers
         public async void HRBorderControllerOnGetAllWithValidPagingInExpectItemsAndCodeStatus200()
         {
             List<String> list = new List<String>();
-            for(int i = 0; i < 300; i++)
+            for (int i = 0; i < 300; i++)
             {
                 list.Add(i.ToString());
             }
