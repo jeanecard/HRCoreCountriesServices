@@ -13,9 +13,13 @@ namespace HRCoreBordersRepository
 {
     public class CoreBordersRepository : IHRCoreBordersRepository
     {
+        private static readonly String _SQLQUERY = " SELECT wkb_geometry, FIPS, ISO2, ISO3, UN, NAME, AREA, POP2005, REGION, SUBREGION, LON, LAT FROM boundaries ";
         private readonly IConfiguration _config = null;
         private static readonly String _DBUSER = "HRCountries:Username";
         private static readonly String _DBPASSWORD = "HRCountries:Password";
+
+        public static string SQLQUERY => _SQLQUERY;
+
         /// <summary>
         /// Dummy default constructor. Private for DI.
         /// </summary>
@@ -29,8 +33,6 @@ namespace HRCoreBordersRepository
             _config = config;
         }
         /// <summary>
-        /// //!TODO use dapper
-        /// //!TODO Try Catch
         /// </summary>
         /// <param name="borderID"></param>
         /// <returns></returns>
@@ -58,8 +60,7 @@ namespace HRCoreBordersRepository
                     await reading;
                     while (reading.Result)
                     {
-                        HRBorder modeli = new HRBorder();
-                        modeli.BorderGeometry = HRConverterPostGisToNetTopologySuite.ConvertFrom(readerFacade, 0);
+                        HRBorder modeli = new HRBorder() { BorderGeometry = HRConverterPostGisToNetTopologySuite.ConvertFrom(readerFacade, 0) };
                         bool columnIsNull = await reader.IsDBNullAsync(1);
                         if (!columnIsNull)
                         {
@@ -119,10 +120,10 @@ namespace HRCoreBordersRepository
         /// </summary>
         /// <param name="borderID">borderID</param>
         /// <returns>SQLQuery to be run</returns>
-        private string GetSQLQuery(String borderID = null)
+        public string GetSQLQuery(String borderID = null)
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append(" SELECT wkb_geometry, FIPS, ISO2, ISO3, UN, NAME, AREA, POP2005, REGION, SUBREGION, LON, LAT FROM boundaries ");
+            sb.Append(SQLQUERY);
             if (borderID != null)
             {
                 sb.Append("WHERE FIPS = '");

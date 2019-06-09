@@ -28,7 +28,7 @@ namespace HRCoreCountriesWebAPI2
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //!TODO do correct DI please
+            //Rework DI please
             services.AddSingleton<ICoreCountriesService>(new CoreCountriesService(new MongoDBCountriesRepository(Configuration)));
             services.AddSingleton<IHRPaginer<HRBorder>>(new HRPaginer<HRBorder>());
             services.AddSingleton<IHRPaginer<HRCountry>>(new HRPaginer<HRCountry>());

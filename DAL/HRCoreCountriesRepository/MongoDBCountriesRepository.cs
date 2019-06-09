@@ -1,4 +1,3 @@
-using HRDALExceptionLib;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
 using QuickType;
@@ -59,7 +58,7 @@ namespace HRCoreCountriesRepository
                         //1.3.1-
                         await retourTask;
                         //1.3.2-
-                        //!TODO do proper filter on MongoDB
+                        //No do proper filter on MongoDB
                         if (retourTask.Result != null)
                         {
                             if (String.IsNullOrEmpty(id))
@@ -96,13 +95,13 @@ namespace HRCoreCountriesRepository
                 //2-
                 else
                 {
-                    HRDALException.ThrowException("Can not retrieve the following collection : " + _MONGO_COUNTRIES_COLLECTION_KEY, "101");
+                    throw new Exception("Collection not found.");
                 }
 
             }
             catch (Exception ex)
             {
-                //!TODO Log pattern to set
+                //Log
                 Console.WriteLine(ex.Message);
                 throw;
             }

@@ -50,10 +50,10 @@ namespace HRCoreCountriesWebAPI2.Controllers
             }
         }
         /// <summary>
-        /// !TODO
+        /// Get a Country by ID (_id)
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">the country ID</param>
+        /// <returns>the status code (http) and the Country.</returns>
         public async Task<(int, HRCountry)> GetFromID(string id)
         {
             //1-
