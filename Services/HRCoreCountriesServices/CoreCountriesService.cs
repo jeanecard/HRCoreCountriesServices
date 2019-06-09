@@ -28,7 +28,7 @@ namespace HRCoreCountriesServices
         //  2- Else, return basic Exception in this very first version
         /// </summary>
         /// <param name="id">the MondoDB ID (hexadecimal)</param>
-        /// <returns>The corresponding Countries. Can throw Exceptions.</returns>
+        /// <returns>The corresponding Countries. Can throw MemberAccessException if repository is null.</returns>
         public async Task<IEnumerable<HRCountry>> GetCountriesAsync(String id = null)
         {
             //1-
@@ -44,7 +44,7 @@ namespace HRCoreCountriesServices
             else
             {
                 //2-
-                throw new Exception("CoreCountriesService initialization failed..");
+                throw new MemberAccessException("CoreCountriesService initialization failed..");
             }
         }
     }
