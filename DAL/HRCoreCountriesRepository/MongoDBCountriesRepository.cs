@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace HRCoreCountriesRepository
 {
+    /// <summary>
+    /// It's not possible at this day to use Dapper on this MongoDB Driver.
+    /// </summary>
     public class MongoDBCountriesRepository : ICountriesRepository
     {
         private readonly IConfiguration _config = null;

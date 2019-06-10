@@ -1,4 +1,5 @@
-﻿using HRConverters;
+﻿using Dapper;
+using HRConverters;
 using HRCoreBordersModel;
 using HRCoreBordersRepository.Interface;
 using Microsoft.Extensions.Configuration;
@@ -14,11 +15,15 @@ namespace HRCoreBordersRepository
     public class CoreBordersRepository : IHRCoreBordersRepository
     {
         private static readonly String _SQLQUERY = " SELECT wkb_geometry, FIPS, ISO2, ISO3, UN, NAME, AREA, POP2005, REGION, SUBREGION, LON, LAT FROM boundaries ";
+        private static readonly String _SQLQUERYFORDAPPER = " SELECT ST_AsText(wkb_geometry) AS WKT_GEOMETRY, FIPS, ISO2, ISO3, UN, NAME, AREA, POP2005, REGION, SUBREGION, LON, LAT FROM boundaries ";
+
         private readonly IConfiguration _config = null;
         private static readonly String _DBUSER = "HRCountries:Username";
         private static readonly String _DBPASSWORD = "HRCountries:Password";
 
         public static string SQLQUERY => _SQLQUERY;
+
+        public static string SQLQUERYFORDAPPER => _SQLQUERYFORDAPPER;
 
         /// <summary>
         /// Dummy default constructor. Private for DI.
@@ -33,10 +38,63 @@ namespace HRCoreBordersRepository
             _config = config;
         }
         /// <summary>
+        /// Call the ReaderMethod.
         /// </summary>
         /// <param name="borderID"></param>
         /// <returns></returns>
         public async Task<IEnumerable<HRBorder>> GetBordersAsync(String borderID = null)
+        {
+            Task<IEnumerable<HRBorder>> retour = ReadBordersWithDapperAsync(borderID);
+            await retour;
+            return retour.Result;
+        }
+
+        /// <summary>
+        /// With Dapper
+        /// </summary>
+        /// <param name="borderID"></param>
+        /// <returns></returns>
+        private async Task<IEnumerable<HRBorder>> ReadBordersWithDapperAsync(String borderID = null)
+        {
+            String cxString = _config.GetConnectionString("BordersConnection");
+            cxString = String.Format(cxString, _config[_DBUSER], _config[_DBPASSWORD]);
+            using (var conn = new NpgsqlConnection(cxString))
+            {
+
+                conn.Open();
+                try
+                {
+                    Task<IEnumerable<HRBorder>> retour = conn.QueryAsync<HRBorder>(GetSQLQueryForDapper(borderID));
+                    await retour;
+                    return retour.Result;
+                }
+                catch(Exception)
+                {
+                    //!log here. 
+                    throw;
+                }
+            }
+        }
+
+        private string GetSQLQueryForDapper(string borderID)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append(SQLQUERYFORDAPPER);
+            if (borderID != null)
+            {
+                sb.Append("WHERE FIPS = '");
+                sb.Append(borderID);
+                sb.Append("'");
+            }
+            return sb.ToString(); ;
+        }
+
+        /// <summary>
+        /// Without Dapper
+        /// </summary>
+        /// <param name="borderID"></param>
+        /// <returns></returns>
+        private async Task<IEnumerable<HRBorder>> ReadBordersAsync(String borderID = null)
         {
             List<HRBorder> retour = new List<HRBorder>();
             String cxString = _config.GetConnectionString("BordersConnection");
@@ -45,8 +103,8 @@ namespace HRCoreBordersRepository
             {
 
                 conn.Open();
+
                 conn.TypeMapper.UseLegacyPostgis();
-                //conn.TypeMapper.UseLegacyPostgis();
                 // Retrieve all rows
                 string query = GetSQLQuery(borderID);
                 using (var cmd = new NpgsqlCommand(query, conn))
@@ -60,7 +118,7 @@ namespace HRCoreBordersRepository
                     await reading;
                     while (reading.Result)
                     {
-                        HRBorder modeli = new HRBorder() { BorderGeometry = HRConverterPostGisToNetTopologySuite.ConvertFrom(readerFacade, 0) };
+                        HRBorder modeli = new HRBorder() { wkb_geometry = HRConverterPostGisToNetTopologySuite.ConvertFrom(readerFacade, 0) };
                         bool columnIsNull = await reader.IsDBNullAsync(1);
                         if (!columnIsNull)
                         {
@@ -115,6 +173,7 @@ namespace HRCoreBordersRepository
             }
             return retour;
         }
+
         /// <summary>
         /// Generate SQLQuery with WHERE clause if necessary on borderID.
         /// </summary>

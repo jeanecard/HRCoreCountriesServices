@@ -6,21 +6,32 @@ namespace HRCoreBordersModel
 {
     public class HRBorder
     {
+        /// <summary>
+        /// This property is used if and only if wkb_geometry is null. 
+        /// </summary>
+        private String wkt_geom = null; 
         [JsonIgnore]
-        public Geometry BorderGeometry { get; set; }
+        public Geometry wkb_geometry { get; set; }
         public String WKT_GEOMETRY
         {
-
             get
             {
-                if (BorderGeometry != null)
+                if (wkb_geometry != null)
                 {
-                    return BorderGeometry.ToText();
+                    return wkb_geometry.ToText();
+                }
+                else if(wkt_geom != null)
+                {
+                    return wkt_geom;
                 }
                 else
                 {
                     return String.Empty;
                 }
+            }
+            set
+            {
+                wkt_geom = value;
             }
         }
         public String FIPS { get; set; }
