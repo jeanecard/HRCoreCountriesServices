@@ -1,4 +1,5 @@
 ﻿using HRCommonModel;
+using HRCommonTools;
 using HRCommonTools.Interace;
 using HRCoreBordersModel;
 using HRCoreBordersServices;
@@ -18,6 +19,7 @@ namespace HRCoreCountriesWebAPI2.Controllers
         private readonly ICoreBordersService _borderService = null;
         private readonly IHRPaginer<HRBorder> _paginer = null;
         private readonly IConfiguration _config = null;
+        private readonly static ushort _maxPageSize = 50;
         /// <summary>
         /// Public constructor with services DI
         /// </summary>
@@ -134,6 +136,7 @@ namespace HRCoreCountriesWebAPI2.Controllers
                 return StatusCode(result.Result.Item1);
             }
         }
+  
 
         /// <summary>
         /// 1- Process PagingInParameter if not supplied
@@ -163,7 +166,7 @@ namespace HRCoreCountriesWebAPI2.Controllers
                     }
                     else
                     {
-                        PagingParameterOutModel<HRBorder> retour = _paginer.GetPagination(pageModel, bordersAction.Result);
+                        PagingParameterOutModel<HRBorder> retour = _paginer.GetPagination(pageModel, bordersAction.Result, _maxPageSize);
                         return (StatusCodes.Status200OK, retour);
                     }
                 }

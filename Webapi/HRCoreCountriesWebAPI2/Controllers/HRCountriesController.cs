@@ -1,4 +1,5 @@
 ﻿using HRCommonModel;
+using HRCommonTools;
 using HRCommonTools.Interace;
 using HRCoreCountriesServices;
 using Microsoft.AspNetCore.Http;
@@ -19,6 +20,7 @@ namespace HRCoreCountriesWebAPI2.Controllers
         private readonly IHRPaginer<HRCountry> _paginer = null;
         private readonly ICoreCountriesService _service = null;
         private readonly IConfiguration _config;
+        private readonly ushort _maxPageSize = 100;
         public HRCountriesController(ICoreCountriesService service, IConfiguration config, IHRPaginer<HRCountry> paginer)
         {
             _service = service;
@@ -148,7 +150,7 @@ namespace HRCoreCountriesWebAPI2.Controllers
                     }
                     else
                     {
-                        return (StatusCodes.Status200OK, _paginer.GetPagination(pageModel, serviceAction.Result));
+                        return (StatusCodes.Status200OK, _paginer.GetPagination(pageModel, serviceAction.Result, _maxPageSize));
                     }
                 }
                 catch (Exception)

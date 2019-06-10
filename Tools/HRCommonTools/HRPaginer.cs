@@ -16,7 +16,7 @@ namespace HRCommonTools
         /// <param name="model">The input Model</param>
         /// <param name="items">The full list of items to paginate</param>
         /// <returns>ArgumentNullException if input args are null, Exception if input is Invalid else return the PagingParameterOutModel expected. </returns>
-        public PagingParameterOutModel<T> GetPagination(PagingParameterInModel model, IEnumerable<T> items)
+        public PagingParameterOutModel<T> GetPagination(PagingParameterInModel model, IEnumerable<T> items, ushort maxPageSize = ushort.MaxValue)
         {
             if (model == null || items == null)
             {
@@ -28,17 +28,18 @@ namespace HRCommonTools
             }
             else
             {
+                PagingParameterInModel reworkedPagingIn = PagingParameterInLimiter.LimitPagingIn(model, maxPageSize);
                 PagingParameterOutModel<T> retour = new PagingParameterOutModel<T>();
                 IEnumerator<T> enumerator = items.GetEnumerator();
                 int itemsCount = GetEnumerableCount(enumerator);
 
                 retour.TotalItemsCount = itemsCount;
-                retour.PageSize = model.PageSize;
-                retour.TotalPages = (itemsCount / model.PageSize) + 1;
+                retour.PageSize = reworkedPagingIn.PageSize;
+                retour.TotalPages = (itemsCount / reworkedPagingIn.PageSize) + 1;
                 List<T> pageItems = new List<T>();
                 int iterator = 0;
-                int startIndex = model.PageSize * (model.PageNumber);
-                int endIndex = startIndex + model.PageSize;
+                int startIndex = reworkedPagingIn.PageSize * (reworkedPagingIn.PageNumber);
+                int endIndex = startIndex + reworkedPagingIn.PageSize;
                 enumerator.Reset();
                 while (enumerator.MoveNext())
                 {
@@ -53,10 +54,12 @@ namespace HRCommonTools
                     iterator++;
                 }
                 retour.PageItems = pageItems;
-                retour.CurrentPage = model.PageNumber;
+                retour.CurrentPage = reworkedPagingIn.PageNumber;
                 return retour;
             }
         }
+
+
         /// <summary>
         /// Compute the validity of the input parameter. Can throw Exceptions.
         /// </summary>
@@ -77,7 +80,7 @@ namespace HRCommonTools
             {
                 IEnumerator<T> enumerator = items.GetEnumerator();
                 int itemsCount = GetEnumerableCount(enumerator);
-                bool isPageNumberInPaginationCapacity = false;
+                bool isPageNumberInPaginationCapacity;
                 if (itemsCount <= model.PageSize)
                 {
                     isPageNumberInPaginationCapacity = (model.PageNumber == 0);
@@ -89,6 +92,7 @@ namespace HRCommonTools
                 return isPageNumberInPaginationCapacity;
             }
         }
+
         /// <summary>
         /// Internal shortcut to avoid casting as array or list the IEnumerable arg.
         /// </summary>
