@@ -13,9 +13,9 @@ namespace XUnitTestDAL
         public void GetSQLQueryWithNoIDExpectSelectOnly()
         {
             CoreBordersRepository repo = new CoreBordersRepository(null);
-            String sql = repo.GetSQLQuery();
+            String sql = repo.GetSQLQuery(true);
             Assert.NotNull(sql);
-            Assert.Equal(sql, CoreBordersRepository.SQLQUERY);
+            Assert.Equal(sql, CoreBordersRepository.SQLQUERYFORDAPPER);
         }
         /// <summary>
         /// Check that SQL query is used as provided more the where clause by the class.
@@ -24,9 +24,9 @@ namespace XUnitTestDAL
         public void GetSQLQueryWithIDExpectSelectWithWherreClause()
         {
             CoreBordersRepository repo = new CoreBordersRepository(null);
-            String sql = repo.GetSQLQuery("XX");
+            String sql = repo.GetSQLQuery(true, "XX");
             Assert.NotNull(sql);
-            Assert.Equal(sql, CoreBordersRepository.SQLQUERY + "WHERE FIPS = 'XX'");
+            Assert.Equal(sql, CoreBordersRepository.SQLQUERYFORDAPPER + "WHERE FIPS = 'XX'");
         }
     }
 }

@@ -16,13 +16,17 @@ namespace HRCoreBordersRepository
     {
         private static readonly String _SQLQUERY = " SELECT wkb_geometry, FIPS, ISO2, ISO3, UN, NAME, AREA, POP2005, REGION, SUBREGION, LON, LAT FROM boundaries ";
         private static readonly String _SQLQUERYFORDAPPER = " SELECT ST_AsText(wkb_geometry) AS WKT_GEOMETRY, FIPS, ISO2, ISO3, UN, NAME, AREA, POP2005, REGION, SUBREGION, LON, LAT FROM boundaries ";
-
         private readonly IConfiguration _config = null;
         private static readonly String _DBUSER = "HRCountries:Username";
         private static readonly String _DBPASSWORD = "HRCountries:Password";
-
+        private static readonly String CONNECTION_STRING_KEY = "BordersConnection";
+        /// <summary>
+        /// SQL Query for manual query
+        /// </summary>
         public static string SQLQUERY => _SQLQUERY;
-
+        /// <summary>
+        /// SQL Query for Dapper
+        /// </summary>
         public static string SQLQUERYFORDAPPER => _SQLQUERYFORDAPPER;
 
         /// <summary>
@@ -32,7 +36,10 @@ namespace HRCoreBordersRepository
         {
             //Dummy.
         }
-
+        /// <summary>
+        /// Constructor for DI with Configuration dependency.
+        /// </summary>
+        /// <param name="config"></param>
         public CoreBordersRepository(IConfiguration config)
         {
             _config = config;
@@ -40,8 +47,8 @@ namespace HRCoreBordersRepository
         /// <summary>
         /// Call the ReaderMethod.
         /// </summary>
-        /// <param name="borderID"></param>
-        /// <returns></returns>
+        /// <param name="borderID">an optionnal borderID</param>
+        /// <returns>A collection with the Border with the borderID querried or all Borders if borderID is not supplied.</returns>
         public async Task<IEnumerable<HRBorder>> GetBordersAsync(String borderID = null)
         {
             Task<IEnumerable<HRBorder>> retour = ReadBordersWithDapperAsync(borderID);
@@ -50,13 +57,13 @@ namespace HRCoreBordersRepository
         }
 
         /// <summary>
-        /// With Dapper
+        /// Mapping from DataBase with Dapper
         /// </summary>
         /// <param name="borderID"></param>
         /// <returns></returns>
         private async Task<IEnumerable<HRBorder>> ReadBordersWithDapperAsync(String borderID = null)
         {
-            String cxString = _config.GetConnectionString("BordersConnection");
+            String cxString = _config.GetConnectionString(CONNECTION_STRING_KEY);
             cxString = String.Format(cxString, _config[_DBUSER], _config[_DBPASSWORD]);
             using (var conn = new NpgsqlConnection(cxString))
             {
@@ -64,7 +71,7 @@ namespace HRCoreBordersRepository
                 conn.Open();
                 try
                 {
-                    Task<IEnumerable<HRBorder>> retour = conn.QueryAsync<HRBorder>(GetSQLQueryForDapper(borderID));
+                    Task<IEnumerable<HRBorder>> retour = conn.QueryAsync<HRBorder>(GetSQLQuery(true, borderID));
                     await retour;
                     return retour.Result;
                 }
@@ -75,50 +82,37 @@ namespace HRCoreBordersRepository
                 }
             }
         }
-
-        private string GetSQLQueryForDapper(string borderID)
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append(SQLQUERYFORDAPPER);
-            if (borderID != null)
-            {
-                sb.Append("WHERE FIPS = '");
-                sb.Append(borderID);
-                sb.Append("'");
-            }
-            return sb.ToString(); ;
-        }
-
         /// <summary>
-        /// Without Dapper
+        ///  Mapping from DataBase without Dapper.
+        ///  Method first done for testsing purpose.
         /// </summary>
         /// <param name="borderID"></param>
         /// <returns></returns>
+        [Obsolete("ReadBordersAsync is deprecated, please use ReadBordersWithDapperAsync instead.")]
+        #pragma warning disable IDE0051 // Disable warning unused members as this method is kept for historical reasons
         private async Task<IEnumerable<HRBorder>> ReadBordersAsync(String borderID = null)
+        #pragma warning restore IDE0051 // Re-enable previous Warning.
         {
             List<HRBorder> retour = new List<HRBorder>();
-            String cxString = _config.GetConnectionString("BordersConnection");
+            String cxString = _config.GetConnectionString(CONNECTION_STRING_KEY);
             cxString = String.Format(cxString, _config[_DBUSER], _config[_DBPASSWORD]);
             using (var conn = new NpgsqlConnection(cxString))
             {
-
                 conn.Open();
-
                 conn.TypeMapper.UseLegacyPostgis();
                 // Retrieve all rows
-                string query = GetSQLQuery(borderID);
+                string query = GetSQLQuery(false, borderID);
                 using (var cmd = new NpgsqlCommand(query, conn))
                 using (Task<DbDataReader> readerTask = cmd.ExecuteReaderAsync())
                 {
                     await readerTask;
-
                     NpgsqlDataReader reader = (NpgsqlDataReader)readerTask.Result;
                     PostGisFieldValueGetter readerFacade = new PostGisFieldValueGetter(reader);
                     Task<bool> reading = reader.ReadAsync();
                     await reading;
                     while (reading.Result)
                     {
-                        HRBorder modeli = new HRBorder() { wkb_geometry = HRConverterPostGisToNetTopologySuite.ConvertFrom(readerFacade, 0) };
+                        HRBorder modeli = new HRBorder() { WKB_GEOMETRY = HRConverterPostGisToNetTopologySuite.ConvertFrom(readerFacade, 0) };
                         bool columnIsNull = await reader.IsDBNullAsync(1);
                         if (!columnIsNull)
                         {
@@ -154,8 +148,8 @@ namespace HRCoreBordersRepository
                         {
                             modeli.POP2005 = await reader.GetFieldValueAsync<int>(7);
                         }
-                        modeli.REGION = "Non convertie (int au lieuy de String)";// await reader.GetFieldValueAsync<String>(8);
-                        modeli.SUBREGION = "Non convertie (int au lieuy de String)";// await reader.GetFieldValueAsync<String>(9);
+                        modeli.REGION = "Not converted";
+                        modeli.SUBREGION = "Not converted";
                         columnIsNull = await reader.IsDBNullAsync(10);
                         if (!columnIsNull)
                         {
@@ -173,16 +167,26 @@ namespace HRCoreBordersRepository
             }
             return retour;
         }
+#pragma warning restore 0169
 
         /// <summary>
         /// Generate SQLQuery with WHERE clause if necessary on borderID.
         /// </summary>
+        /// <param name="isforDapper">true if the query has to be run by Dapper.</param>
         /// <param name="borderID">borderID</param>
         /// <returns>SQLQuery to be run</returns>
-        public string GetSQLQuery(String borderID = null)
+        public string GetSQLQuery(bool isforDapper, String borderID = null)
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append(SQLQUERY);
+            if(isforDapper)
+            {
+                sb.Append(SQLQUERYFORDAPPER);
+            }
+            else
+            {
+                sb.Append(SQLQUERY);
+            }
+           
             if (borderID != null)
             {
                 sb.Append("WHERE FIPS = '");

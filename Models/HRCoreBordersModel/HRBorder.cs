@@ -11,14 +11,14 @@ namespace HRCoreBordersModel
         /// </summary>
         private String wkt_geom = null; 
         [JsonIgnore]
-        public Geometry wkb_geometry { get; set; }
+        public Geometry WKB_GEOMETRY { get; set; }
         public String WKT_GEOMETRY
         {
             get
             {
-                if (wkb_geometry != null)
+                if (WKB_GEOMETRY != null)
                 {
-                    return wkb_geometry.ToText();
+                    return WKB_GEOMETRY.ToText();
                 }
                 else if(wkt_geom != null)
                 {

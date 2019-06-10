@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace HRCoreCountriesRepository
 {
     /// <summary>
-    /// It's not possible at this day to use Dapper on this MongoDB Driver.
+    /// It's not possible so far to use Dapper on this MongoDB Driver.
     /// </summary>
     public class MongoDBCountriesRepository : ICountriesRepository
     {
@@ -31,44 +31,46 @@ namespace HRCoreCountriesRepository
         }
         /// <summary>
         /// 1- Get collection of Countries from Mongo
-        /// If collection is valid
-        ///     1.2- Create an Empty Filter to get All Countries
-        ///     1.3- Create Task of Find
-        ///         1.3.1- Await task end
-        ///         1.3.2- Return Enumerable
-        /// Else
-        ///     Throw Code 101 Exception
-        ///  Rethrow all others exceptions.
+        ///     1.1- If collection is valid
+        ///         1.1.2- Create an Empty Filter to get All Countries and create the corresponding task
+        ///         1.1.3- await task result and if Result is not null return :
+        ///             1.1.3.1 - Full result if objectID nt supplied
+        ///             1.1.3.2 - A collection with the single element queried. Algorithm has to be improve in next
+        ///             iteration (Link, Filter MongoDB ..)
+        ///     1.2- Else
+        ///         Throw Code InvalidOperationException
+        /// 2- Return null result if previous algorithm does not throw any exception and does not return any result.
         /// </summary>
-        /// <returns>return all countries or throw Exceptions :
-        ///     Code 101 if collection cannot be retrieved
+        /// <returns>return all countries (a collection with single element if if exists and is supplied)
+        /// or throw Exceptions :
+        ///     InvalidOperationException if collection cannot be retrieved
+        ///     ArgumentOutOfRangeException if objectID supplied can not be converted in MongoDB ID
         ///     System Exception as is if any other exception is thrown.
         /// </returns>
         public async Task<IEnumerable<HRCountry>> GetCountriesAsync(String id = null)
         {
+            //1-
             try
             {
-                //1-
-
                 IMongoCollection<HRCountry> collection = GetCountriesCollection();
+                //1.1-
                 if (collection != null)
                 {
-                    //1.2-
+                    //1.1.2-
                     FilterDefinitionBuilder<HRCountry> bld = new FilterDefinitionBuilder<HRCountry>();
-                    //1.3-
                     using (Task<IAsyncCursor<HRCountry>> retourTask = collection.FindAsync(bld.Empty))
                     {
-                        //1.3.1-
+                        //1.1.3-
                         await retourTask;
-                        //1.3.2-
-                        //No do proper filter on MongoDB
                         if (retourTask.Result != null)
                         {
+                            //1.1.3.1-
                             if (String.IsNullOrEmpty(id))
                             {
                                 //Force to list to avoid return asyn enum that can be enumerate only once.
                                 return retourTask.Result.ToList();
                             }
+                            //1.1.3.2-
                             else
                             {
                                 List<HRCountry> fullCountries = retourTask.Result.ToList();
@@ -87,27 +89,24 @@ namespace HRCoreCountriesRepository
                                 }
                                 catch (Exception)
                                 {
-                                    //Could not proceed this id as Hexadecimal
-                                    return null;
+                                    throw new ArgumentOutOfRangeException();
                                 }
-
                             }
                         }
                     }
                 }
-                //2-
+                //1.2-
                 else
                 {
-                    throw new Exception("Collection not found.");
+                    throw new InvalidOperationException("Collection not found.");
                 }
-
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                //Log
-                Console.WriteLine(ex.Message);
+                //Log pattern to apply.
                 throw;
             }
+            //2-
             return null;
         }
         /// <summary>
