@@ -1,7 +1,9 @@
 ﻿namespace HRCommonModel
 {
     /// <summary>
-    /// Input parameter to query a Pagination
+    /// Input parameter to query a Pagination.
+    /// Prefered custom one to top, skip, count standard.
+    /// In superior version a proxy can be done over this object with the classical top, skip, count server pagination.
     /// </summary>
     public class PagingParameterInModel
     {
