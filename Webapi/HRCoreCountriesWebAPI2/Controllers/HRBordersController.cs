@@ -1,4 +1,5 @@
 ﻿using HRCommonModel;
+using HRCommonModels;
 using HRCommonTools;
 using HRCommonTools.Interace;
 using HRCoreBordersModel;
@@ -12,7 +13,8 @@ using System.Threading.Tasks;
 
 namespace HRCoreCountriesWebAPI2.Controllers
 {
-    [Route("api/[controller]")]
+    [Produces("application/json")]
+    [Route("api/v1.0/[controller]")]
     [ApiController]
     public class HRBordersController : ControllerBase
     {
@@ -118,14 +120,16 @@ namespace HRCoreCountriesWebAPI2.Controllers
         /// Get by PagingInParameter based on GetFromPaging method
         /// </summary>
         /// <param name="pageModel">The PagingInParameter. Can be null (will be set to server Default)</param>
+        /// <param name="orderBy">The ordering param. Retrun a status 400 bad request is underlying services don't know how to order. Can be null.</param>
         /// <returns>The HRBorders corresponding to pageModel parameter. Can throw MemberAccessException if any service is not consistant.</returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status416RequestedRangeNotSatisfiable)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<PagingParameterOutModel<HRBorder>>> Get([FromQuery] PagingParameterInModel pageModel)
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<PagingParameterOutModel<HRBorder>>> Get([FromQuery] PagingParameterInModel pageModel, [FromQuery]  HRSortingParamModel orderBy)
         {
-            Task<(int, PagingParameterOutModel<HRBorder>)> result = GetFromPaging(pageModel);
+            Task<(int, PagingParameterOutModel<HRBorder>)> result = GetFromPaging(pageModel, orderBy);
             await result;
             if (result.Result.Item2 != null)
             {
@@ -142,13 +146,31 @@ namespace HRCoreCountriesWebAPI2.Controllers
         /// 1- Process PagingInParameter if not supplied
         /// 2- Get the HRBorders from service
         /// 3- Paginate previous result
+        /// !Strange we have to âss from query even for an "internal" method ... to untderstand.
         /// </summary>
         /// <param name="pageModel">The Paging Model</param>
         /// <returns>(http Status Code, PagingParameterOutModel)</returns>
-        public async Task<(int, PagingParameterOutModel<HRBorder>)> GetFromPaging([FromQuery] PagingParameterInModel pageModel)
+        public async Task<(int, PagingParameterOutModel<HRBorder>)> GetFromPaging([FromQuery] PagingParameterInModel pageModel, [FromQuery]  HRSortingParamModel orderBy)
         {
             if (_borderService != null && _paginer != null)
             {
+                if(orderBy != null)
+                {
+                    if (!_borderService.IsSortable())
+                    {
+                        return (StatusCodes.Status400BadRequest, null);
+                    }
+                    try
+                    {
+                        HRSortingParamModelDeserializer.GetFieldOrders(orderBy);
+                    }
+                    catch(Exception)
+                    {
+                        //!Trouve mieux pour valider...
+                        return (StatusCodes.Status400BadRequest, null);
+
+                    }
+                }
                 //1-
                 if (pageModel == null)
                 {
@@ -157,18 +179,11 @@ namespace HRCoreCountriesWebAPI2.Controllers
                 try
                 {
                     //2-
-                    Task<IEnumerable<HRBorder>> bordersAction = _borderService.GetBordersAsync();
+                    Task<PagingParameterOutModel<HRBorder>> bordersAction = _borderService.GetBordersAsync(pageModel, orderBy);
                     await bordersAction;
                     //3-
-                    if (!_paginer.IsValid(pageModel, bordersAction.Result))
-                    {
-                        return (StatusCodes.Status416RequestedRangeNotSatisfiable, null);
-                    }
-                    else
-                    {
-                        PagingParameterOutModel<HRBorder> retour = _paginer.GetPagination(pageModel, bordersAction.Result, _maxPageSize);
-                        return (StatusCodes.Status200OK, retour);
-                    }
+                    return (StatusCodes.Status200OK, bordersAction.Result);
+
                 }
                 catch (Exception)
                 {

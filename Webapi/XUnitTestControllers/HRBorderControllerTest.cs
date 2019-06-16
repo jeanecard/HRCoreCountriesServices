@@ -102,7 +102,7 @@ namespace XUnitTestControllers
             CoreBordersServiceStub service = new CoreBordersServiceStub(list);
             HRBordersController ctrl = new HRBordersController(new HRPaginer<HRBorder>(), null, service);
             PagingParameterInModel invalidModel = new PagingParameterInModel() { PageNumber = 2, PageSize = 100 };
-            Task<(int, PagingParameterOutModel<HRBorder>)> resultService = ctrl.GetFromPaging(invalidModel);
+            Task<(int, PagingParameterOutModel<HRBorder>)> resultService = ctrl.GetFromPaging(invalidModel, null);
             await resultService;
             Assert.True(resultService.Result.Item1 == StatusCodes.Status416RequestedRangeNotSatisfiable);
             Assert.True(resultService.Result.Item2 == null);
@@ -119,7 +119,7 @@ namespace XUnitTestControllers
             CoreBordersServiceStub service = new CoreBordersServiceStub(list) { ThrowException = true };          
             HRBordersController ctrl = new HRBordersController(new HRPaginer<HRBorder>(), null, service);
             PagingParameterInModel validModel = new PagingParameterInModel() { PageNumber = 0, PageSize = 50 };
-            Task<(int, PagingParameterOutModel<HRBorder>)> resultService = ctrl.GetFromPaging(validModel);
+            Task<(int, PagingParameterOutModel<HRBorder>)> resultService = ctrl.GetFromPaging(validModel, null);
             await resultService;
             Assert.True(resultService.Result.Item1 == StatusCodes.Status500InternalServerError);
             Assert.True(resultService.Result.Item2 == null);
@@ -139,7 +139,7 @@ namespace XUnitTestControllers
             CoreBordersServiceStub service = new CoreBordersServiceStub(list);
             HRBordersController ctrl = new HRBordersController(new HRPaginer<HRBorder>(), null, service);
             PagingParameterInModel validModel = new PagingParameterInModel() { PageNumber = 1, PageSize = 100 };
-            Task<(int, PagingParameterOutModel<HRBorder>)> resultService = ctrl.GetFromPaging(validModel);
+            Task<(int, PagingParameterOutModel<HRBorder>)> resultService = ctrl.GetFromPaging(validModel, null);
             await resultService;
             Assert.True(resultService.Result.Item1 == StatusCodes.Status200OK);
             Assert.True(resultService.Result.Item2 != null);
@@ -168,7 +168,7 @@ namespace XUnitTestControllers
             CoreBordersServiceStub service = new CoreBordersServiceStub(list);
             HRBordersController ctrl = new HRBordersController(new HRPaginer<HRBorder>(), null, service);
             PagingParameterInModel validModel = new PagingParameterInModel() { PageNumber = 1, PageSize = 100 };
-            Task<ActionResult<PagingParameterOutModel<HRBorder>>> resultService = ctrl.Get(validModel);
+            Task<ActionResult<PagingParameterOutModel<HRBorder>>> resultService = ctrl.Get(validModel, null);
             await resultService;
             Assert.True(resultService.Result.Value != null);
             Assert.True(resultService.Result.Value.HasNextPage);

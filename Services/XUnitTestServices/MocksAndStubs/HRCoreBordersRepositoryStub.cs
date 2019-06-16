@@ -1,4 +1,5 @@
-﻿using HRCoreBordersModel;
+﻿using HRCommonModels;
+using HRCoreBordersModel;
 using HRCoreBordersRepository.Interface;
 using System;
 using System.Collections.Generic;
@@ -44,6 +45,16 @@ namespace XUnitTestServices.MocksAndStubs
             {
                 return _borders;
             }
+        }
+
+        public Task<IEnumerable<HRBorder>> GetBordersAsync(HRSortingParamModel orderBy)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsSortable()
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -110,15 +110,9 @@ namespace ConsoleTools
             Console.ReadKey();
         }
 
-        private static async void ConnectToPostGis2()
+        private static void ConnectToPostGis2()
         {
-            HRCoreBordersService _borderService = new HRCoreBordersService(new CoreBordersRepository(null));
-            Task<IEnumerable<HRBorder>> bordersAction = _borderService.GetBordersAsync();
-            await bordersAction;
-            IEnumerable<HRBorder> t = bordersAction.Result;
-
             Console.ReadKey();
-
         }
     }
 }

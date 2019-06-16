@@ -1,4 +1,6 @@
-﻿using HRCoreBordersModel;
+﻿using HRCommonModel;
+using HRCommonModels;
+using HRCoreBordersModel;
 using HRCoreBordersServices;
 using System;
 using System.Collections.Generic;
@@ -34,6 +36,16 @@ namespace XUnitTestControllers
             {
                 return _list;
             }
+        }
+
+        public bool IsSortable()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<PagingParameterOutModel<HRBorder>> GetBordersAsync(PagingParameterInModel pageModel, HRSortingParamModel orderBy)
+        {
+            throw new NotImplementedException();
         }
 
         public CoreBordersServiceStub(List<String> bordersID)
