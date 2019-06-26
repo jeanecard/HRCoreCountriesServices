@@ -25,7 +25,7 @@ namespace XUnitTestHRTools
         [Fact]
         public void HRDeserializerGetFieldOrdersWitSortingParamsQueryEmptyExpectEmptyList()
         {
-            IEnumerable<(String, String)> retour = HRSortingParamModelDeserializer.GetFieldOrders(new HRSortingParamModel() {SortingParamsQuery = String.Empty });
+            IEnumerable<(String, String)> retour = HRSortingParamModelDeserializer.GetFieldOrders(new HRSortingParamModel() { OrderBy = String.Empty });
             Assert.NotNull(retour);
             Assert.NotNull(retour.GetEnumerator());
             Assert.False(retour.GetEnumerator().MoveNext());
@@ -40,7 +40,7 @@ namespace XUnitTestHRTools
             bool catched = false;
             try
             {
-                HRSortingParamModelDeserializer.GetFieldOrders(new HRSortingParamModel() { SortingParamsQuery = query });
+                HRSortingParamModelDeserializer.GetFieldOrders(new HRSortingParamModel() { OrderBy = query });
             }
             catch(ArgumentOutOfRangeException)
             {
@@ -62,7 +62,7 @@ namespace XUnitTestHRTools
             bool catched = false;
             try
             {
-                HRSortingParamModelDeserializer.GetFieldOrders(new HRSortingParamModel() { SortingParamsQuery = query });
+                HRSortingParamModelDeserializer.GetFieldOrders(new HRSortingParamModel() { OrderBy = query });
             }
             catch (ArgumentOutOfRangeException)
             {
@@ -85,7 +85,7 @@ namespace XUnitTestHRTools
             bool catched = false;
             try
             {
-                HRSortingParamModelDeserializer.GetFieldOrders(new HRSortingParamModel() { SortingParamsQuery = query });
+                HRSortingParamModelDeserializer.GetFieldOrders(new HRSortingParamModel() { OrderBy = query });
             }
             catch (ArgumentOutOfRangeException)
             {
@@ -104,7 +104,7 @@ namespace XUnitTestHRTools
         public void HRDeserializerGetFieldOrdersWitSortingParamsQueryWithLowerCaseOrderingArgumentExpectReturnOK()
         {
             String query = "FIELD1;AsC;FIELD2;DeSc";
-            IEnumerable<(String, String)> result = HRSortingParamModelDeserializer.GetFieldOrders(new HRSortingParamModel() { SortingParamsQuery = query });
+            IEnumerable<(String, String)> result = HRSortingParamModelDeserializer.GetFieldOrders(new HRSortingParamModel() { OrderBy = query });
             List<(String, String)> list = new List<(string, string)>(result);
             Assert.NotNull(list);
             Assert.True(list.Count == 2);
@@ -120,7 +120,7 @@ namespace XUnitTestHRTools
         public void HRDeserializerGetFieldOrdersWith3FieldsAnd3OrdersCompliantExpectReturnOK()
         {
             String query = "FIELD1;AsC;FIELD2;DeSc;FIELD3;DESC";
-            IEnumerable<(String, String)> result = HRSortingParamModelDeserializer.GetFieldOrders(new HRSortingParamModel() { SortingParamsQuery = query });
+            IEnumerable<(String, String)> result = HRSortingParamModelDeserializer.GetFieldOrders(new HRSortingParamModel() { OrderBy = query });
             List<(String, String)> list = new List<(string, string)>(result);
             Assert.NotNull(list);
             Assert.True(list.Count == 3);
@@ -138,7 +138,7 @@ namespace XUnitTestHRTools
         public void HRDeserializerGetFieldOrdersWith1FieldAnd1OrderCompliantExpectReturnOK()
         {
             String query = "FIELD1;AsC";
-            IEnumerable<(String, String)> result = HRSortingParamModelDeserializer.GetFieldOrders(new HRSortingParamModel() { SortingParamsQuery = query });
+            IEnumerable<(String, String)> result = HRSortingParamModelDeserializer.GetFieldOrders(new HRSortingParamModel() { OrderBy = query });
             List<(String, String)> list = new List<(string, string)>(result);
             Assert.NotNull(list);
             Assert.True(list.Count == 1);

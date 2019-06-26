@@ -25,7 +25,7 @@ namespace XUnitTest_Pagination
             PagingParameterInModel model = new PagingParameterInModel();
             model.PageSize = 80;
             model.PageNumber = 1;
-            PagingParameterOutModel<String> result = paginer.GetPagination(model, CreateItems(200), 30);
+            PagingParameterOutModel<String> result = paginer.GetPaginationFromFullList(model, CreateItems(200), 30);
             Assert.NotNull(result);
             Assert.True(result.HasNextPage);
             Assert.True(result.HasPreviousPage);
@@ -54,7 +54,7 @@ namespace XUnitTest_Pagination
             model.PageNumber = 0;
             model.PageSize = 20;
             List<String> paginerItems = new List<String>();
-            PagingParameterOutModel<String> retour = paginer.GetPagination(model, paginerItems);
+            PagingParameterOutModel<String> retour = paginer.GetPaginationFromFullList(model, paginerItems);
 
             Assert.NotNull(retour);
             Assert.True(retour.TotalItemsCount == 0);
@@ -79,13 +79,13 @@ namespace XUnitTest_Pagination
             PagingParameterInModel model = new PagingParameterInModel();
             model.PageNumber = 0;
             model.PageSize = 20;
-            Assert.Throws<ArgumentNullException>(() => paginer.GetPagination(model, null));
+            Assert.Throws<ArgumentNullException>(() => paginer.GetPaginationFromFullList(model, null));
         }
         [Fact]
         public void PaginateNullPaginationInThrowArgumentsNullException()
         {
             HRPaginer<String> paginer = new HRPaginer<String>();
-            Assert.Throws<ArgumentNullException>(() => paginer.GetPagination(null, PaginationTest.CreateItems(50)));
+            Assert.Throws<ArgumentNullException>(() => paginer.GetPaginationFromFullList(null, PaginationTest.CreateItems(50)));
 
         }
         [Fact]
@@ -95,7 +95,7 @@ namespace XUnitTest_Pagination
             PagingParameterInModel model = new PagingParameterInModel();
             model.PageNumber = 0;
             model.PageSize = 0;
-            Assert.Throws<InvalidOperationException>(() => paginer.GetPagination(model, CreateItems(50)));
+            Assert.Throws<InvalidOperationException>(() => paginer.GetPaginationFromFullList(model, CreateItems(50)));
 
         }
         [Fact]
@@ -105,7 +105,7 @@ namespace XUnitTest_Pagination
             PagingParameterInModel model = new PagingParameterInModel();
             model.PageNumber = 5;
             model.PageSize = 100;
-            Assert.Throws<Exception>(() => paginer.GetPagination(model, CreateItems(50)));
+            Assert.Throws<Exception>(() => paginer.GetPaginationFromFullList(model, CreateItems(50)));
         }
         //PARTIE IS VALID
         [Fact]
@@ -193,7 +193,7 @@ namespace XUnitTest_Pagination
             PagingParameterInModel model = new PagingParameterInModel();
             model.PageSize = 50;
             model.PageNumber = 0;
-            PagingParameterOutModel<String> result = paginer.GetPagination(model, CreateItems(49));
+            PagingParameterOutModel<String> result = paginer.GetPaginationFromFullList(model, CreateItems(49));
             Assert.NotNull(result);
             Assert.False(result.HasNextPage);
             Assert.False(result.HasPreviousPage);
@@ -220,7 +220,7 @@ namespace XUnitTest_Pagination
             PagingParameterInModel model = new PagingParameterInModel();
             model.PageSize = 50;
             model.PageNumber = 0;
-            PagingParameterOutModel<String> result = paginer.GetPagination(model, CreateItems(200));
+            PagingParameterOutModel<String> result = paginer.GetPaginationFromFullList(model, CreateItems(200));
             Assert.NotNull(result);
             Assert.True(result.HasNextPage);
             Assert.False(result.HasPreviousPage);
@@ -246,7 +246,7 @@ namespace XUnitTest_Pagination
             PagingParameterInModel model = new PagingParameterInModel();
             model.PageSize = 50;
             model.PageNumber = 1;
-            PagingParameterOutModel<String> result = paginer.GetPagination(model, CreateItems(200));
+            PagingParameterOutModel<String> result = paginer.GetPaginationFromFullList(model, CreateItems(200));
             Assert.NotNull(result);
             Assert.True(result.HasNextPage);
             Assert.True(result.HasPreviousPage);
@@ -272,7 +272,7 @@ namespace XUnitTest_Pagination
             PagingParameterInModel model = new PagingParameterInModel();
             model.PageSize = 50;
             model.PageNumber = 4;
-            PagingParameterOutModel<String> result = paginer.GetPagination(model, CreateItems(210));
+            PagingParameterOutModel<String> result = paginer.GetPaginationFromFullList(model, CreateItems(210));
             Assert.NotNull(result);
             Assert.False(result.HasNextPage);
             Assert.True(result.HasPreviousPage);

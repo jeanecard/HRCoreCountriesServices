@@ -25,10 +25,10 @@ namespace HRCommonTools
         public static IEnumerable<(String, String)> GetFieldOrders(HRSortingParamModel model)
         {
             List<(String, String)> retour = new List<(String, String)>();
-            if (model != null && !String.IsNullOrEmpty( model.SortingParamsQuery))
+            if (model != null && !String.IsNullOrEmpty( model.OrderBy))
             {
                 //1-
-                String[] parsedQuery = model.SortingParamsQuery.Split(_separator);
+                String[] parsedQuery = model.OrderBy.Split(_separator);
                 //1.1-
                 int paramsCount = parsedQuery.Length;
                 if (paramsCount % 2 != 0)
@@ -73,5 +73,36 @@ namespace HRCommonTools
             return retour;
         }
 
+        /// <summary>
+        /// Evaluate validity of model.
+        /// 1- Null models are valid
+        /// 2- Version 1 : Not null models are valid if they can be deserialized without Exception).
+        /// </summary>
+        /// <param name="model">The input model.</param>
+        /// <returns>true if model is valid. Don't throw any exception.</returns>
+        public static bool IsValid(HRSortingParamModel model)
+        {
+            bool retour = false;
+            //1-
+            if(model == null)
+            {
+                retour = true;
+            }
+            else
+            {
+                //2-
+                try
+                {
+                    GetFieldOrders(model);
+                    retour = true;
+
+                }
+                catch (Exception)
+                {
+                    //Dummy.
+                }
+            }
+            return retour;
+        }
     }
 }

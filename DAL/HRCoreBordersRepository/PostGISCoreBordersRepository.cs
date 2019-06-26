@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using HRCommonModel;
 using HRCommonModels;
 using HRCommonTools;
 using HRConverters;
@@ -9,14 +10,13 @@ using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Linq;
-using System.Data.SqlClient;
 
 namespace HRCoreBordersRepository
 {
-    public class CoreBordersRepository : IHRCoreBordersRepository
+    public class PostGISCoreBordersRepository : IHRCoreBordersRepository
     {
         private static readonly String _SQLQUERY = " SELECT wkb_geometry, FIPS, ISO2, ISO3, UN, NAME, AREA, POP2005, REGION, SUBREGION, LON, LAT FROM boundaries ";
         private static readonly String _SQLQUERYFORDAPPER = " SELECT ST_AsText(wkb_geometry) AS WKT_GEOMETRY, FIPS, ISO2, ISO3, UN, NAME, AREA, POP2005, REGION, SUBREGION, LON, LAT FROM boundaries ";
@@ -24,7 +24,10 @@ namespace HRCoreBordersRepository
         private static readonly String _DBUSER = "HRCountries:Username";
         private static readonly String _DBPASSWORD = "HRCountries:Password";
         private static readonly String CONNECTION_STRING_KEY = "BordersConnection";
-        private static readonly Dictionary<String, int> _whiteListOfAvaialbleFields = new Dictionary<String, int>();
+        /// <summary>
+        /// List of field available for ORDER part of SQL Query. Prefered to Reflection for performance reasons.
+        /// </summary>
+        private readonly Dictionary<String, int> _whiteListOfAvaialbleFields = new Dictionary<String, int>();
 
         /// <summary>
         /// SQL Query for manual query
@@ -38,17 +41,21 @@ namespace HRCoreBordersRepository
         /// <summary>
         /// Dummy default constructor. Private for DI.
         /// </summary>
-        private CoreBordersRepository()
+        private PostGISCoreBordersRepository()
         {
             //Dummy.
         }
         /// <summary>
         /// Constructor for DI with Configuration dependency.
+        /// 1- Set Config.
+        /// 2- Add field avalaible for ORDER QUERY.
         /// </summary>
         /// <param name="config"></param>
-        public CoreBordersRepository(IConfiguration config)
+        public PostGISCoreBordersRepository(IConfiguration config)
         {
+            //1-
             _config = config;
+            //2-
             _whiteListOfAvaialbleFields.Add("WKT_GEOMETRY", 1);
             _whiteListOfAvaialbleFields.Add("FIPS", 1);
             _whiteListOfAvaialbleFields.Add("ISO2", 1);
@@ -64,14 +71,28 @@ namespace HRCoreBordersRepository
         }
         /// <summary>
         /// Call the ReaderMethod.
+        /// 1- Get the Result Action
+        /// 2- Return the first element or null.
+        /// TODO UT this please !!
         /// </summary>
-        /// <param name="borderID">an optionnal borderID</param>
+        /// <param name="borderID">the borderID to look for.</param>
         /// <returns>A collection with the Border with the borderID querried or all Borders if borderID is not supplied.</returns>
-        public async Task<IEnumerable<HRBorder>> GetBordersAsync(String borderID)
+        public async Task<HRBorder> GetBorderAsync(String borderID)
         {
-            Task<IEnumerable<HRBorder>> retour = ReadBordersWithDapperAsync(borderID);
-            await retour;
-            return retour.Result;
+            HRBorder retour = null;
+            //1-
+            Task<IEnumerable<HRBorder>> bordersAction = ReadBordersWithDapperAsync(borderID);
+            await bordersAction;
+            if (bordersAction.Result != null)
+            {
+                List<HRBorder> borderList = bordersAction.Result.ToList<HRBorder>();
+                //2-
+                if (borderList != null && borderList.Count > 0)
+                {
+                    retour = borderList.First<HRBorder>();
+                }
+            }
+            return retour;
         }
 
         /// <summary>
@@ -89,7 +110,7 @@ namespace HRCoreBordersRepository
                 conn.Open();
                 try
                 {
-                    Task<IEnumerable<HRBorder>> retour = conn.QueryAsync<HRBorder>(GetSQLQuery(true, borderID,  null));
+                    Task<IEnumerable<HRBorder>> retour = conn.QueryAsync<HRBorder>(GetSQLQuery(true, borderID, null));
                     await retour;
                     return retour.Result;
                 }
@@ -194,8 +215,8 @@ namespace HRCoreBordersRepository
         /// </summary>
         /// <param name="isforDapper">true if the query has to be run by Dapper.</param>
         /// <param name="borderID">borderID</param>
-        /// <returns>SQLQuery to be run or Exception if could not convertt to a propoer SQL query (including revention agains t SQL Injection)</returns>
-        public string GetSQLQuery(bool isforDapper, String borderID = null, HRSortingParamModel orderBy = null)
+        /// <returns>SQLQuery to be run or Exception if could not convert to a propoer SQL query (including revention agains t SQL Injection)</returns>
+        public string GetSQLQuery(bool isforDapper, String borderID = null, HRSortingParamModel orderBy = null, PagingParameterInModel pageInModel = null)
         {
             StringBuilder sb = new StringBuilder();
             if (isforDapper)
@@ -206,17 +227,21 @@ namespace HRCoreBordersRepository
             {
                 sb.Append(SQLQUERY);
             }
-
+            
             if (!String.IsNullOrEmpty(borderID)
                 && borderID.Length == 2)
             {
                 sb.Append("WHERE FIPS = '");
                 //Cheat Code to avoid SQL injection. Indeed pbm with SQL Command and SQLPArameters on GeometryColumn with postgis.
-                sb.Append(borderID.Substring(0,2));
+                sb.Append(borderID.Substring(0, 2));
                 sb.Append("'");
 
             }
-
+            if(pageInModel != null && orderBy == null)
+            {
+                //Set default order by as pagination required order by 
+                orderBy = new HRSortingParamModel() { OrderBy = "FIPS;ASC" };
+            }
             if (orderBy != null)
             {
                 IEnumerable<(String, String)> orders = HRSortingParamModelDeserializer.GetFieldOrders(orderBy);
@@ -249,19 +274,48 @@ namespace HRCoreBordersRepository
                         }
                     }
                 }
+                if (pageInModel != null)
+                {
+                    sb.Append(" LIMIT ");
+                    if (pageInModel.PageSize > 0)
+                    {
+                        sb.Append(pageInModel.PageSize.ToString());
+                    }
+                    else
+                    {
+                        sb.Append("ALL");
+                    }
+                    sb.Append(" OFFSET ");
+                    sb.Append(pageInModel.PageNumber * pageInModel.PageSize);
+                    sb.Append(" ");
+
+                }
             }
-            return sb.ToString(); ;
+           
+            return sb.ToString();
         }
         /// <summary>
-        /// TODO
+        /// Return true as PostGIS/Postgres are sortable.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>true</returns>
         public bool IsSortable()
         {
             return true;
         }
-
-        public async Task<IEnumerable<HRBorder>> GetBordersAsync(HRSortingParamModel orderBy)
+        /// <summary>
+        /// Return true as PostGis can Paginate.
+        /// </summary>
+        /// <returns>Always true</returns>
+        public bool IsPaginable()
+        {
+            return true;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="orderBy"></param>
+        /// <returns></returns>
+        public async Task<IEnumerable<HRBorder>> GetOrderedBordersAsync(HRSortingParamModel orderBy)
         {
             String cxString = _config.GetConnectionString(CONNECTION_STRING_KEY);
             cxString = String.Format(cxString, _config[_DBUSER], _config[_DBPASSWORD]);
@@ -273,6 +327,100 @@ namespace HRCoreBordersRepository
                     Task<IEnumerable<HRBorder>> retour = conn.QueryAsync<HRBorder>(GetSQLQuery(true, null, orderBy));
                     await retour;
                     return retour.Result;
+                }
+                catch (Exception)
+                {
+                    //!log here. 
+                    throw;
+                }
+            }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IEnumerable<HRBorder>> GetFullBordersAsync()
+        {
+            String cxString = _config.GetConnectionString(CONNECTION_STRING_KEY);
+            cxString = String.Format(cxString, _config[_DBUSER], _config[_DBPASSWORD]);
+            using (var conn = new NpgsqlConnection(cxString))
+            {
+                conn.Open();
+                try
+                {
+                    Task<IEnumerable<HRBorder>> retour = conn.QueryAsync<HRBorder>(GetSQLQuery(true, null, null));
+                    await retour;
+                    return retour.Result;
+                }
+                catch (Exception)
+                {
+                    //!log here. 
+                    throw;
+                }
+            }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pageModel"></param>
+        /// <param name="orderBy"></param>
+        /// <returns></returns>
+        public async Task<PagingParameterOutModel<HRBorder>> GetOrderedAndPaginatedBordersAsync(PagingParameterInModel pageModel, HRSortingParamModel orderBy)
+        {
+            String cxString = _config.GetConnectionString(CONNECTION_STRING_KEY);
+            cxString = String.Format(cxString, _config[_DBUSER], _config[_DBPASSWORD]);
+            String queryString = GetSQLQuery(true, null, orderBy, pageModel);
+            using (var conn = new NpgsqlConnection(cxString))
+            {
+                conn.Open();
+                try
+                {
+                    Task<int> totalCountTask = conn.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM boundaries");
+                    await totalCountTask;
+                    int totalItemsCount = totalCountTask.Result;
+                    //!Add a tu on this part
+                    if (pageModel.PageNumber * pageModel.PageSize <= totalItemsCount)
+                    {
+                        Task<IEnumerable<HRBorder>> queryTask = conn.QueryAsync<HRBorder>(queryString);
+                        await queryTask;
+                        PagingParameterOutModel<HRBorder> retour = new PagingParameterOutModel<HRBorder>();
+                        retour.PageItems = queryTask.Result;
+                        retour.PageSize = pageModel.PageSize;
+                        retour.TotalItemsCount = totalItemsCount;
+                        retour.CurrentPage = pageModel.PageNumber;
+                        return retour;
+                    }
+                    else
+                    {
+                        throw new IndexOutOfRangeException("Pagination out of existing range.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    //!log here. 
+                    throw;
+                }
+            }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pageModel"></param>
+        /// <returns></returns>
+        public async  Task<PagingParameterOutModel<HRBorder>> GetPaginatedBordersAsync(PagingParameterInModel pageModel)
+        {
+            String cxString = _config.GetConnectionString(CONNECTION_STRING_KEY);
+            cxString = String.Format(cxString, _config[_DBUSER], _config[_DBPASSWORD]);
+            using (var conn = new NpgsqlConnection(cxString))
+            {
+                conn.Open();
+                try
+                {
+                    Task<IEnumerable<HRBorder>> queryTask = conn.QueryAsync<HRBorder>(GetSQLQuery(true, null, null, pageModel));
+                    await queryTask;
+                    PagingParameterOutModel<HRBorder> retour = new PagingParameterOutModel<HRBorder>();
+
+                    return retour;
                 }
                 catch (Exception)
                 {

@@ -12,10 +12,10 @@ namespace XUnitTestDAL
         [Fact]
         public void GetSQLQueryWithNoIDExpectSelectOnly()
         {
-            CoreBordersRepository repo = new CoreBordersRepository(null);
+            PostGISCoreBordersRepository repo = new PostGISCoreBordersRepository(null);
             String sql = repo.GetSQLQuery(true);
             Assert.NotNull(sql);
-            Assert.Equal(sql, CoreBordersRepository.SQLQUERYFORDAPPER);
+            Assert.Equal(sql, PostGISCoreBordersRepository.SQLQUERYFORDAPPER);
         }
         /// <summary>
         /// Check that SQL query is used as provided more the where clause by the class.
@@ -23,10 +23,10 @@ namespace XUnitTestDAL
         [Fact]
         public void GetSQLQueryWithIDExpectSelectWithWherreClause()
         {
-            CoreBordersRepository repo = new CoreBordersRepository(null);
+            PostGISCoreBordersRepository repo = new PostGISCoreBordersRepository(null);
             String sql = repo.GetSQLQuery(true, "XX");
             Assert.NotNull(sql);
-            Assert.Equal(sql, CoreBordersRepository.SQLQUERYFORDAPPER + "WHERE FIPS = 'XX'");
+            Assert.Equal(sql, PostGISCoreBordersRepository.SQLQUERYFORDAPPER + "WHERE FIPS = 'XX'");
         }
     }
 }

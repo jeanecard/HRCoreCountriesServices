@@ -92,23 +92,7 @@ namespace XUnitTestControllers
         #endregion
 
         #region GetAll
-        /// <summary>
-        /// Test that an invalid PagingIn on GetAll return a http status 416 and a null result.
-        /// </summary>
-        [Fact]
-        public async void HRBorderControllerOnGetAllWithInvalidPagingInExpectStatus416RequestedRangeNotSatisfiable()
-        {
-            List<String> list = new List<String>() { ("XX"), ("YY") };
-            CoreBordersServiceStub service = new CoreBordersServiceStub(list);
-            HRBordersController ctrl = new HRBordersController(new HRPaginer<HRBorder>(), null, service);
-            PagingParameterInModel invalidModel = new PagingParameterInModel() { PageNumber = 2, PageSize = 100 };
-            Task<(int, PagingParameterOutModel<HRBorder>)> resultService = ctrl.GetFromPaging(invalidModel, null);
-            await resultService;
-            Assert.True(resultService.Result.Item1 == StatusCodes.Status416RequestedRangeNotSatisfiable);
-            Assert.True(resultService.Result.Item2 == null);
-
-        }
-
+      
         /// <summary>
         /// Test that a call to GetAll with any exception raised by his service return a 500 http status code and a null result.
         /// </summary>
@@ -143,46 +127,8 @@ namespace XUnitTestControllers
             await resultService;
             Assert.True(resultService.Result.Item1 == StatusCodes.Status200OK);
             Assert.True(resultService.Result.Item2 != null);
-            Assert.True(resultService.Result.Item2.HasNextPage);
-            Assert.True(resultService.Result.Item2.HasPreviousPage);
-            Assert.True(resultService.Result.Item2.TotalItemsCount == 300);
-            int j = 100;
-            foreach (HRBorder iterator in resultService.Result.Item2.PageItems)
-            {
-                Assert.True(iterator.FIPS == j.ToString());
-                j++;
-            }
-            Assert.True(j == 150);
+ 
         }
-        /// <summary>
-        /// Test normal condition Success and partial result returned in the maxlimit pageSize.
-        /// </summary>
-        [Fact]
-        public async void HRBorderControllerOnGetAllWithValidPagingInExpectItemsChunkedTo50MaxPageSize()
-        {
-            List<String> list = new List<String>();
-            for (int i = 0; i < 300; i++)
-            {
-                list.Add(i.ToString());
-            }
-            CoreBordersServiceStub service = new CoreBordersServiceStub(list);
-            HRBordersController ctrl = new HRBordersController(new HRPaginer<HRBorder>(), null, service);
-            PagingParameterInModel validModel = new PagingParameterInModel() { PageNumber = 1, PageSize = 100 };
-            Task<ActionResult<PagingParameterOutModel<HRBorder>>> resultService = ctrl.Get(validModel, null);
-            await resultService;
-            Assert.True(resultService.Result.Value != null);
-            Assert.True(resultService.Result.Value.HasNextPage);
-            Assert.True(resultService.Result.Value.HasPreviousPage);//in first version reset to 0
-            Assert.True(resultService.Result.Value.TotalItemsCount == 300);
-            int j = 100;
-            foreach (HRBorder iterator in resultService.Result.Value.PageItems)
-            {
-                Assert.True(iterator.FIPS == j.ToString());
-                j++;
-            }
-            Assert.True(j == 150);
-        }
-
-        #endregion
+         #endregion
     }
 }

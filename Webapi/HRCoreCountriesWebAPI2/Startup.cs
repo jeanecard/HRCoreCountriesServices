@@ -34,7 +34,7 @@ namespace HRCoreCountriesWebAPI2
             services.AddSingleton<IHRPaginer<HRCountry>>(new HRPaginer<HRCountry>());
 
             services.AddSingleton(Configuration);
-            services.AddSingleton<ICoreBordersService>(new HRCoreBordersService(new CoreBordersRepository(Configuration)));
+            services.AddSingleton<ICoreBordersService>(new HRCoreBordersService(new PostGISCoreBordersRepository(Configuration), new HRPaginer<HRBorder>()));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             // Register the Swagger services
             services.AddSwaggerDocument();

@@ -87,25 +87,21 @@ namespace HRCoreCountriesWebAPI2.Controllers
             //2-
             try
             {
-                Task<IEnumerable<HRBorder>> bordersAction = _borderService.GetBordersAsync(id);
+                Task<HRBorder> bordersAction = _borderService.GetBorderAsync(id);
                 await bordersAction;
                 //3-
-                if (bordersAction.Result != null)
+                HRBorder resultAction = bordersAction.Result;
+                if (resultAction != null)
                 {
-                    IEnumerator<HRBorder> enumerator = bordersAction.Result.GetEnumerator();
-                    if (enumerator.MoveNext())
-                    {
-                        if (enumerator.Current != null
-                            && !String.IsNullOrEmpty(enumerator.Current.FIPS)
-                            && enumerator.Current.FIPS.ToUpper() == id.ToUpper())
+                        if (!String.IsNullOrEmpty(resultAction.FIPS)
+                            && resultAction.FIPS.ToUpper() == id.ToUpper())
                         {
-                            return (StatusCodes.Status200OK, enumerator.Current);
+                            return (StatusCodes.Status200OK, resultAction);
                         }
                         else
                         {
                             return (StatusCodes.Status404NotFound, null);
                         }
-                    }
                 }
                 return (StatusCodes.Status404NotFound, null);
             }
@@ -124,10 +120,12 @@ namespace HRCoreCountriesWebAPI2.Controllers
         /// <returns>The HRBorders corresponding to pageModel parameter. Can throw MemberAccessException if any service is not consistant.</returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status416RequestedRangeNotSatisfiable)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<PagingParameterOutModel<HRBorder>>> Get([FromQuery] PagingParameterInModel pageModel, [FromQuery]  HRSortingParamModel orderBy)
+        [ProducesResponseType(StatusCodes.Status416RequestedRangeNotSatisfiable)]
+        [ProducesResponseType(StatusCodes.Status413PayloadTooLarge)]
+        public async Task<ActionResult<PagingParameterOutModel<HRBorder>>> Get([FromQuery] PagingParameterInModel pageModel, 
+            [FromQuery]  HRSortingParamModel orderBy)
         {
             Task<(int, PagingParameterOutModel<HRBorder>)> result = GetFromPaging(pageModel, orderBy);
             await result;
@@ -160,21 +158,20 @@ namespace HRCoreCountriesWebAPI2.Controllers
                     {
                         return (StatusCodes.Status400BadRequest, null);
                     }
-                    try
+                    else if(!HRSortingParamModelDeserializer.IsValid(orderBy))
                     {
-                        HRSortingParamModelDeserializer.GetFieldOrders(orderBy);
-                    }
-                    catch(Exception)
-                    {
-                        //!Trouve mieux pour valider...
                         return (StatusCodes.Status400BadRequest, null);
-
                     }
                 }
                 //1-
                 if (pageModel == null)
                 {
                     pageModel = GetDefaultPagingInParameter();
+                }
+                //!Add tu on this
+                if(pageModel.PageSize > _maxPageSize)
+                {
+                    return (StatusCodes.Status413PayloadTooLarge, null);
                 }
                 try
                 {
@@ -184,6 +181,11 @@ namespace HRCoreCountriesWebAPI2.Controllers
                     //3-
                     return (StatusCodes.Status200OK, bordersAction.Result);
 
+                }
+                catch(IndexOutOfRangeException)
+                {
+                    //!Add tu on this
+                    return (StatusCodes.Status416RequestedRangeNotSatisfiable, null);
                 }
                 catch (Exception)
                 {

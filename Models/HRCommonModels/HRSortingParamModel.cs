@@ -8,7 +8,7 @@ namespace HRCommonModels
     /// Implements a generic ordering of fields.
     /// The following format is expected : 
     /// FieldName1;ASC or DESC;FieldName2;ASC or DESC
-    /// All parts are mandatory. ASC and DESC are ket insensitive.
+    /// All parts are mandatory. ASC and DESC are key insensitive.
     /// </summary>
     public class HRSortingParamModel
     {
@@ -17,7 +17,13 @@ namespace HRCommonModels
         /// <summary>
         /// 
         /// </summary>
-        public string SortingParamsQuery {
+        public string OrderBy {
+            get => _sortingParamsQuery;
+            set => _sortingParamsQuery = value;
+        }
+
+        public String SortingParamsQuery
+        {
             get => _sortingParamsQuery;
             set => _sortingParamsQuery = value;
         }

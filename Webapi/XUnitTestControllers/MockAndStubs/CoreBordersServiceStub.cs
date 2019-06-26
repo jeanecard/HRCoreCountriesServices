@@ -12,7 +12,7 @@ namespace XUnitTestControllers
     {
         private readonly List<HRBorder> _list = new List<HRBorder>();
         public bool ThrowException = false;
-        public async Task<IEnumerable<HRBorder>> GetBordersAsync(string borderID = null)
+        public async Task<HRBorder> GetBorderAsync(string borderID)
         {
             await Task.Delay(1);
             if (ThrowException)
@@ -21,21 +21,15 @@ namespace XUnitTestControllers
             }
             if (borderID != null)
             {
-                List<HRBorder> retour = new List<HRBorder>();
                 foreach (HRBorder iterator in _list)
                 {
                     if (iterator.FIPS == borderID)
                     {
-                        retour.Add(iterator);
-                        break;
+                        return iterator;
                     }
                 }
-                return retour;
             }
-            else
-            {
-                return _list;
-            }
+            return null;
         }
 
         public bool IsSortable()
@@ -43,10 +37,20 @@ namespace XUnitTestControllers
             throw new NotImplementedException();
         }
 
-        public Task<PagingParameterOutModel<HRBorder>> GetBordersAsync(PagingParameterInModel pageModel, HRSortingParamModel orderBy)
+        public async Task<PagingParameterOutModel<HRBorder>> GetBordersAsync(PagingParameterInModel pageModel, HRSortingParamModel orderBy)
         {
-            throw new NotImplementedException();
+            await Task.Delay(1);
+            if (ThrowException)
+            {
+                throw new Exception("");
+            }
+            PagingParameterOutModel<HRBorder> retour = new PagingParameterOutModel<HRBorder>();
+            retour.PageItems = _list;
+            retour.TotalItemsCount = _list.Count;
+            retour.PageSize = pageModel.PageSize;
+            return retour;
         }
+
 
         public CoreBordersServiceStub(List<String> bordersID)
         {

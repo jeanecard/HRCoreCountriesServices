@@ -10,7 +10,7 @@ namespace HRCoreBordersServices
     public interface ICoreBordersService
     {
         bool IsSortable();
-        Task<IEnumerable<HRBorder>> GetBordersAsync(String borderID);
+        Task<HRBorder> GetBorderAsync(String borderID);
         Task<PagingParameterOutModel<HRBorder>> GetBordersAsync(PagingParameterInModel pageModel,  HRSortingParamModel orderBy);
 
         

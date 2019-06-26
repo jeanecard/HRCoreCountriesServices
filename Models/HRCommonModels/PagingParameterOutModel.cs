@@ -9,9 +9,8 @@ namespace HRCommonModel
     public class PagingParameterOutModel<T>
     {
         private int _totalItemsCount = 0;
-        private int _pageSize = 1;
-        private int _currentPage = 1;
-        private int _totalPages = 1;
+        private ushort _pageSize = 1;
+        private ushort _currentPage = 1;
         private IEnumerable<T> _pageItems = null;
         /// <summary>
         /// Total items count in the query
@@ -20,15 +19,28 @@ namespace HRCommonModel
         /// <summary>
         /// Max Number of items in a page
         /// </summary>
-        public int PageSize { get => _pageSize; set => _pageSize = value; }
+        public ushort PageSize { get => _pageSize; set => _pageSize = value; }
         /// <summary>
         /// The index (0 based) of the current page
         /// </summary>
-        public int CurrentPage { get => _currentPage; set => _currentPage = value; }
+        public ushort CurrentPage { get => _currentPage; set => _currentPage = value; }
         /// <summary>
         /// The number of Page in the query
         /// </summary>
-        public int TotalPages { get => _totalPages; set => _totalPages = value; }
+        public int TotalPages
+        {
+            get
+            {
+                if (_pageSize > 0)
+                {
+                    return (_totalItemsCount / _pageSize) + 1;
+                }
+                else
+                {
+                    return 1;
+                }
+            }
+        }
         /// <summary>
         /// Return true if current page has a previous page
         /// </summary>

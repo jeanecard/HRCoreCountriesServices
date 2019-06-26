@@ -150,7 +150,7 @@ namespace HRCoreCountriesWebAPI2.Controllers
                     }
                     else
                     {
-                        return (StatusCodes.Status200OK, _paginer.GetPagination(pageModel, serviceAction.Result, _maxPageSize));
+                        return (StatusCodes.Status200OK, _paginer.GetPaginationFromFullList(pageModel, serviceAction.Result, _maxPageSize));
                     }
                 }
                 catch (Exception)

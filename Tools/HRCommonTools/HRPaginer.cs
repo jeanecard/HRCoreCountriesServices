@@ -16,7 +16,7 @@ namespace HRCommonTools
         /// <param name="model">The input Model</param>
         /// <param name="items">The full list of items to paginate</param>
         /// <returns>ArgumentNullException if input args are null, Exception if input is Invalid else return the PagingParameterOutModel expected. </returns>
-        public PagingParameterOutModel<T> GetPagination(PagingParameterInModel model, IEnumerable<T> items, ushort maxPageSize = ushort.MaxValue)
+        public PagingParameterOutModel<T> GetPaginationFromFullList(PagingParameterInModel model, IEnumerable<T> items, ushort maxPageSize = ushort.MaxValue)
         {
             if (model == null || items == null)
             {
@@ -35,7 +35,6 @@ namespace HRCommonTools
 
                 retour.TotalItemsCount = itemsCount;
                 retour.PageSize = reworkedPagingIn.PageSize;
-                retour.TotalPages = (itemsCount / reworkedPagingIn.PageSize) + 1;
                 List<T> pageItems = new List<T>();
                 int iterator = 0;
                 int startIndex = reworkedPagingIn.PageSize * (reworkedPagingIn.PageNumber);
