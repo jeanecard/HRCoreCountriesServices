@@ -1,4 +1,6 @@
-﻿using HRCoreCountriesServices;
+﻿using HRCommonModel;
+using HRCommonModels;
+using HRCoreCountriesServices;
 using QuickType;
 using System;
 using System.Collections.Generic;
@@ -35,6 +37,27 @@ namespace XUnitTestControllers
             }
             return _list;
         }
+
+        public Task<HRCountry> GetCountryAsync(string id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<PagingParameterOutModel<HRCountry>> GetCountriesAsync(PagingParameterInModel pageModel, HRSortingParamModel orderBy)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsSortable()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsPaginable()
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Construct a list of HRCountry from ID String list.
         /// </summary>

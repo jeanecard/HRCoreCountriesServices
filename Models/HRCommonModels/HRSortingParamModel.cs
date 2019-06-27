@@ -27,6 +27,14 @@ namespace HRCommonModels
             get => _sortingParamsQuery;
             set => _sortingParamsQuery = value;
         }
+        /// <summary>
+        /// Check if object is not on default state.
+        /// </summary>
+        /// <returns></returns>
+        public bool IsInitialised()
+        {
+            return !String.IsNullOrEmpty(_sortingParamsQuery);
+        }
     }
 }
 

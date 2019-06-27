@@ -22,7 +22,7 @@ namespace XUnitTestControllers
         public async void HRBorderControllerOnGetByIDUnknownExpectStatusCode404()
         {
             List<String> list = new List<String>();
-            HRBordersController ctrl = new HRBordersController(new HRPaginer<HRBorder>(), null, new CoreBordersServiceStub(list));
+            HRBordersController ctrl = new HRBordersController( null, new CoreBordersServiceStub(list));
             Task<(int, HRBorder)> resultService = ctrl.GetFromID("XX");
             await resultService;
             Assert.True(resultService.Result.Item1 == StatusCodes.Status404NotFound);
@@ -37,7 +37,7 @@ namespace XUnitTestControllers
         public async void HRBorderControllerOnGetByIDNullExpectStatus400BadRequest()
         {
             List<String> list = new List<String>();
-            HRBordersController ctrl = new HRBordersController(new HRPaginer<HRBorder>(), null, new CoreBordersServiceStub(list));
+            HRBordersController ctrl = new HRBordersController(null, new CoreBordersServiceStub(list));
             Task<(int, HRBorder)> resultService = ctrl.GetFromID(null);
             await resultService;
             Assert.True(resultService.Result.Item1 == StatusCodes.Status400BadRequest);
@@ -51,7 +51,7 @@ namespace XUnitTestControllers
         [Fact]
         public async void HRBorderControllerOnGetByIDWithNullServiceExpectStatus500InternalServerError()
         {
-            HRBordersController ctrl = new HRBordersController(new HRPaginer<HRBorder>(), null, null);
+            HRBordersController ctrl = new HRBordersController( null, null);
             Task<(int, HRBorder)> resultService = ctrl.GetFromID("XX");
             await resultService;
             Assert.True(resultService.Result.Item1 == StatusCodes.Status500InternalServerError);
@@ -67,7 +67,7 @@ namespace XUnitTestControllers
         {
             List<String> list = new List<String>() { ("XX") };
             CoreBordersServiceStub service = new CoreBordersServiceStub(list) { ThrowException = true }; 
-            HRBordersController ctrl = new HRBordersController(new HRPaginer<HRBorder>(), null, service);
+            HRBordersController ctrl = new HRBordersController(null, service);
             Task<(int, HRBorder)> resultService = ctrl.GetFromID("XX");
             await resultService;
             Assert.True(resultService.Result.Item1 == StatusCodes.Status500InternalServerError);
@@ -83,7 +83,7 @@ namespace XUnitTestControllers
         {
             List<String> list = new List<String>() { ("XX"), ("YY") };
             CoreBordersServiceStub service = new CoreBordersServiceStub(list);
-            HRBordersController ctrl = new HRBordersController(new HRPaginer<HRBorder>(), null, service);
+            HRBordersController ctrl = new HRBordersController(null, service);
             Task<(int, HRBorder)> resultService = ctrl.GetFromID("XX");
             await resultService;
             Assert.True(resultService.Result.Item1 == StatusCodes.Status200OK);
@@ -101,7 +101,7 @@ namespace XUnitTestControllers
         {
             List<String> list = new List<String>() { ("XX"), ("YY") };
             CoreBordersServiceStub service = new CoreBordersServiceStub(list) { ThrowException = true };          
-            HRBordersController ctrl = new HRBordersController(new HRPaginer<HRBorder>(), null, service);
+            HRBordersController ctrl = new HRBordersController(null, service);
             PagingParameterInModel validModel = new PagingParameterInModel() { PageNumber = 0, PageSize = 50 };
             Task<(int, PagingParameterOutModel<HRBorder>)> resultService = ctrl.GetFromPaging(validModel, null);
             await resultService;
@@ -121,7 +121,7 @@ namespace XUnitTestControllers
                 list.Add(i.ToString());
             }
             CoreBordersServiceStub service = new CoreBordersServiceStub(list);
-            HRBordersController ctrl = new HRBordersController(new HRPaginer<HRBorder>(), null, service);
+            HRBordersController ctrl = new HRBordersController(null, service);
             PagingParameterInModel validModel = new PagingParameterInModel() { PageNumber = 1, PageSize = 100 };
             Task<(int, PagingParameterOutModel<HRBorder>)> resultService = ctrl.GetFromPaging(validModel, null);
             await resultService;

@@ -1,3 +1,5 @@
+using HRCommonModel;
+using HRCommonModels;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
 using QuickType;
@@ -58,6 +60,7 @@ namespace HRCoreCountriesRepository
                 {
                     //1.1.2-
                     FilterDefinitionBuilder<HRCountry> bld = new FilterDefinitionBuilder<HRCountry>();
+                    
                     using (Task<IAsyncCursor<HRCountry>> retourTask = collection.FindAsync(bld.Empty))
                     {
                         //1.1.3-
@@ -142,6 +145,144 @@ namespace HRCoreCountriesRepository
                 }
             }
             return retour;
+        }
+        /// <summary>
+        /// Pick a country in collection by his ID (ALPHA 2 or 3 Code).
+        /// </summary>
+        /// <param name="id">The searched ID (Alpha2 or Alpha3)</param>
+        /// <returns>The corrresponding HRCountry or null if not found. Can throw the following exception :
+        /// </returns>
+        public async Task<HRCountry> GetCountryAsync(string id)
+        {
+            if(String.IsNullOrEmpty(id))
+            {
+                return null;
+            }
+            try
+            {
+                String idToSearch = id.ToUpper();
+                IMongoCollection<HRCountry> collection = GetCountriesCollection();
+                if (collection != null)
+                {
+                    FilterDefinitionBuilder<HRCountry> bld = new FilterDefinitionBuilder<HRCountry>();
+                    using (Task<IAsyncCursor<HRCountry>> retourTask = collection.FindAsync(bld.Where(country => 
+                    ((!String.IsNullOrEmpty(country.Alpha2Code)) && (country.Alpha2Code == idToSearch)) 
+                    || 
+                    ( (!String.IsNullOrEmpty(country.Alpha3Code)) && (country.Alpha3Code == idToSearch)) )))
+                    {
+                        //1.1.3-
+                        await retourTask;
+                        if (retourTask.Result != null)
+                        {
+                            return retourTask.Result.FirstOrDefault();
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                //Log pattern to apply.
+                throw;
+            }
+            //2-
+            return null;
+        }
+        /// <summary>
+        /// Not implemented in Version 1.
+        /// </summary>
+        /// <param name="orderBy"></param>
+        /// <returns></returns>
+        public Task<IEnumerable<HRCountry>> GetOrderedCountriessAsync(HRSortingParamModel orderBy)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// TODO : Comments.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IEnumerable<HRCountry>> GetFullCountriesAsync()
+        {
+            //1-
+            try
+            {
+                IMongoCollection<HRCountry> collection = GetCountriesCollection();
+                //1.1-
+                if (collection != null)
+                {
+                    //1.1.2-
+                    FilterDefinitionBuilder<HRCountry> bld = new FilterDefinitionBuilder<HRCountry>();
+                    using (Task<IAsyncCursor<HRCountry>> retourTask = collection.FindAsync(bld.Empty))
+                    {
+                        //1.1.3-
+                        await retourTask;
+                        if (retourTask.Result != null)
+                        {
+                            //Force to list to avoid return asyn enum that can be enumerate only once.
+                            return retourTask.Result.ToList();
+                        }
+                    }
+                }
+                else
+                {
+                    throw new InvalidOperationException("Collection not found.");
+                }
+            }
+            catch (Exception)
+            {
+                //Log pattern to apply.
+                throw;
+            }
+            //2-
+            return null;
+        }
+
+        /// <summary>
+        /// Not implemented in version 1.
+        /// </summary>
+        /// <param name="pageModel"></param>
+        /// <param name="orderBy"></param>
+        /// <returns></returns>
+        public Task<PagingParameterOutModel<HRCountry>> GetOrderedAndPaginatedCountriesAsync(PagingParameterInModel pageModel, HRSortingParamModel orderBy)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Not implemented in version 1.
+        /// </summary>
+        /// <param name="pageModel"></param>
+        /// <returns></returns>
+        public Task<PagingParameterOutModel<HRCountry>> GetPaginatedCountriesAsync(PagingParameterInModel pageModel)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// False in version 1 even if MongoDB can Order.
+        /// </summary>
+        /// <returns></returns>
+        public bool IsSortable()
+        {
+            return false;
+        }
+
+        /// <summary>
+        /// False in version 1 even if MongoDB can paginate.
+        /// </summary>
+        /// <returns></returns>
+        public bool IsPaginable()
+        {
+            return false;
+        }
+        /// <summary>
+        /// Not implemented in version 1.
+        /// </summary>
+        /// <param name="orderBy"></param>
+        /// <returns></returns>
+        public Task<IEnumerable<HRCountry>> GetOrderedCountriesAsync(HRSortingParamModel orderBy)
+        {
+            throw new NotImplementedException();
         }
     }
 }

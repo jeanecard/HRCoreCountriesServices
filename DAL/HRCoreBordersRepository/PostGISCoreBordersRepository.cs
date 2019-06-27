@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using HRCommon.Interface;
 using HRCommonModel;
 using HRCommonModels;
 using HRCommonTools;
@@ -16,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace HRCoreBordersRepository
 {
-    public class PostGISCoreBordersRepository : IHRCoreBordersRepository
+    public class PostGISCoreBordersRepository : IHRCoreBordersRepository, ISortable, IPaginable
     {
         private static readonly String _SQLQUERY = " SELECT wkb_geometry, FIPS, ISO2, ISO3, UN, NAME, AREA, POP2005, REGION, SUBREGION, LON, LAT FROM boundaries ";
         private static readonly String _SQLQUERYFORDAPPER = " SELECT ST_AsText(wkb_geometry) AS WKT_GEOMETRY, FIPS, ISO2, ISO3, UN, NAME, AREA, POP2005, REGION, SUBREGION, LON, LAT FROM boundaries ";
@@ -409,20 +410,36 @@ namespace HRCoreBordersRepository
         /// <returns></returns>
         public async  Task<PagingParameterOutModel<HRBorder>> GetPaginatedBordersAsync(PagingParameterInModel pageModel)
         {
+            //!TODO copier coller !!
             String cxString = _config.GetConnectionString(CONNECTION_STRING_KEY);
             cxString = String.Format(cxString, _config[_DBUSER], _config[_DBPASSWORD]);
+            String queryString = GetSQLQuery(true, null, null, pageModel);
             using (var conn = new NpgsqlConnection(cxString))
             {
                 conn.Open();
                 try
                 {
-                    Task<IEnumerable<HRBorder>> queryTask = conn.QueryAsync<HRBorder>(GetSQLQuery(true, null, null, pageModel));
-                    await queryTask;
-                    PagingParameterOutModel<HRBorder> retour = new PagingParameterOutModel<HRBorder>();
-
-                    return retour;
+                    Task<int> totalCountTask = conn.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM boundaries");
+                    await totalCountTask;
+                    int totalItemsCount = totalCountTask.Result;
+                    //!Add a tu on this part
+                    if (pageModel.PageNumber * pageModel.PageSize <= totalItemsCount)
+                    {
+                        Task<IEnumerable<HRBorder>> queryTask = conn.QueryAsync<HRBorder>(queryString);
+                        await queryTask;
+                        PagingParameterOutModel<HRBorder> retour = new PagingParameterOutModel<HRBorder>();
+                        retour.PageItems = queryTask.Result;
+                        retour.PageSize = pageModel.PageSize;
+                        retour.TotalItemsCount = totalItemsCount;
+                        retour.CurrentPage = pageModel.PageNumber;
+                        return retour;
+                    }
+                    else
+                    {
+                        throw new IndexOutOfRangeException("Pagination out of existing range.");
+                    }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     //!log here. 
                     throw;

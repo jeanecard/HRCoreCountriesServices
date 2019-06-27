@@ -1,3 +1,6 @@
+using HRCommon.Interface;
+using HRCommonModel;
+using HRCommonModels;
 using QuickType;
 using System;
 using System.Collections.Generic;
@@ -5,8 +8,9 @@ using System.Threading.Tasks;
 
 namespace HRCoreCountriesServices
 {
-    public interface ICoreCountriesService
+    public interface ICoreCountriesService : ISortable, IPaginable
     {
-        Task<IEnumerable<HRCountry>> GetCountriesAsync(String id = null);
+        Task<HRCountry> GetCountryAsync(String id);
+        Task<PagingParameterOutModel<HRCountry>> GetCountriesAsync(PagingParameterInModel pageModel, HRSortingParamModel orderBy);
     }
 }

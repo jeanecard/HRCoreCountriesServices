@@ -1,4 +1,5 @@
-﻿using HRCommonModel;
+﻿using HRCommon.Interface;
+using HRCommonModel;
 using HRCommonModels;
 using HRCoreBordersModel;
 using System;
@@ -7,9 +8,8 @@ using System.Threading.Tasks;
 
 namespace HRCoreBordersServices
 {
-    public interface ICoreBordersService
+    public interface ICoreBordersService : ISortable, IPaginable
     {
-        bool IsSortable();
         Task<HRBorder> GetBorderAsync(String borderID);
         Task<PagingParameterOutModel<HRBorder>> GetBordersAsync(PagingParameterInModel pageModel,  HRSortingParamModel orderBy);
 

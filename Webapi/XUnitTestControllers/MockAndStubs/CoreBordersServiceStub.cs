@@ -51,6 +51,10 @@ namespace XUnitTestControllers
             return retour;
         }
 
+        public bool IsPaginable()
+        {
+            throw new NotImplementedException();
+        }
 
         public CoreBordersServiceStub(List<String> bordersID)
         {

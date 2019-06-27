@@ -29,7 +29,7 @@ namespace HRCoreCountriesWebAPI2
         public void ConfigureServices(IServiceCollection services)
         {
             //Rework DI please
-            services.AddSingleton<ICoreCountriesService>(new CoreCountriesService(new MongoDBCountriesRepository(Configuration)));
+            services.AddSingleton<ICoreCountriesService>(new CoreCountriesService((new MongoDBCountriesRepository(Configuration)), new HRPaginer<HRCountry>()));
             services.AddSingleton<IHRPaginer<HRBorder>>(new HRPaginer<HRBorder>());
             services.AddSingleton<IHRPaginer<HRCountry>>(new HRPaginer<HRCountry>());
 

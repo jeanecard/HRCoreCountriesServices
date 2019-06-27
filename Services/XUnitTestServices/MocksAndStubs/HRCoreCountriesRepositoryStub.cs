@@ -1,4 +1,6 @@
-﻿using HRCoreCountriesRepository;
+﻿using HRCommonModel;
+using HRCommonModels;
+using HRCoreCountriesRepository;
 using HRCoreCountriesServices;
 using QuickType;
 using System;
@@ -44,6 +46,46 @@ namespace XUnitTestServices.MocksAndStubs
             {
                 return _countries;
             }
+        }
+
+        public Task<HRCountry> GetCountryAsync(string id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<HRCountry>> GetFullCountriesAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<PagingParameterOutModel<HRCountry>> GetOrderedAndPaginatedCountriesAsync(PagingParameterInModel pageModel, HRSortingParamModel orderBy)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<HRCountry>> GetOrderedCountriesAsync(HRSortingParamModel orderBy)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<HRCountry>> GetOrderedCountriessAsync(HRSortingParamModel orderBy)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<PagingParameterOutModel<HRCountry>> GetPaginatedCountriesAsync(PagingParameterInModel pageModel)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsPaginable()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsSortable()
+        {
+            throw new NotImplementedException();
         }
     }
 }

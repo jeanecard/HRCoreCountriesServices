@@ -19,16 +19,14 @@ namespace HRCoreCountriesWebAPI2.Controllers
     public class HRBordersController : ControllerBase
     {
         private readonly ICoreBordersService _borderService = null;
-        private readonly IHRPaginer<HRBorder> _paginer = null;
         private readonly IConfiguration _config = null;
         private readonly static ushort _maxPageSize = 50;
         /// <summary>
         /// Public constructor with services DI
         /// </summary>
         /// <param name="paginer">a Paginer Implementation.</param>
-        public HRBordersController(IHRPaginer<HRBorder> paginer, IConfiguration config, ICoreBordersService borderService)
+        public HRBordersController(IConfiguration config, ICoreBordersService borderService)
         {
-            _paginer = paginer;
             _config = config;
             _borderService = borderService;
         }
@@ -148,11 +146,13 @@ namespace HRCoreCountriesWebAPI2.Controllers
         /// </summary>
         /// <param name="pageModel">The Paging Model</param>
         /// <returns>(http Status Code, PagingParameterOutModel)</returns>
-        public async Task<(int, PagingParameterOutModel<HRBorder>)> GetFromPaging([FromQuery] PagingParameterInModel pageModel, [FromQuery]  HRSortingParamModel orderBy)
+        public async Task<(int, PagingParameterOutModel<HRBorder>)> GetFromPaging(
+            [FromQuery] PagingParameterInModel pageModel, 
+            [FromQuery]  HRSortingParamModel orderBy)
         {
-            if (_borderService != null && _paginer != null)
+            if (_borderService != null)
             {
-                if(orderBy != null)
+                if(orderBy != null && orderBy.IsInitialised())
                 {
                     if (!_borderService.IsSortable())
                     {

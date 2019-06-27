@@ -6,6 +6,8 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="2.2.0" />
     <PackageReference Include="System.Runtime" Version="4.3.1" />
+    <ProjectReference Include="..\..\Common\HRCommon\HRCommon.csproj" />
+    <ProjectReference Include="..\..\Models\HRCommonModels\HRCommonModels.csproj" />
     <ProjectReference Include="..\..\Models\HRCoreCountriesModel\HRCoreCountriesModel.csproj" />
     <PackageReference Include="MongoDB.Driver" Version="2.8.1" />
     <PackageReference Include="MongoDB.Driver.Core" Version="2.8.1" />

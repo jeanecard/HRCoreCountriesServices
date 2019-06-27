@@ -97,7 +97,7 @@ namespace HRCoreBordersServices
             //2-
             Task<IEnumerable<HRBorder>> taskForInternalPagination = null;
             //2.1-
-            if (orderBy != null)
+            if (orderBy != null && orderBy.IsInitialised())
             {
                 //2.1.1-
                 if (_bordersRepository.IsSortable())
@@ -150,6 +150,14 @@ namespace HRCoreBordersServices
             {
                 return _paginer.GetPaginationFromFullList(pageModel, taskForInternalPagination.Result, _maxPageSize);
             }
+        }
+        /// <summary>
+        /// All Pagination are available
+        /// </summary>
+        /// <returns></returns>
+        public bool IsPaginable()
+        {
+            return true;
         }
     }
 }
