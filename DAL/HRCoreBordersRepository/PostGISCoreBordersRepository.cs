@@ -237,7 +237,6 @@ namespace HRCoreBordersRepository
                 //Cheat Code to avoid SQL injection. Indeed pbm with SQL Command and SQLPArameters on GeometryColumn with postgis.
                 sb.Append(borderID.Substring(0, 2));
                 sb.Append("'");
-
             }
             if(pageInModel != null && orderBy == null)
             {
@@ -262,7 +261,7 @@ namespace HRCoreBordersRepository
                             {
                                 if (i == 0)
                                 {
-                                    sb.Append("ORDER BY ");
+                                    sb.Append(" ORDER BY ");
                                 }
                                 sb.Append(fieldNamei);
                                 sb.Append(" ");
