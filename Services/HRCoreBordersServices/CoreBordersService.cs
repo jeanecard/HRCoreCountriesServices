@@ -1,25 +1,29 @@
 ﻿using HRCommonModel;
 using HRCommonModels;
-using HRCommonTools;
-using HRCommonTools.Interace;
+using HRCommonTools.Interface;
 using HRCoreBordersModel;
-using HRCoreBordersRepository.Interface;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Linq;
+using HRCoreRepository.Interface;
+using HRCommon.Interface;
 
 namespace HRCoreBordersServices
 {
     public class HRCoreBordersService : ICoreBordersService
     {
-        private readonly IHRCoreBordersRepository _bordersRepository = null;
-        private readonly IHRPaginer<HRBorder> _paginer = null;
+        private readonly IServiceWorkflowOnHRCoreRepository<HRBorder> _workflow = null;
+        private readonly IHRCoreRepository<HRBorder> _bordersRepository = null;
         private readonly static ushort _maxPageSize = 50;
-        public HRCoreBordersService(IHRCoreBordersRepository service, IHRPaginer<HRBorder> paginer)
+        public HRCoreBordersService(IHRCoreRepository<HRBorder> repo, 
+            IServiceWorkflowOnHRCoreRepository<HRBorder> workflow)
         {
-            _bordersRepository = service;
-            _paginer = paginer;
+            _bordersRepository = repo;
+            _workflow = workflow;
+            if (_workflow != null)
+            {
+                _workflow.MaxPageSize = _maxPageSize;
+            }
         }
 
         public bool IsSortable()
@@ -50,7 +54,7 @@ namespace HRCoreBordersServices
             if (_bordersRepository != null)
             {
                 //1.2-
-                Task<HRBorder> bordersTask = _bordersRepository.GetBorderAsync(borderID);
+                Task<HRBorder> bordersTask = _bordersRepository.GetAsync(borderID);
                 await bordersTask;
                 //1.3-
                 return bordersTask.Result;
@@ -62,94 +66,20 @@ namespace HRCoreBordersServices
             }
         }
         /// <summary>
-        /// Method used to paginate results. The query in can be ordered or not.
-        /// 1- Check that context is consistant before processing.
-        ///     1.1- Internal member
-        ///     1.2- Input parameters
-        /// 2- Process query on repository
-        ///  2.1- if OrderBy is supplied
-        ///     2.1.1- Is repository is sortable
-        ///         2.1.1.1- If repository IsPaginable : Full Query Repository for Pagination and Order and return result
-        ///         2.1.1.2- Else : Process partial query on ordering repository capacity for internal pagination
-        ///     2.1.2- Else throw NotSupportedException
-        ///  2.2- else
-        ///     2.2.1- If repository is Paginable, Full Query and return result.
-        ///     2.2.2- else Partial repository Query for internal Pagination
-        /// 3- This step means that internal Pagination is needed
-        ///     3-1- Check that Pagination is valid
-        ///     3.2- Process pagination and return.
+        /// TODO
         /// </summary>
-        /// <param name="pageModel">The Input Pagination, can not be null.</param>
-        /// <param name="orderBy">The ordering query. Can be null.</param>
-        /// <returns>The expected results.Can throw MemberAccessException, ArgumentNullException, NotSupportedException and InvalidOperationException.</returns>
+        /// <param name="pageModel"></param>
+        /// <param name="orderBy"></param>
+        /// <returns></returns>
         public async Task<PagingParameterOutModel<HRBorder>> GetBordersAsync(PagingParameterInModel pageModel, HRSortingParamModel orderBy = null)
         {
-            //1.1-
-            if (_bordersRepository == null || _paginer == null)
+            if(_workflow == null)
             {
                 throw new MemberAccessException();
             }
-            //1.2-
-            if (pageModel == null)
-            {
-                throw new ArgumentNullException();
-            }
-            //2-
-            Task<IEnumerable<HRBorder>> taskForInternalPagination = null;
-            //2.1-
-            if (orderBy != null && orderBy.IsInitialised())
-            {
-                //2.1.1-
-                if (_bordersRepository.IsSortable())
-                {
-                    //2.1.1.1-
-                    if (_bordersRepository.IsPaginable())
-                    {
-                        Task<PagingParameterOutModel<HRBorder>> bordersTask = null;
-                        bordersTask = _bordersRepository.GetOrderedAndPaginatedBordersAsync(pageModel, orderBy);
-                        await bordersTask;
-                        return bordersTask.Result;
-                    }
-                    //2.1.1.2-
-                    else
-                    {
-                        taskForInternalPagination = _bordersRepository.GetOrderedBordersAsync(orderBy);
-                    }
-                }
-                //2.1.2-
-                else
-                {
-                    throw new NotSupportedException("Linq orderBy is not yet implemented.");
-                }
-            }
-            //2.2-
-            else
-            {
-                //2.2.1-
-                if (_bordersRepository.IsPaginable())
-                {
-                    Task<PagingParameterOutModel<HRBorder>> bordersTask = null;
-                    bordersTask = _bordersRepository.GetPaginatedBordersAsync(pageModel);
-                    await bordersTask;
-                    return bordersTask.Result;
-                }
-                //2.2.2-
-                else
-                {
-                    taskForInternalPagination = _bordersRepository.GetFullBordersAsync();
-                }
-            }
-            //3-
-            //3.1-
-            if (!_paginer.IsValid(pageModel, taskForInternalPagination.Result))
-            {
-                throw new InvalidProgramException();
-            }
-            //3.2-
-            else
-            {
-                return _paginer.GetPaginationFromFullList(pageModel, taskForInternalPagination.Result, _maxPageSize);
-            }
+            Task<PagingParameterOutModel<HRBorder>> retourTask = _workflow.GetQueryResultsAsync(pageModel, orderBy);
+            await retourTask;
+            return retourTask.Result;
         }
         /// <summary>
         /// All Pagination are available

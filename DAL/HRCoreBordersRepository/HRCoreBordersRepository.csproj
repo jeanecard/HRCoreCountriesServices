@@ -19,5 +19,8 @@
     <ProjectReference Include="..\..\Tools\HRCommonTools\HRCommonTools.csproj" />
     <ProjectReference Include="..\..\Tools\HRGeometryConverters\HRGeometryConverters.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Interface\" />
+  </ItemGroup>
 
 </Project>

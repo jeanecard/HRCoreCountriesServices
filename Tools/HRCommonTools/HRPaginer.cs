@@ -1,5 +1,5 @@
 ﻿using HRCommonModel;
-using HRCommonTools.Interace;
+using HRCommonTools.Interface;
 using System;
 using System.Collections.Generic;
 

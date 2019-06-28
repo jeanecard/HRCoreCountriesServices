@@ -1,7 +1,6 @@
 ﻿using HRCommonModel;
 using HRCommonModels;
-using HRCoreCountriesRepository;
-using HRCoreCountriesServices;
+using HRCoreRepository.Interface;
 using QuickType;
 using System;
 using System.Collections.Generic;
@@ -9,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace XUnitTestServices.MocksAndStubs
 {
-    class HRCoreCountriesRepositoryStub : ICountriesRepository
+    class HRCoreCountriesRepositoryStub : IHRCoreRepository<HRCountry>
     {
-        private List<HRCountry> _countries = new List<HRCountry>();
-        private HRCountry _selected = new HRCountry();
+        private readonly List<HRCountry> _countries = new List<HRCountry>();
+        private readonly HRCountry _selected = new HRCountry();
         public HRCoreCountriesRepositoryStub(List<String> countries, String countrySelectable)
         {
             if(countries != null)
@@ -26,8 +25,13 @@ namespace XUnitTestServices.MocksAndStubs
             {
                 _selected._id = new MongoDB.Bson.ObjectId(countrySelectable);
             }
-        } 
-        
+        }
+
+        public Task<HRCountry> GetAsync(string id)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Retrun selected or full list.
         /// </summary>
@@ -38,8 +42,7 @@ namespace XUnitTestServices.MocksAndStubs
             await Task.Delay(1);
             if (id != null)
             {
-                List<HRCountry> retour = new List<HRCountry>();
-                retour.Add(_selected);
+                List<HRCountry> retour = new List<HRCountry>() { _selected };
                 return retour;
             }
             else
@@ -58,7 +61,17 @@ namespace XUnitTestServices.MocksAndStubs
             throw new NotImplementedException();
         }
 
+        public Task<IEnumerable<HRCountry>> GetFullsAsync()
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<PagingParameterOutModel<HRCountry>> GetOrderedAndPaginatedCountriesAsync(PagingParameterInModel pageModel, HRSortingParamModel orderBy)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<PagingParameterOutModel<HRCountry>> GetOrderedAndPaginatedsAsync(PagingParameterInModel pageModel, HRSortingParamModel orderBy)
         {
             throw new NotImplementedException();
         }
@@ -73,7 +86,17 @@ namespace XUnitTestServices.MocksAndStubs
             throw new NotImplementedException();
         }
 
+        public Task<IEnumerable<HRCountry>> GetOrderedsAsync(HRSortingParamModel orderBy)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<PagingParameterOutModel<HRCountry>> GetPaginatedCountriesAsync(PagingParameterInModel pageModel)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<PagingParameterOutModel<HRCountry>> GetPaginatedsAsync(PagingParameterInModel pageModel)
         {
             throw new NotImplementedException();
         }

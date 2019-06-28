@@ -5,7 +5,7 @@ using HRCommonModels;
 using HRCommonTools;
 using HRConverters;
 using HRCoreBordersModel;
-using HRCoreBordersRepository.Interface;
+using HRCoreRepository.Interface;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
 using System;
@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace HRCoreBordersRepository
 {
-    public class PostGISCoreBordersRepository : IHRCoreBordersRepository, ISortable, IPaginable
+    public class PostGISCoreBordersRepository : IHRCoreRepository<HRBorder>, ISortable, IPaginable
     {
         private static readonly String _SQLQUERY = " SELECT wkb_geometry, FIPS, ISO2, ISO3, UN, NAME, AREA, POP2005, REGION, SUBREGION, LON, LAT FROM boundaries ";
         private static readonly String _SQLQUERYFORDAPPER = " SELECT ST_AsText(wkb_geometry) AS WKT_GEOMETRY, FIPS, ISO2, ISO3, UN, NAME, AREA, POP2005, REGION, SUBREGION, LON, LAT FROM boundaries ";
@@ -78,7 +78,7 @@ namespace HRCoreBordersRepository
         /// </summary>
         /// <param name="borderID">the borderID to look for.</param>
         /// <returns>A collection with the Border with the borderID querried or all Borders if borderID is not supplied.</returns>
-        public async Task<HRBorder> GetBorderAsync(String borderID)
+        public async Task<HRBorder> GetAsync(string borderID) 
         {
             HRBorder retour = null;
             //1-
@@ -143,6 +143,7 @@ namespace HRCoreBordersRepository
                 // Retrieve all rows
                 string query = GetSQLQuery(false, borderID);
                 using (var cmd = new NpgsqlCommand(query, conn))
+                    //!TODO dispose ...
                 using (Task<DbDataReader> readerTask = cmd.ExecuteReaderAsync())
                 {
                     await readerTask;
@@ -316,7 +317,7 @@ namespace HRCoreBordersRepository
         /// </summary>
         /// <param name="orderBy"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<HRBorder>> GetOrderedBordersAsync(HRSortingParamModel orderBy)
+        public async Task<IEnumerable<HRBorder>> GetOrderedsAsync(HRSortingParamModel orderBy)
         {
             String cxString = _config.GetConnectionString(CONNECTION_STRING_KEY);
             cxString = String.Format(cxString, _config[_DBUSER], _config[_DBPASSWORD]);
@@ -340,7 +341,7 @@ namespace HRCoreBordersRepository
         /// 
         /// </summary>
         /// <returns></returns>
-        public async Task<IEnumerable<HRBorder>> GetFullBordersAsync()
+        public async Task<IEnumerable<HRBorder>> GetFullsAsync()
         {
             String cxString = _config.GetConnectionString(CONNECTION_STRING_KEY);
             cxString = String.Format(cxString, _config[_DBUSER], _config[_DBPASSWORD]);
@@ -366,7 +367,7 @@ namespace HRCoreBordersRepository
         /// <param name="pageModel"></param>
         /// <param name="orderBy"></param>
         /// <returns></returns>
-        public async Task<PagingParameterOutModel<HRBorder>> GetOrderedAndPaginatedBordersAsync(PagingParameterInModel pageModel, HRSortingParamModel orderBy)
+        public async Task<PagingParameterOutModel<HRBorder>> GetOrderedAndPaginatedsAsync(PagingParameterInModel pageModel, HRSortingParamModel orderBy)
         {
             String cxString = _config.GetConnectionString(CONNECTION_STRING_KEY);
             cxString = String.Format(cxString, _config[_DBUSER], _config[_DBPASSWORD]);
@@ -384,11 +385,13 @@ namespace HRCoreBordersRepository
                     {
                         Task<IEnumerable<HRBorder>> queryTask = conn.QueryAsync<HRBorder>(queryString);
                         await queryTask;
-                        PagingParameterOutModel<HRBorder> retour = new PagingParameterOutModel<HRBorder>();
-                        retour.PageItems = queryTask.Result;
-                        retour.PageSize = pageModel.PageSize;
-                        retour.TotalItemsCount = totalItemsCount;
-                        retour.CurrentPage = pageModel.PageNumber;
+                        PagingParameterOutModel<HRBorder> retour = new PagingParameterOutModel<HRBorder>()
+                        {
+                            PageItems = queryTask.Result,
+                            PageSize = pageModel.PageSize,
+                            TotalItemsCount = totalItemsCount,
+                            CurrentPage = pageModel.PageNumber
+                        };
                         return retour;
                     }
                     else
@@ -396,7 +399,7 @@ namespace HRCoreBordersRepository
                         throw new IndexOutOfRangeException("Pagination out of existing range.");
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     //!log here. 
                     throw;
@@ -408,7 +411,7 @@ namespace HRCoreBordersRepository
         /// </summary>
         /// <param name="pageModel"></param>
         /// <returns></returns>
-        public async  Task<PagingParameterOutModel<HRBorder>> GetPaginatedBordersAsync(PagingParameterInModel pageModel)
+        public async  Task<PagingParameterOutModel<HRBorder>> GetPaginatedsAsync(PagingParameterInModel pageModel)
         {
             //!TODO copier coller !!
             String cxString = _config.GetConnectionString(CONNECTION_STRING_KEY);
@@ -427,11 +430,12 @@ namespace HRCoreBordersRepository
                     {
                         Task<IEnumerable<HRBorder>> queryTask = conn.QueryAsync<HRBorder>(queryString);
                         await queryTask;
-                        PagingParameterOutModel<HRBorder> retour = new PagingParameterOutModel<HRBorder>();
-                        retour.PageItems = queryTask.Result;
-                        retour.PageSize = pageModel.PageSize;
-                        retour.TotalItemsCount = totalItemsCount;
-                        retour.CurrentPage = pageModel.PageNumber;
+                        PagingParameterOutModel<HRBorder> retour = new PagingParameterOutModel<HRBorder>() {
+                            PageItems = queryTask.Result,
+                        PageSize = pageModel.PageSize,
+                        TotalItemsCount = totalItemsCount,
+                        CurrentPage = pageModel.PageNumber
+                    };
                         return retour;
                     }
                     else
@@ -439,7 +443,7 @@ namespace HRCoreBordersRepository
                         throw new IndexOutOfRangeException("Pagination out of existing range.");
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     //!log here. 
                     throw;

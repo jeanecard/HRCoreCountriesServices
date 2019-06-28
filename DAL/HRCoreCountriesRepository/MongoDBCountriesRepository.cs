@@ -1,5 +1,7 @@
+using HRCommon.Interface;
 using HRCommonModel;
 using HRCommonModels;
+using HRCoreRepository.Interface;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
 using QuickType;
@@ -12,7 +14,7 @@ namespace HRCoreCountriesRepository
     /// <summary>
     /// It's not possible so far to use Dapper on this MongoDB Driver.
     /// </summary>
-    public class MongoDBCountriesRepository : ICountriesRepository
+    public class MongoDBCountriesRepository : IHRCoreRepository<HRCountry>, IPaginable, ISortable
     {
         private readonly IConfiguration _config = null;
         private static readonly String _MONGO_CX_STRING_KEY = "CountriesConnection";
@@ -152,7 +154,7 @@ namespace HRCoreCountriesRepository
         /// <param name="id">The searched ID (Alpha2 or Alpha3)</param>
         /// <returns>The corrresponding HRCountry or null if not found. Can throw the following exception :
         /// </returns>
-        public async Task<HRCountry> GetCountryAsync(string id)
+        public async Task<HRCountry> GetAsync(string id)
         {
             if(String.IsNullOrEmpty(id))
             {
@@ -192,7 +194,7 @@ namespace HRCoreCountriesRepository
         /// </summary>
         /// <param name="orderBy"></param>
         /// <returns></returns>
-        public Task<IEnumerable<HRCountry>> GetOrderedCountriessAsync(HRSortingParamModel orderBy)
+        public Task<IEnumerable<HRCountry>> GetOrderedsAsync(HRSortingParamModel orderBy)
         {
             throw new NotImplementedException();
         }
@@ -201,7 +203,7 @@ namespace HRCoreCountriesRepository
         /// TODO : Comments.
         /// </summary>
         /// <returns></returns>
-        public async Task<IEnumerable<HRCountry>> GetFullCountriesAsync()
+        public async Task<IEnumerable<HRCountry>> GetFullsAsync()
         {
             //1-
             try
@@ -243,7 +245,7 @@ namespace HRCoreCountriesRepository
         /// <param name="pageModel"></param>
         /// <param name="orderBy"></param>
         /// <returns></returns>
-        public Task<PagingParameterOutModel<HRCountry>> GetOrderedAndPaginatedCountriesAsync(PagingParameterInModel pageModel, HRSortingParamModel orderBy)
+        public Task<PagingParameterOutModel<HRCountry>> GetOrderedAndPaginatedsAsync(PagingParameterInModel pageModel, HRSortingParamModel orderBy)
         {
             throw new NotImplementedException();
         }
@@ -253,7 +255,7 @@ namespace HRCoreCountriesRepository
         /// </summary>
         /// <param name="pageModel"></param>
         /// <returns></returns>
-        public Task<PagingParameterOutModel<HRCountry>> GetPaginatedCountriesAsync(PagingParameterInModel pageModel)
+        public Task<PagingParameterOutModel<HRCountry>> GetPaginatedsAsync(PagingParameterInModel pageModel)
         {
             throw new NotImplementedException();
         }
@@ -274,15 +276,6 @@ namespace HRCoreCountriesRepository
         public bool IsPaginable()
         {
             return false;
-        }
-        /// <summary>
-        /// Not implemented in version 1.
-        /// </summary>
-        /// <param name="orderBy"></param>
-        /// <returns></returns>
-        public Task<IEnumerable<HRCountry>> GetOrderedCountriesAsync(HRSortingParamModel orderBy)
-        {
-            throw new NotImplementedException();
         }
     }
 }

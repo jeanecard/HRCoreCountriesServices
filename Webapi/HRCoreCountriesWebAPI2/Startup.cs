@@ -1,5 +1,6 @@
-﻿using HRCommonTools;
-using HRCommonTools.Interace;
+﻿using HRCommon;
+using HRCommonTools;
+using HRCommonTools.Interface;
 using HRCoreBordersModel;
 using HRCoreBordersRepository;
 using HRCoreBordersServices;
@@ -29,12 +30,17 @@ namespace HRCoreCountriesWebAPI2
         public void ConfigureServices(IServiceCollection services)
         {
             //Rework DI please
-            services.AddSingleton<ICoreCountriesService>(new CoreCountriesService((new MongoDBCountriesRepository(Configuration)), new HRPaginer<HRCountry>()));
+            services.AddSingleton<ICoreCountriesService>(new CoreCountriesService((
+                new MongoDBCountriesRepository(Configuration)),
+                new HRServiceWorkflowPaginationOnly<HRCountry>(new MongoDBCountriesRepository(Configuration), new HRPaginer<HRCountry>())
+                ));
             services.AddSingleton<IHRPaginer<HRBorder>>(new HRPaginer<HRBorder>());
             services.AddSingleton<IHRPaginer<HRCountry>>(new HRPaginer<HRCountry>());
 
             services.AddSingleton(Configuration);
-            services.AddSingleton<ICoreBordersService>(new HRCoreBordersService(new PostGISCoreBordersRepository(Configuration), new HRPaginer<HRBorder>()));
+            services.AddSingleton<ICoreBordersService>(new HRCoreBordersService(
+                new PostGISCoreBordersRepository(Configuration), 
+                new HRServiceWorkflowPaginationOnly<HRBorder>(new PostGISCoreBordersRepository(Configuration), new HRPaginer<HRBorder>())));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             // Register the Swagger services
             services.AddSwaggerDocument();

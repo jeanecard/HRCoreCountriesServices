@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Xunit;
 using XUnitTestServices.MocksAndStubs;
 using System.Linq;
+using HRCommon;
 
 namespace XUnitTestServices
 {
@@ -20,7 +21,9 @@ namespace XUnitTestServices
         [Fact]
         public async void BorderServiceOnGetBordersAsyncThrowMemberAccessExceptionIfRepositoryIsNull()
         {
-            HRCoreBordersService service = new HRCoreBordersService(null, new HRPaginer<HRBorder>());
+            HRCoreBordersService service = new HRCoreBordersService(
+                null, 
+                new HRServiceWorkflowPaginationOnly<HRBorder>(null, null));
             await Assert.ThrowsAsync<MemberAccessException>(async () => await service.GetBordersAsync(new PagingParameterInModel(), null));
 
         }
@@ -30,7 +33,9 @@ namespace XUnitTestServices
         [Fact]
         public async void BorderServiceOnGetBorderAsyncThrowMemberAccessExceptionIfRepositoryIsNull()
         {
-            HRCoreBordersService service = new HRCoreBordersService(null, new HRPaginer<HRBorder>());
+            HRCoreBordersService service = new HRCoreBordersService(
+                null, 
+                new HRServiceWorkflowPaginationOnly<HRBorder>(null, null));
             await Assert.ThrowsAsync<MemberAccessException>(async () => await service.GetBorderAsync("xx"));
 
         }
@@ -40,7 +45,9 @@ namespace XUnitTestServices
         [Fact]
         public async void BorderServiceOnGetBordersAsyncThrowMemberAccessExceptionIfPaginerIsNull()
         {
-            HRCoreBordersService service = new HRCoreBordersService(new HRCoreBordersRepositoryStub(null, ""), null);
+            HRCoreBordersService service = new HRCoreBordersService(
+                new HRCoreBordersRepositoryStub(null, ""), 
+                new HRServiceWorkflowPaginationOnly<HRBorder>(null, null));
             await Assert.ThrowsAsync<MemberAccessException>(async () => await service.GetBordersAsync(new PagingParameterInModel(), null));
         }
         /// <summary>
@@ -49,7 +56,9 @@ namespace XUnitTestServices
         [Fact]
         public async void BorderServiceOnGetBordersAsyncThrowArgumentNullExceptionIfPageModelIsNull()
         {
-            HRCoreBordersService service = new HRCoreBordersService(new HRCoreBordersRepositoryStub(null, ""), new HRPaginer<HRBorder>());
+            HRCoreBordersService service = new HRCoreBordersService(
+                new HRCoreBordersRepositoryStub(null, ""), 
+                new HRServiceWorkflowPaginationOnly<HRBorder>(null, null));
             await Assert.ThrowsAsync<ArgumentNullException>(async () => await service.GetBordersAsync(null, null));
         }
 
@@ -59,7 +68,9 @@ namespace XUnitTestServices
         [Fact]
         public async void BorderServiceOnGetBordersAsyncThrowNotSupportedExceptionOnOrderWithoutOrderingCapacityOnRepository()
         {
-            HRCoreBordersService service = new HRCoreBordersService(new HRCoreBordersRepositoryStub(null, "", false), new HRPaginer<HRBorder>());
+            HRCoreBordersService service = new HRCoreBordersService(
+                new HRCoreBordersRepositoryStub(null, "", false), 
+                new HRServiceWorkflowPaginationOnly<HRBorder>(null, null));
             await Assert.ThrowsAsync<NotSupportedException>(async () => await service.GetBordersAsync(new PagingParameterInModel(), new HRSortingParamModel()));
         }
 
@@ -73,7 +84,9 @@ namespace XUnitTestServices
                 new List<String>() { "AA", "BB", "CC"}, 
                 "BB", 
                 true);
-            HRCoreBordersService service = new HRCoreBordersService(repository, new HRPaginer<HRBorder>());
+            HRCoreBordersService service = new HRCoreBordersService(
+                repository, 
+                new HRServiceWorkflowPaginationOnly<HRBorder>(null, null));
             Task<PagingParameterOutModel<HRBorder>> task = service.GetBordersAsync(new PagingParameterInModel() { PageNumber = 0, PageSize = 20 }, new HRSortingParamModel() { OrderBy = "POP2005;asc" });
             await task;
             Assert.NotNull(task.Result);
@@ -99,7 +112,9 @@ namespace XUnitTestServices
             }
             HRCoreBordersRepositoryStub repository = new HRCoreBordersRepositoryStub(
                 borders,  "BB", true, false);
-            HRCoreBordersService service = new HRCoreBordersService(repository, new HRPaginer<HRBorder>());
+            HRCoreBordersService service = new HRCoreBordersService(
+                repository, 
+                new HRServiceWorkflowPaginationOnly<HRBorder>(null, null));
             Task<PagingParameterOutModel<HRBorder>> task = service.GetBordersAsync(new PagingParameterInModel() { PageNumber = 1, PageSize = 20 }, new HRSortingParamModel() { OrderBy = "POP2005;asc" });
             await task;
             Assert.NotNull(task.Result);
@@ -123,7 +138,9 @@ namespace XUnitTestServices
                 "BB",
                 true,
                 true);
-            HRCoreBordersService service = new HRCoreBordersService(repository, new HRPaginer<HRBorder>());
+            HRCoreBordersService service = new HRCoreBordersService(
+                repository, 
+                new HRServiceWorkflowPaginationOnly<HRBorder>(null, null));
             Task<PagingParameterOutModel<HRBorder>> task = service.GetBordersAsync(new PagingParameterInModel() { PageNumber = 0, PageSize = 20 }, null);
             await task;
             Assert.NotNull(task.Result);
@@ -148,7 +165,9 @@ namespace XUnitTestServices
             }
             HRCoreBordersRepositoryStub repository = new HRCoreBordersRepositoryStub(
                 borders, "BB", true, false);
-            HRCoreBordersService service = new HRCoreBordersService(repository, new HRPaginer<HRBorder>());
+            HRCoreBordersService service = new HRCoreBordersService(
+                repository, 
+                new HRServiceWorkflowPaginationOnly<HRBorder>(null, null));
             Task<PagingParameterOutModel<HRBorder>> task = service.GetBordersAsync(new PagingParameterInModel() { PageNumber = 1, PageSize = 20 }, null);
             await task;
             Assert.NotNull(task.Result);

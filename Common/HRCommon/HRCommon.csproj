@@ -4,4 +4,9 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Models\HRCommonModels\HRCommonModels.csproj" />
+    <ProjectReference Include="..\..\Tools\HRCommonTools\HRCommonTools.csproj" />
+  </ItemGroup>
+
 </Project>

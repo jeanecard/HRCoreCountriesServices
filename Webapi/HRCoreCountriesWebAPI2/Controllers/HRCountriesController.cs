@@ -1,7 +1,7 @@
 ﻿using HRCommonModel;
 using HRCommonModels;
 using HRCommonTools;
-using HRCommonTools.Interace;
+using HRCommonTools.Interface;
 using HRCoreCountriesServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -91,7 +91,7 @@ namespace HRCoreCountriesWebAPI2.Controllers
                 }
                 return (StatusCodes.Status404NotFound, null);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return (StatusCodes.Status500InternalServerError, null);
             }

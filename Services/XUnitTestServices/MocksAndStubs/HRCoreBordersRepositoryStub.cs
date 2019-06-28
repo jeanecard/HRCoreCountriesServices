@@ -1,34 +1,34 @@
 ﻿using HRCommonModel;
 using HRCommonModels;
 using HRCoreBordersModel;
-using HRCoreBordersRepository.Interface;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
+using HRCoreRepository.Interface;
 
 namespace XUnitTestServices.MocksAndStubs
 {
-    class HRCoreBordersRepositoryStub : IHRCoreBordersRepository
+    class HRCoreBordersRepositoryStub : IHRCoreRepository<HRBorder>
     {
-        private List<HRBorder> _borders = new List<HRBorder>();
-        private HRBorder _selected = new HRBorder();
-        private bool _isSortable = true;
-        private bool _isPaginable;
+        private readonly List<HRBorder> _borders = new List<HRBorder>();
+        private readonly HRBorder _selected = new HRBorder();
+        private readonly bool _isSortable = true;
+        private readonly bool _isPaginable;
 
         public HRCoreBordersRepositoryStub(List<String> borders, String borderSelectable, bool isSortable = true, bool isPaginable = true)
         {
             _isPaginable = isPaginable;
             _isSortable = isSortable;
-            if(borders != null)
+            if (borders != null)
             {
-                foreach(String iter in borders)
+                foreach (String iter in borders)
                 {
                     _borders.Add(new HRBorder() { FIPS = iter });
                 }
             }
-            if(!String.IsNullOrEmpty(borderSelectable))
+            if (!String.IsNullOrEmpty(borderSelectable))
             {
                 _selected.FIPS = borderSelectable;
 
@@ -45,7 +45,7 @@ namespace XUnitTestServices.MocksAndStubs
         /// </summary>
         /// <param name="borderID"></param>
         /// <returns></returns>
-        public async Task<HRBorder> GetBordersAsync(string borderID)
+        public async Task<HRBorder> GetAsync(string borderID)
         {
             await Task.Delay(1);
             if (borderID != null)
@@ -58,7 +58,7 @@ namespace XUnitTestServices.MocksAndStubs
             }
         }
 
-        public async  Task<IEnumerable<HRBorder>> GetBordersAsync(HRSortingParamModel orderBy)
+        public async Task<IEnumerable<HRBorder>> GetBordersAsync(HRSortingParamModel orderBy)
         {
             await Task.Delay(1);
             return _borders;
@@ -70,15 +70,27 @@ namespace XUnitTestServices.MocksAndStubs
             return _borders;
         }
 
+        public Task<IEnumerable<HRBorder>> GetFullsAsync()
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<PagingParameterOutModel<HRBorder>> GetOrderedAndPaginatedBordersAsync(PagingParameterInModel pageModel, HRSortingParamModel orderBy)
         {
             await Task.Delay(1);
-            PagingParameterOutModel<HRBorder> retour = new PagingParameterOutModel<HRBorder>();
-            retour.CurrentPage = pageModel.PageNumber;
-            retour.PageItems = _borders;
-            retour.PageSize = pageModel.PageSize;
-            retour.TotalItemsCount = _borders.Count;
+            PagingParameterOutModel<HRBorder> retour = new PagingParameterOutModel<HRBorder>()
+            {
+                CurrentPage = pageModel.PageNumber,
+                PageItems = _borders,
+                PageSize = pageModel.PageSize,
+                TotalItemsCount = _borders.Count
+            };
             return retour;
+        }
+
+        public Task<PagingParameterOutModel<HRBorder>> GetOrderedAndPaginatedsAsync(PagingParameterInModel pageModel, HRSortingParamModel orderBy)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<IEnumerable<HRBorder>> GetOrderedBordersAsync(HRSortingParamModel orderBy)
@@ -87,14 +99,21 @@ namespace XUnitTestServices.MocksAndStubs
             return _borders;
         }
 
-        public async  Task<PagingParameterOutModel<HRBorder>> GetPaginatedBordersAsync(PagingParameterInModel pageModel)
+        public Task<IEnumerable<HRBorder>> GetOrderedsAsync(HRSortingParamModel orderBy)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<PagingParameterOutModel<HRBorder>> GetPaginatedBordersAsync(PagingParameterInModel pageModel)
         {
             await Task.Delay(1);
-            PagingParameterOutModel<HRBorder> retour = new PagingParameterOutModel<HRBorder>();
-            retour.CurrentPage = pageModel.PageNumber;
-            retour.PageItems = _borders;
-            retour.PageSize = pageModel.PageSize;
-            retour.TotalItemsCount = _borders.Count;
+            PagingParameterOutModel<HRBorder> retour = new PagingParameterOutModel<HRBorder>()
+            {
+                CurrentPage = pageModel.PageNumber,
+                PageItems = _borders,
+                PageSize = pageModel.PageSize,
+                TotalItemsCount = _borders.Count
+            };
             return retour;
         }
 
@@ -106,6 +125,11 @@ namespace XUnitTestServices.MocksAndStubs
         public bool IsSortable()
         {
             return _isSortable;
+        }
+
+        public Task<PagingParameterOutModel<HRBorder>> GetPaginatedsAsync(PagingParameterInModel pageModel)
+        {
+            throw new NotImplementedException();
         }
     }
 }

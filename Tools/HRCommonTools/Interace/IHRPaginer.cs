@@ -1,7 +1,7 @@
 ﻿using HRCommonModel;
 using System.Collections.Generic;
 
-namespace HRCommonTools.Interace
+namespace HRCommonTools.Interface
 {
     public interface IHRPaginer<T>
     {

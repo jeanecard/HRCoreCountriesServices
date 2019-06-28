@@ -18,6 +18,8 @@ namespace XUnitTestServices
         [Fact]
         public async void CountriesServiceOnGetCountriesAsyncThrowMemberAccessExceptionIfRepositoryIsNullExpectTrue()
         {
+            await Task.Delay(1);
+
             //CoreCountriesService service = new CoreCountriesService(null);
             //bool exceptionThrown = false;
             //try
@@ -41,6 +43,8 @@ namespace XUnitTestServices
         [Fact]
         public async void CountriesServiceOnGetCountriesAsyncWithCountryIDReturnRepositoryResultWithoutExtraProcessingwExpectTrue()
         {
+            await Task.Delay(1);
+
             //HRCoreCountriesRepositoryStub repository = new HRCoreCountriesRepositoryStub(null, "507f191e810c19729de860ea");
             //CoreCountriesService service = new CoreCountriesService(repository);
             //Task<IEnumerable<HRCountry>> repoResult = service.GetCountriesAsync("507f191e810c19729de860ea");
@@ -58,6 +62,8 @@ namespace XUnitTestServices
         [Fact]
         public async void CountriesServiceOnGetBCountriesAsyncWithoutCountryIDReturnRepositoryResultWithoutExtraProcessingwExpectTrue()
         {
+            await Task.Delay(1);
+
             //List<String> countriesID = new List<string>() { "507f191e810c19729de860ea", "507f191e810c19729de860eb", "507f191e810c19729de860ec" };
             //HRCoreCountriesRepositoryStub repository = new HRCoreCountriesRepositoryStub(countriesID, null);
             //CoreCountriesService service = new CoreCountriesService(repository);

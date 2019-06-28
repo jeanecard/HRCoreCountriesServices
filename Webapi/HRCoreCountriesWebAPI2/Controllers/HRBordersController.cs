@@ -1,7 +1,7 @@
 ﻿using HRCommonModel;
 using HRCommonModels;
 using HRCommonTools;
-using HRCommonTools.Interace;
+using HRCommonTools.Interface;
 using HRCoreBordersModel;
 using HRCoreBordersServices;
 using Microsoft.AspNetCore.Http;
