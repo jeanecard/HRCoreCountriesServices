@@ -7,7 +7,6 @@
 
   <ItemGroup>
   <PackageReference Include="GeoJSON.Net" Version="1.1.72" />
-  <!-- <PackageReference Include="mongocsharpdriver" Version="2.8.0" /> -->
   <PackageReference Include="MongoDB.Driver" Version="2.8.1" />
   <PackageReference Include="MongoDB.Driver.Core" Version="2.8.1" />
   <PackageReference Include="MongoDB.BSon" Version="2.8.1" />
