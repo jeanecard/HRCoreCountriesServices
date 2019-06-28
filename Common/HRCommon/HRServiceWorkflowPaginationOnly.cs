@@ -5,7 +5,6 @@ using HRCommonModels;
 using HRCoreRepository.Interface;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace HRCommon
@@ -16,7 +15,9 @@ namespace HRCommon
         private readonly IHRPaginer<T> _paginer = null;
         private ushort _maxPageSize = 50;
 
-
+        /// <summary>
+        /// TODO
+        /// </summary>
         ushort IServiceWorkflowOnHRCoreRepository<T>.MaxPageSize
         {
             get
@@ -28,12 +29,18 @@ namespace HRCommon
                 _maxPageSize = value;
             }
         }
-
+        /// <summary>
+        /// TODO
+        /// </summary>
         private HRServiceWorkflowPaginationOnly()
         {
             //Private for DI.
         }
-
+        /// <summary>
+        /// TODO
+        /// </summary>
+        /// <param name="repo"></param>
+        /// <param name="paginer"></param>
         public HRServiceWorkflowPaginationOnly(IHRCoreRepository<T> repo, IHRPaginer<T> paginer)
         {
             _repository = repo;
@@ -93,6 +100,7 @@ namespace HRCommon
                     else
                     {
                         taskForInternalPagination = _repository.GetOrderedsAsync(orderBy);
+                        await taskForInternalPagination;
                     }
                 }
                 //2.1.2-
@@ -116,6 +124,7 @@ namespace HRCommon
                 else
                 {
                     taskForInternalPagination = _repository.GetFullsAsync();
+                    await taskForInternalPagination;
                 }
             }
             //3-
