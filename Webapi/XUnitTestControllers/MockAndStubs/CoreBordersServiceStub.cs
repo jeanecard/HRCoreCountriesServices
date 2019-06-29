@@ -44,10 +44,12 @@ namespace XUnitTestControllers
             {
                 throw new Exception("");
             }
-            PagingParameterOutModel<HRBorder> retour = new PagingParameterOutModel<HRBorder>();
-            retour.PageItems = _list;
-            retour.TotalItemsCount = _list.Count;
-            retour.PageSize = pageModel.PageSize;
+            PagingParameterOutModel<HRBorder> retour = new PagingParameterOutModel<HRBorder>()
+            {
+                PageItems = _list,
+                TotalItemsCount = (uint)_list.Count,
+                PageSize = pageModel.PageSize
+            };
             return retour;
         }
 
@@ -62,8 +64,7 @@ namespace XUnitTestControllers
             {
                 foreach (String iterator in bordersID)
                 {
-                    HRBorder borderi = new HRBorder();
-                    borderi.FIPS = iterator;
+                    HRBorder borderi = new HRBorder() { FIPS = iterator };
                     _list.Add(borderi);
                 }
             }

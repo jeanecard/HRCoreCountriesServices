@@ -1,5 +1,7 @@
 using HRCommonModel;
 using HRCommonModels;
+using HRCommonTools;
+using HRCoreBordersModel;
 using HRCoreBordersRepository;
 using System;
 using Xunit;
@@ -14,7 +16,7 @@ namespace XUnitTestDAL
         [Fact]
         public void GetSQLQueryWithNoIDExpectSelectOnly()
         {
-            PostGISCoreBordersRepository repo = new PostGISCoreBordersRepository(null);
+            PostGISCoreBordersRepository repo = new PostGISCoreBordersRepository(null, new HRPaginer<HRBorder>());
             String sql = repo.GetSQLQuery(true);
             Assert.NotNull(sql);
             Assert.Equal(sql, PostGISCoreBordersRepository.SQLQUERYFORDAPPER);
@@ -23,9 +25,9 @@ namespace XUnitTestDAL
         /// Check that SQL query is used as provided more the where clause.
         /// </summary>
         [Fact]
-        public void GetSQLQueryWithIDExpectSelectWithWherreClause()
+        public void GetSQLQueryWithIDExpectSelectWithWhereClause()
         {
-            PostGISCoreBordersRepository repo = new PostGISCoreBordersRepository(null);
+            PostGISCoreBordersRepository repo = new PostGISCoreBordersRepository(null, new HRPaginer<HRBorder>());
             String sql = repo.GetSQLQuery(true, "XX");
             Assert.NotNull(sql);
             Assert.Equal(sql, PostGISCoreBordersRepository.SQLQUERYFORDAPPER + "WHERE FIPS = 'XX'");
@@ -36,7 +38,7 @@ namespace XUnitTestDAL
         [Fact]
         public void GetSQLQueryWithValidOrderByExpectSelectWithOrderByClause()
         {
-            PostGISCoreBordersRepository repo = new PostGISCoreBordersRepository(null);
+            PostGISCoreBordersRepository repo = new PostGISCoreBordersRepository(null, new HRPaginer<HRBorder>());
             String sql = repo.GetSQLQuery(true, null, new HRCommonModels.HRSortingParamModel() { SortingParamsQuery = "name;asc" }, null);
             Assert.NotNull(sql);
             Assert.Equal(sql, PostGISCoreBordersRepository.SQLQUERYFORDAPPER + " ORDER BY name ASC ");
@@ -47,7 +49,7 @@ namespace XUnitTestDAL
         [Fact]
         public void GetSQLQueryWithValidOrderByExpectSelectWithPaginationClause()
         {
-            PostGISCoreBordersRepository repo = new PostGISCoreBordersRepository(null);
+            PostGISCoreBordersRepository repo = new PostGISCoreBordersRepository(null, new HRPaginer<HRBorder>());
             String sql = repo.GetSQLQuery(true,
                 null,
                 null,
@@ -61,7 +63,7 @@ namespace XUnitTestDAL
         [Fact]
         public void GetSQLQueryWithValidOrderByExpectSelectWithPaginationAndOrderByClause()
         {
-            PostGISCoreBordersRepository repo = new PostGISCoreBordersRepository(null);
+            PostGISCoreBordersRepository repo = new PostGISCoreBordersRepository(null, new HRPaginer<HRBorder>());
             String sql = repo.GetSQLQuery(true,
                 null,
                 new HRCommonModels.HRSortingParamModel() { OrderBy = "name;desc" },
@@ -75,7 +77,7 @@ namespace XUnitTestDAL
         [Fact]
         public void GetSQLQueryWithInValidOrderByThrowInvalidOperationException()
         {
-            PostGISCoreBordersRepository repo = new PostGISCoreBordersRepository(null);
+            PostGISCoreBordersRepository repo = new PostGISCoreBordersRepository(null, new HRPaginer<HRBorder>());
             Assert.Throws<InvalidOperationException>(() => 
             repo.GetSQLQuery(
                 true, 

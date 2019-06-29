@@ -8,14 +8,14 @@ namespace HRCommonModel
     /// <typeparam name="T"></typeparam>
     public class PagingParameterOutModel<T>
     {
-        private int _totalItemsCount = 0;
+        private uint _totalItemsCount = 0;
         private ushort _pageSize = 1;
         private ushort _currentPage = 1;
         private IEnumerable<T> _pageItems = null;
         /// <summary>
         /// Total items count in the query
         /// </summary>
-        public int TotalItemsCount { get => _totalItemsCount; set => _totalItemsCount = value; }
+        public uint TotalItemsCount { get => _totalItemsCount; set => _totalItemsCount = value; }
         /// <summary>
         /// Max Number of items in a page
         /// </summary>
@@ -27,7 +27,7 @@ namespace HRCommonModel
         /// <summary>
         /// The number of Page in the query
         /// </summary>
-        public int TotalPages
+        public uint TotalPages
         {
             get
             {

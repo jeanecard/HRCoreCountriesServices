@@ -83,7 +83,7 @@ namespace XUnitTestServices.MocksAndStubs
                 CurrentPage = pageModel.PageNumber,
                 PageItems = _borders,
                 PageSize = pageModel.PageSize,
-                TotalItemsCount = _borders.Count
+                TotalItemsCount = (uint)_borders.Count
             };
             return retour;
         }
@@ -112,7 +112,7 @@ namespace XUnitTestServices.MocksAndStubs
                 CurrentPage = pageModel.PageNumber,
                 PageItems = _borders,
                 PageSize = pageModel.PageSize,
-                TotalItemsCount = _borders.Count
+                TotalItemsCount = (uint)_borders.Count
             };
             return retour;
         }

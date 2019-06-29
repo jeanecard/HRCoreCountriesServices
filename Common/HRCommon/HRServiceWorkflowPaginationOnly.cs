@@ -81,7 +81,7 @@ namespace HRCommon
                 throw new ArgumentNullException();
             }
             //2-
-            Task<IEnumerable<T>> taskForInternalPagination = null;
+            IEnumerable<T> internalPagination = null;
             //2.1-
             if (orderBy != null && orderBy.IsInitialised())
             {
@@ -91,16 +91,23 @@ namespace HRCommon
                     //2.1.1.1-
                     if (_repository.IsPaginable())
                     {
-                        Task<PagingParameterOutModel<T>> itemsTask = null;
-                        itemsTask = _repository.GetOrderedAndPaginatedsAsync(pageModel, orderBy);
-                        await itemsTask;
-                        return itemsTask.Result;
+                        PagingParameterOutModel<T> retourPaginable = null;
+
+                        using (Task<PagingParameterOutModel<T>> itemsTask = _repository.GetOrderedAndPaginatedsAsync(pageModel, orderBy))
+                        { 
+                            await itemsTask;
+                            retourPaginable = itemsTask.Result;
+                        }
+                        return retourPaginable;
                     }
                     //2.1.1.2-
                     else
                     {
-                        taskForInternalPagination = _repository.GetOrderedsAsync(orderBy);
-                        await taskForInternalPagination;
+                        using(Task < IEnumerable < T >> taskForInternalPagination = _repository.GetOrderedsAsync(orderBy))
+                        {
+                            await taskForInternalPagination;
+                            internalPagination = taskForInternalPagination.Result;
+                        }
                     }
                 }
                 //2.1.2-
@@ -115,28 +122,34 @@ namespace HRCommon
                 //2.2.1-
                 if (_repository.IsPaginable())
                 {
-                    Task<PagingParameterOutModel<T>> bordersTask = null;
-                    bordersTask = _repository.GetPaginatedsAsync(pageModel);
-                    await bordersTask;
-                    return bordersTask.Result;
+                    PagingParameterOutModel<T> retourPaginable = null;
+                    using (Task<PagingParameterOutModel<T>> bordersTask = _repository.GetPaginatedsAsync(pageModel))
+                    {
+                        await bordersTask;
+                        retourPaginable = bordersTask.Result;
+                    }
+                    return retourPaginable;
                 }
                 //2.2.2-
                 else
                 {
-                    taskForInternalPagination = _repository.GetFullsAsync();
-                    await taskForInternalPagination;
+                    using (Task<IEnumerable<T>> taskForInternalPagination = _repository.GetFullsAsync())
+                    {
+                        await taskForInternalPagination;
+                        internalPagination = taskForInternalPagination.Result;
+                    }
                 }
             }
             //3-
             //3.1-
-            if (!_paginer.IsValid(pageModel, taskForInternalPagination.Result))
+            if (!_paginer.IsValid(pageModel, internalPagination))
             {
                 throw new InvalidProgramException();
             }
             //3.2-
             else
             {
-                return _paginer.GetPaginationFromFullList(pageModel, taskForInternalPagination.Result, _maxPageSize);
+                return _paginer.GetPaginationFromFullList(pageModel, internalPagination, _maxPageSize);
             }
         }
     }

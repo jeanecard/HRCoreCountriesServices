@@ -1,6 +1,9 @@
-﻿using System;
+﻿using HRCoreCountriesRepository;
+using QuickType;
+using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace XUnitTestDAL
@@ -8,12 +11,18 @@ namespace XUnitTestDAL
     public class HRCoreCountriesRepositoryTest
     {
         /// <summary>
-        /// TODO
+        /// Test that GetAsync return null when id is null or Empty
         /// </summary>
         [Fact]
-        public void TODO()
+        public async void TestGetAsyncReturnNullWithIDNullOrEmpty()
         {
-            Assert.True(false);
+            MongoDBCountriesRepository repo = new MongoDBCountriesRepository(null);
+            Task<HRCountry> task = repo.GetAsync(null);
+            await task;
+            Assert.Null(task.Result);
+            task = repo.GetAsync(String.Empty);
+            await task;
+            Assert.Null(task.Result);
         }
     }
 }

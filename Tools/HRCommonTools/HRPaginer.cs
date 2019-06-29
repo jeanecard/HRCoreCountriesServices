@@ -3,6 +3,7 @@ using HRCommonTools.Interface;
 using System;
 using System.Collections.Generic;
 
+
 namespace HRCommonTools
 {
     /// <summary>
@@ -31,7 +32,7 @@ namespace HRCommonTools
                 PagingParameterInModel reworkedPagingIn = PagingParameterInLimiter.LimitPagingIn(model, maxPageSize);
                 PagingParameterOutModel<T> retour = new PagingParameterOutModel<T>();
                 IEnumerator<T> enumerator = items.GetEnumerator();
-                int itemsCount = GetEnumerableCount(enumerator);
+                uint itemsCount = GetEnumerableCount(enumerator);
 
                 retour.TotalItemsCount = itemsCount;
                 retour.PageSize = reworkedPagingIn.PageSize;
@@ -57,17 +58,15 @@ namespace HRCommonTools
                 return retour;
             }
         }
-
-
         /// <summary>
-        /// Compute the validity of the input parameter. Can throw Exceptions.
+        /// 
         /// </summary>
-        /// <param name="model">The input Pagination Parameter</param>
-        /// <param name="items">The full list of items to paginate</param>
-        /// <returns>Throw ArgumentNullException if any of input parameters is null, Throw InvalidOperationException if pageSize is 0 else true if input args are valid else false.</returns>
-        public bool IsValid(PagingParameterInModel model, IEnumerable<T> items)
+        /// <param name="model"></param>
+        /// <param name="itemsCount"></param>
+        /// <returns></returns>
+        public bool IsValid(PagingParameterInModel model, uint itemsCount)
         {
-            if (items == null || model == null)
+            if ( model == null)
             {
                 throw new ArgumentNullException();
             }
@@ -77,8 +76,6 @@ namespace HRCommonTools
             }
             else
             {
-                IEnumerator<T> enumerator = items.GetEnumerator();
-                int itemsCount = GetEnumerableCount(enumerator);
                 bool isPageNumberInPaginationCapacity;
                 if (itemsCount <= model.PageSize)
                 {
@@ -93,13 +90,33 @@ namespace HRCommonTools
         }
 
         /// <summary>
+        /// Compute the validity of the input parameter. Can throw Exceptions.
+        /// </summary>
+        /// <param name="model">The input Pagination Parameter</param>
+        /// <param name="items">The full list of items to paginate</param>
+        /// <returns>Throw ArgumentNullException if any of input parameters is null, Throw InvalidOperationException if pageSize is 0 else true if input args are valid else false.</returns>
+        public bool IsValid(PagingParameterInModel model, IEnumerable<T> items)
+        {
+            if (items == null || model == null)
+            {
+                throw new ArgumentNullException();
+            }
+            else
+            {
+                IEnumerator<T> enumerator = items.GetEnumerator();
+                uint itemsCount = GetEnumerableCount(enumerator);
+                return this.IsValid(model, itemsCount);
+            }
+        }
+
+        /// <summary>
         /// Internal shortcut to avoid casting as array or list the IEnumerable arg.
         /// </summary>
         /// <param name="items">The list of elements to get Count</param>
         /// <returns>Exception or the result count</returns>
-        private int GetEnumerableCount(IEnumerator<T> enumerator)
+        private uint GetEnumerableCount(IEnumerator<T> enumerator)
         {
-            int retour = 0;
+            uint retour = 0;
             if (enumerator != null)
             {
                 while (enumerator.MoveNext())
