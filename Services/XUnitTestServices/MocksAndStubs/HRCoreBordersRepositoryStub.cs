@@ -1,12 +1,10 @@
 ﻿using HRCommonModel;
 using HRCommonModels;
 using HRCoreBordersModel;
+using HRCoreRepository.Interface;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
-using System.Linq;
-using HRCoreRepository.Interface;
 
 namespace XUnitTestServices.MocksAndStubs
 {
@@ -37,6 +35,7 @@ namespace XUnitTestServices.MocksAndStubs
 
         public Task<HRBorder> GetBorderAsync(string borderID)
         {
+            borderID.ToString();
             throw new NotImplementedException();
         }
 
@@ -61,6 +60,7 @@ namespace XUnitTestServices.MocksAndStubs
         public async Task<IEnumerable<HRBorder>> GetBordersAsync(HRSortingParamModel orderBy)
         {
             await Task.Delay(1);
+            orderBy.ToString();
             return _borders;
         }
 
@@ -77,6 +77,7 @@ namespace XUnitTestServices.MocksAndStubs
 
         public async Task<PagingParameterOutModel<HRBorder>> GetOrderedAndPaginatedBordersAsync(PagingParameterInModel pageModel, HRSortingParamModel orderBy)
         {
+            orderBy.ToString();
             await Task.Delay(1);
             PagingParameterOutModel<HRBorder> retour = new PagingParameterOutModel<HRBorder>()
             {
@@ -96,6 +97,7 @@ namespace XUnitTestServices.MocksAndStubs
         public async Task<IEnumerable<HRBorder>> GetOrderedBordersAsync(HRSortingParamModel orderBy)
         {
             await Task.Delay(1);
+            orderBy.ToString();
             return _borders;
         }
 

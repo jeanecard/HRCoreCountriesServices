@@ -1,9 +1,7 @@
 using HRCommonModel;
-using HRCommonTools;
 using HRCoreBordersModel;
 using HRCoreCountriesWebAPI2.Controllers;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -22,7 +20,7 @@ namespace XUnitTestControllers
         public async void HRBorderControllerOnGetByIDUnknownExpectStatusCode404()
         {
             List<String> list = new List<String>();
-            HRBordersController ctrl = new HRBordersController( null, new CoreBordersServiceStub(list));
+            HRBordersController ctrl = new HRBordersController(null, new CoreBordersServiceStub(list));
             Task<(int, HRBorder)> resultService = ctrl.GetFromID("XX");
             await resultService;
             Assert.True(resultService.Result.Item1 == StatusCodes.Status404NotFound);
@@ -51,7 +49,7 @@ namespace XUnitTestControllers
         [Fact]
         public async void HRBorderControllerOnGetByIDWithNullServiceExpectStatus500InternalServerError()
         {
-            HRBordersController ctrl = new HRBordersController( null, null);
+            HRBordersController ctrl = new HRBordersController(null, null);
             Task<(int, HRBorder)> resultService = ctrl.GetFromID("XX");
             await resultService;
             Assert.True(resultService.Result.Item1 == StatusCodes.Status500InternalServerError);
@@ -66,7 +64,7 @@ namespace XUnitTestControllers
         public async void HRBorderControllerOnGetByIDWithExceptionThrownByServiceExpectStatus500InternalServerError()
         {
             List<String> list = new List<String>() { ("XX") };
-            CoreBordersServiceStub service = new CoreBordersServiceStub(list) { ThrowException = true }; 
+            CoreBordersServiceStub service = new CoreBordersServiceStub(list) { ThrowException = true };
             HRBordersController ctrl = new HRBordersController(null, service);
             Task<(int, HRBorder)> resultService = ctrl.GetFromID("XX");
             await resultService;
@@ -92,7 +90,7 @@ namespace XUnitTestControllers
         #endregion
 
         #region GetAll
-      
+
         /// <summary>
         /// Test that a call to GetAll with any exception raised by his service return a 500 http status code and a null result.
         /// </summary>
@@ -100,7 +98,7 @@ namespace XUnitTestControllers
         public async void HRBorderControllerOnGetAllWithExceptionThrownByServiceExpectStatus500InternalServerError()
         {
             List<String> list = new List<String>() { ("XX"), ("YY") };
-            CoreBordersServiceStub service = new CoreBordersServiceStub(list) { ThrowException = true };          
+            CoreBordersServiceStub service = new CoreBordersServiceStub(list) { ThrowException = true };
             HRBordersController ctrl = new HRBordersController(null, service);
             PagingParameterInModel validModel = new PagingParameterInModel() { PageNumber = 0, PageSize = 50 };
             Task<(int, PagingParameterOutModel<HRBorder>)> resultService = ctrl.GetFromPaging(validModel, null);
@@ -127,8 +125,8 @@ namespace XUnitTestControllers
             await resultService;
             Assert.True(resultService.Result.Item1 == StatusCodes.Status200OK);
             Assert.True(resultService.Result.Item2 != null);
- 
+
         }
-         #endregion
+        #endregion
     }
 }

@@ -66,7 +66,7 @@ namespace HRCommonTools
         /// <returns></returns>
         public bool IsValid(PagingParameterInModel model, uint itemsCount)
         {
-            if ( model == null)
+            if (model == null)
             {
                 throw new ArgumentNullException();
             }

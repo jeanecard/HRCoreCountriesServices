@@ -42,11 +42,11 @@ namespace XUnitTestHRTools
             {
                 HRSortingParamModelDeserializer.GetFieldOrders(new HRSortingParamModel() { OrderBy = query });
             }
-            catch(ArgumentOutOfRangeException)
+            catch (ArgumentOutOfRangeException)
             {
                 catched = true;
             }
-            catch(Exception)
+            catch (Exception)
             {
                 //Dummy.
             }

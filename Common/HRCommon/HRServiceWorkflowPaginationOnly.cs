@@ -1,7 +1,7 @@
-﻿using HRCommonTools.Interface;
-using HRCommon.Interface;
+﻿using HRCommon.Interface;
 using HRCommonModel;
 using HRCommonModels;
+using HRCommonTools.Interface;
 using HRCoreRepository.Interface;
 using System;
 using System.Collections.Generic;
@@ -94,7 +94,7 @@ namespace HRCommon
                         PagingParameterOutModel<T> retourPaginable = null;
 
                         using (Task<PagingParameterOutModel<T>> itemsTask = _repository.GetOrderedAndPaginatedsAsync(pageModel, orderBy))
-                        { 
+                        {
                             await itemsTask;
                             retourPaginable = itemsTask.Result;
                         }
@@ -103,7 +103,7 @@ namespace HRCommon
                     //2.1.1.2-
                     else
                     {
-                        using(Task < IEnumerable < T >> taskForInternalPagination = _repository.GetOrderedsAsync(orderBy))
+                        using (Task<IEnumerable<T>> taskForInternalPagination = _repository.GetOrderedsAsync(orderBy))
                         {
                             await taskForInternalPagination;
                             internalPagination = taskForInternalPagination.Result;

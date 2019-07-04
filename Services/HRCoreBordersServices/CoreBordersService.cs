@@ -1,12 +1,10 @@
-﻿using HRCommonModel;
+﻿using HRCommon.Interface;
+using HRCommonModel;
 using HRCommonModels;
-using HRCommonTools.Interface;
 using HRCoreBordersModel;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using HRCoreRepository.Interface;
-using HRCommon.Interface;
+using System;
+using System.Threading.Tasks;
 
 namespace HRCoreBordersServices
 {
@@ -15,7 +13,7 @@ namespace HRCoreBordersServices
         private readonly IServiceWorkflowOnHRCoreRepository<HRBorder> _workflow = null;
         private readonly IHRCoreRepository<HRBorder> _bordersRepository = null;
         private readonly static ushort _maxPageSize = 50;
-        public HRCoreBordersService(IHRCoreRepository<HRBorder> repo, 
+        public HRCoreBordersService(IHRCoreRepository<HRBorder> repo,
             IServiceWorkflowOnHRCoreRepository<HRBorder> workflow)
         {
             _bordersRepository = repo;
@@ -73,7 +71,7 @@ namespace HRCoreBordersServices
         /// <returns></returns>
         public async Task<PagingParameterOutModel<HRBorder>> GetBordersAsync(PagingParameterInModel pageModel, HRSortingParamModel orderBy = null)
         {
-            if(_workflow == null)
+            if (_workflow == null)
             {
                 throw new MemberAccessException();
             }

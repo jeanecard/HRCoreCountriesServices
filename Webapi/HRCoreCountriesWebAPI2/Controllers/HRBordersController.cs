@@ -1,14 +1,12 @@
 ﻿using HRCommonModel;
 using HRCommonModels;
 using HRCommonTools;
-using HRCommonTools.Interface;
 using HRCoreBordersModel;
 using HRCoreBordersServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace HRCoreCountriesWebAPI2.Controllers
@@ -91,15 +89,15 @@ namespace HRCoreCountriesWebAPI2.Controllers
                 HRBorder resultAction = bordersAction.Result;
                 if (resultAction != null)
                 {
-                        if (!String.IsNullOrEmpty(resultAction.FIPS)
-                            && resultAction.FIPS.ToUpper() == id.ToUpper())
-                        {
-                            return (StatusCodes.Status200OK, resultAction);
-                        }
-                        else
-                        {
-                            return (StatusCodes.Status404NotFound, null);
-                        }
+                    if (!String.IsNullOrEmpty(resultAction.FIPS)
+                        && resultAction.FIPS.ToUpper() == id.ToUpper())
+                    {
+                        return (StatusCodes.Status200OK, resultAction);
+                    }
+                    else
+                    {
+                        return (StatusCodes.Status404NotFound, null);
+                    }
                 }
                 return (StatusCodes.Status404NotFound, null);
             }
@@ -122,7 +120,7 @@ namespace HRCoreCountriesWebAPI2.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status416RequestedRangeNotSatisfiable)]
         [ProducesResponseType(StatusCodes.Status413PayloadTooLarge)]
-        public async Task<ActionResult<PagingParameterOutModel<HRBorder>>> Get([FromQuery] PagingParameterInModel pageModel, 
+        public async Task<ActionResult<PagingParameterOutModel<HRBorder>>> Get([FromQuery] PagingParameterInModel pageModel,
             [FromQuery]  HRSortingParamModel orderBy)
         {
             Task<(int, PagingParameterOutModel<HRBorder>)> result = GetFromPaging(pageModel, orderBy);
@@ -136,7 +134,7 @@ namespace HRCoreCountriesWebAPI2.Controllers
                 return StatusCode(result.Result.Item1);
             }
         }
-  
+
 
         /// <summary>
         /// 1- Process PagingInParameter if not supplied
@@ -147,18 +145,18 @@ namespace HRCoreCountriesWebAPI2.Controllers
         /// <param name="pageModel">The Paging Model</param>
         /// <returns>(http Status Code, PagingParameterOutModel)</returns>
         public async Task<(int, PagingParameterOutModel<HRBorder>)> GetFromPaging(
-            [FromQuery] PagingParameterInModel pageModel, 
+            [FromQuery] PagingParameterInModel pageModel,
             [FromQuery]  HRSortingParamModel orderBy)
         {
             if (_borderService != null)
             {
-                if(orderBy != null && orderBy.IsInitialised())
+                if (orderBy != null && orderBy.IsInitialised())
                 {
                     if (!_borderService.IsSortable())
                     {
                         return (StatusCodes.Status400BadRequest, null);
                     }
-                    else if(!HRSortingParamModelDeserializer.IsValid(orderBy))
+                    else if (!HRSortingParamModelDeserializer.IsValid(orderBy))
                     {
                         return (StatusCodes.Status400BadRequest, null);
                     }
@@ -169,7 +167,7 @@ namespace HRCoreCountriesWebAPI2.Controllers
                     pageModel = GetDefaultPagingInParameter();
                 }
                 //!Add tu on this
-                if(pageModel.PageSize > _maxPageSize)
+                if (pageModel.PageSize > _maxPageSize)
                 {
                     return (StatusCodes.Status413PayloadTooLarge, null);
                 }
@@ -182,7 +180,7 @@ namespace HRCoreCountriesWebAPI2.Controllers
                     return (StatusCodes.Status200OK, bordersAction.Result);
 
                 }
-                catch(IndexOutOfRangeException)
+                catch (IndexOutOfRangeException)
                 {
                     //!Add tu on this
                     return (StatusCodes.Status416RequestedRangeNotSatisfiable, null);

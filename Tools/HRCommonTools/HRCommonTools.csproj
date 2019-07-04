@@ -6,7 +6,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Models\HRCommonModels\HRCommonModels.csproj" />
-    <ProjectReference Include="..\..\Models\HRCoreBordersModel\HRCoreBordersModel.csproj" />
   </ItemGroup>
 
 </Project>

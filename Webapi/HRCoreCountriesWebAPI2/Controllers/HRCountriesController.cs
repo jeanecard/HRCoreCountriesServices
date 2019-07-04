@@ -1,14 +1,12 @@
 ﻿using HRCommonModel;
 using HRCommonModels;
 using HRCommonTools;
-using HRCommonTools.Interface;
 using HRCoreCountriesServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using QuickType;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace HRCoreCountriesWebAPI2.Controllers

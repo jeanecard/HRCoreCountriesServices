@@ -1,12 +1,9 @@
 ﻿using HRCommon.Interface;
 using HRCommonModel;
 using HRCommonModels;
-using HRCommonTools.Interface;
-using HRCoreCountriesRepository;
 using HRCoreRepository.Interface;
 using QuickType;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace HRCoreCountriesServices
@@ -27,7 +24,7 @@ namespace HRCoreCountriesServices
             //1-
             _repository = repo;
             _workflow = workflow;
-            if(_workflow != null)
+            if (_workflow != null)
             {
                 _workflow.MaxPageSize = _maxPageSize;
             }

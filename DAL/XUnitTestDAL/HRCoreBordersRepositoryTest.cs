@@ -53,7 +53,7 @@ namespace XUnitTestDAL
             String sql = repo.GetSQLQuery(true,
                 null,
                 null,
-                new PagingParameterInModel() { PageNumber = 0, PageSize = 20});
+                new PagingParameterInModel() { PageNumber = 0, PageSize = 20 });
             Assert.NotNull(sql);
             Assert.Equal(sql, PostGISCoreBordersRepository.SQLQUERYFORDAPPER + " ORDER BY FIPS ASC  LIMIT 20 OFFSET 0 ");
         }
@@ -78,11 +78,11 @@ namespace XUnitTestDAL
         public void GetSQLQueryWithInValidOrderByThrowInvalidOperationException()
         {
             PostGISCoreBordersRepository repo = new PostGISCoreBordersRepository(null, new HRPaginer<HRBorder>());
-            Assert.Throws<InvalidOperationException>(() => 
+            Assert.Throws<InvalidOperationException>(() =>
             repo.GetSQLQuery(
-                true, 
-                null, 
-                new HRSortingParamModel() { OrderBy="nameXXXX;ASC"}, 
+                true,
+                null,
+                new HRSortingParamModel() { OrderBy = "nameXXXX;ASC" },
                 new PagingParameterInModel() { PageNumber = 0, PageSize = 20 }));
         }
     }

@@ -242,7 +242,7 @@ namespace HRCoreCountriesRepository
                         if (retourTask.Result != null)
                         {
                             //Force to list to avoid return asyn enum that can be enumerate only once.
-                            retour =  retourTask.Result.ToList();
+                            retour = retourTask.Result.ToList();
                         }
                     }
                 }

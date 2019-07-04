@@ -9,7 +9,7 @@ namespace HRCoreBordersModel
         /// <summary>
         /// This property is used if and only if wkb_geometry is null. 
         /// </summary>
-        private String wkt_geom = null; 
+        private String wkt_geom = null;
         [JsonIgnore]
         public Geometry WKB_GEOMETRY { get; set; }
         public String WKT_GEOMETRY
@@ -20,7 +20,7 @@ namespace HRCoreBordersModel
                 {
                     return WKB_GEOMETRY.ToText();
                 }
-                else if(wkt_geom != null)
+                else if (wkt_geom != null)
                 {
                     return wkt_geom;
                 }

@@ -1,7 +1,5 @@
 ﻿using HRConverters;
 using HRCoreBordersModel;
-using HRCoreBordersRepository;
-using HRCoreBordersServices;
 using NetTopologySuite.Geometries;
 using Npgsql;
 using System;

@@ -14,14 +14,14 @@ namespace XUnitTestServices.MocksAndStubs
         private readonly HRCountry _selected = new HRCountry();
         public HRCoreCountriesRepositoryStub(List<String> countries, String countrySelectable)
         {
-            if(countries != null)
+            if (countries != null)
             {
-                foreach(String iter in countries)
+                foreach (String iter in countries)
                 {
                     _countries.Add(new HRCountry() { _id = new MongoDB.Bson.ObjectId(iter) });
                 }
             }
-            if(!String.IsNullOrEmpty(countrySelectable))
+            if (!String.IsNullOrEmpty(countrySelectable))
             {
                 _selected._id = new MongoDB.Bson.ObjectId(countrySelectable);
             }

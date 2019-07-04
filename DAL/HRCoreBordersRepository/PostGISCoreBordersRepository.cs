@@ -77,7 +77,7 @@ namespace HRCoreBordersRepository
         /// </summary>
         /// <param name="borderID">the borderID to look for.</param>
         /// <returns>A collection with the Border with the borderID querried or all Borders if borderID is not supplied.</returns>
-        public async Task<HRBorder> GetAsync(string borderID) 
+        public async Task<HRBorder> GetAsync(string borderID)
         {
             HRBorder retour = null;
             //1-
@@ -113,10 +113,10 @@ namespace HRCoreBordersRepository
                 try
                 {
                     using (Task<IEnumerable<HRBorder>> retourTask = conn.QueryAsync<HRBorder>(GetSQLQuery(true, borderID, null)))
-                    { 
+                    {
                         await retourTask;
                         retour = retourTask.Result;
-                    }   
+                    }
                 }
                 catch (Exception)
                 {
@@ -146,7 +146,7 @@ namespace HRCoreBordersRepository
             {
                 sb.Append(SQLQUERY);
             }
-            
+
             if (!String.IsNullOrEmpty(borderID)
                 && borderID.Length == 2)
             {
@@ -155,7 +155,7 @@ namespace HRCoreBordersRepository
                 sb.Append(borderID.Substring(0, 2));
                 sb.Append("'");
             }
-            if(pageInModel != null && orderBy == null)
+            if (pageInModel != null && orderBy == null)
             {
                 //Set default order by as pagination required order by 
                 orderBy = new HRSortingParamModel() { OrderBy = "FIPS;ASC" };
@@ -209,7 +209,7 @@ namespace HRCoreBordersRepository
 
                 }
             }
-           
+
             return sb.ToString();
         }
         /// <summary>
@@ -244,7 +244,7 @@ namespace HRCoreBordersRepository
                 try
                 {
                     using (Task<IEnumerable<HRBorder>> retourTask = conn.QueryAsync<HRBorder>(GetSQLQuery(true, null, orderBy)))
-                    { 
+                    {
                         await retourTask;
                         retour = retourTask.Result;
                     }
@@ -279,11 +279,11 @@ namespace HRCoreBordersRepository
         /// <returns>The corresponding PagingParameterOutModel</returns>
         public async Task<PagingParameterOutModel<HRBorder>> GetOrderedAndPaginatedsAsync(PagingParameterInModel pageModel, HRSortingParamModel orderBy)
         {
-            if(pageModel == null)
+            if (pageModel == null)
             {
                 throw new ArgumentNullException();
             }
-            if(_paginer == null)
+            if (_paginer == null)
             {
                 throw new MemberAccessException("Paginer can not be null.");
             }
@@ -300,8 +300,8 @@ namespace HRCoreBordersRepository
                     using (Task<int> totalCountTask = conn.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM boundaries"))
                     {
                         await totalCountTask;
-                        if(totalCountTask.Result >= 0 && totalCountTask.Result < Int32.MaxValue)
-                        totalItemsCount = (uint)(totalCountTask.Result);
+                        if (totalCountTask.Result >= 0 && totalCountTask.Result < Int32.MaxValue)
+                            totalItemsCount = (uint)(totalCountTask.Result);
                     }
                     if (_paginer.IsValid(pageModel, totalItemsCount))
                     {
@@ -335,7 +335,7 @@ namespace HRCoreBordersRepository
         /// </summary>
         /// <param name="pageModel"></param>
         /// <returns></returns>
-        public async  Task<PagingParameterOutModel<HRBorder>> GetPaginatedsAsync(PagingParameterInModel pageModel)
+        public async Task<PagingParameterOutModel<HRBorder>> GetPaginatedsAsync(PagingParameterInModel pageModel)
         {
             PagingParameterOutModel<HRBorder> retour = null;
             using (Task<PagingParameterOutModel<HRBorder>> retourTask = GetOrderedAndPaginatedsAsync(pageModel, null))

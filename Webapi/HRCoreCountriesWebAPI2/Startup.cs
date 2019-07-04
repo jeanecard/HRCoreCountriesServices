@@ -12,7 +12,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 //Swagger Dependencies
-using NSwag.AspNetCore;
 using QuickType;
 
 namespace HRCoreCountriesWebAPI2
@@ -39,10 +38,10 @@ namespace HRCoreCountriesWebAPI2
 
             services.AddSingleton(Configuration);
             services.AddSingleton<ICoreBordersService>(new HRCoreBordersService(
-                new PostGISCoreBordersRepository(Configuration, new HRPaginer<HRBorder>()), 
+                new PostGISCoreBordersRepository(Configuration, new HRPaginer<HRBorder>()),
                 new HRServiceWorkflowPaginationOnly<HRBorder>(
-                    new PostGISCoreBordersRepository(Configuration, 
-                        new HRPaginer<HRBorder>()), 
+                    new PostGISCoreBordersRepository(Configuration,
+                        new HRPaginer<HRBorder>()),
                     new HRPaginer<HRBorder>())));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             // Register the Swagger services

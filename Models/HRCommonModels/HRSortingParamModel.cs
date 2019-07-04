@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace HRCommonModels
 {
@@ -17,7 +15,8 @@ namespace HRCommonModels
         /// <summary>
         /// 
         /// </summary>
-        public string OrderBy {
+        public string OrderBy
+        {
             get => _sortingParamsQuery;
             set => _sortingParamsQuery = value;
         }

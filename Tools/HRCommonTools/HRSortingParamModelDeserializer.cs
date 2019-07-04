@@ -25,7 +25,7 @@ namespace HRCommonTools
         public static IEnumerable<(String, String)> GetFieldOrders(HRSortingParamModel model)
         {
             List<(String, String)> retour = new List<(String, String)>();
-            if (model != null && !String.IsNullOrEmpty( model.OrderBy))
+            if (model != null && !String.IsNullOrEmpty(model.OrderBy))
             {
                 //1-
                 String[] parsedQuery = model.OrderBy.Split(_separator);
@@ -84,7 +84,7 @@ namespace HRCommonTools
         {
             bool retour = false;
             //1-
-            if(model == null)
+            if (model == null)
             {
                 retour = true;
             }

@@ -1,12 +1,5 @@
-using HRCoreBordersModel;
-using HRCoreBordersServices;
-using HRCoreCountriesServices;
-using QuickType;
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
-using XUnitTestServices.MocksAndStubs;
 
 namespace XUnitTestServices
 {

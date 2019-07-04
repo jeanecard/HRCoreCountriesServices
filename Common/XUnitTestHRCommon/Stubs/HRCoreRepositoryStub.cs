@@ -3,7 +3,6 @@ using HRCommonModels;
 using HRCoreRepository.Interface;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace XUnitTestHRCommon.Stubs
@@ -38,7 +37,7 @@ namespace XUnitTestHRCommon.Stubs
         public async Task<PagingParameterOutModel<int>> GetPaginatedsAsync(PagingParameterInModel pageModel)
         {
             await Task.Delay(1);
-            return new PagingParameterOutModel<int>() { CurrentPage = 44};
+            return new PagingParameterOutModel<int>() { CurrentPage = 44 };
         }
 
         public bool IsPaginable()

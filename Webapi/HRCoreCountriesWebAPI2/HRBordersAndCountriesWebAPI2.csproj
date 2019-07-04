@@ -14,9 +14,9 @@
      <ProjectReference Include="..\..\Services\HRCoreCountriesServices\HRCoreCountriesServices.csproj" />
      <ProjectReference Include="..\..\Models\HRCoreCountriesModel\HRCoreCountriesModel.csproj" />
      <ProjectReference Include="..\..\Tools\HRCommonTools\HRCommonTools.csproj" />
-    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
-    <PackageReference Include="NSwag.AspNetCore" Version="13.0.2" />
+    <PackageReference Include="NSwag.AspNetCore" Version="13.0.3" />
   </ItemGroup>
 
 </Project>
