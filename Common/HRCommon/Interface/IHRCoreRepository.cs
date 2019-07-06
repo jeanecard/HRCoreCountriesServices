@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 
 namespace HRCoreRepository.Interface
 {
+    /// <summary>
+    /// Interface for HRRepository
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public interface IHRCoreRepository<T> : ISortable, IPaginable
     {
         Task<T> GetAsync(String id);

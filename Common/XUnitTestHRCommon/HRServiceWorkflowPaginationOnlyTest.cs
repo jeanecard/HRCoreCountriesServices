@@ -36,7 +36,7 @@ namespace XUnitTestHRCommon
 
         [Fact]
         /// <summary>
-        /// Test that GetQueryResultsAsync throw NotSupportedException with a unsuortable repository and a valid orderBy  
+        /// Test that GetQueryResultsAsync throw NotSupportedException with a unsortable repository and a valid orderBy  
         /// </summary>
         public async void GetQueryResultsAsyncThrowNotSupportedExceptionOnUnsortableRepository()
         {
@@ -48,7 +48,7 @@ namespace XUnitTestHRCommon
         }
         [Fact]
         /// <summary>
-        /// Test that GetQueryResultsAsync Retrun SortableAndPAginable from repo with a valid orderBy  
+        /// Test that GetQueryResultsAsync Retrun SortableAndPaginable from repo with a valid orderBy  
         /// </summary>
         public async void GetQueryResultsAsyncRetrunRepositoryGetOrderedAndPaginatedsAsync()
         {

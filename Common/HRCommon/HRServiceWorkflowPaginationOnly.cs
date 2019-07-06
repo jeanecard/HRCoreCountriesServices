@@ -9,15 +9,16 @@ using System.Threading.Tasks;
 
 namespace HRCommon
 {
-    //x
+    /// <summary>
+    ///  Implementation of a Workflow to get a list of items considering that repository is sortable or not, paginable or not.
+    /// </summary>
     public class HRServiceWorkflowPaginationOnly<T> : IServiceWorkflowOnHRCoreRepository<T>
     {
         private readonly IHRCoreRepository<T> _repository = null;
         private readonly IHRPaginer<T> _paginer = null;
         private ushort _maxPageSize = 50;
-
         /// <summary>
-        /// TODO
+        /// MaxPageSize allowed for a Pagination.
         /// </summary>
         ushort IServiceWorkflowOnHRCoreRepository<T>.MaxPageSize
         {
@@ -31,14 +32,14 @@ namespace HRCommon
             }
         }
         /// <summary>
-        /// TODO
+        /// Private constructor for DI.
         /// </summary>
         private HRServiceWorkflowPaginationOnly()
         {
-            //Private for DI.
+            //Dummy.
         }
         /// <summary>
-        /// TODO
+        /// Construcotr for DI with a Paginer and Repository dependencies
         /// </summary>
         /// <param name="repo"></param>
         /// <param name="paginer"></param>
