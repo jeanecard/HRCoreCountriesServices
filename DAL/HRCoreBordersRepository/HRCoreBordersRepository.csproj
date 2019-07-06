@@ -5,7 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Interface\**" />
+    <EmbeddedResource Remove="Interface\**" />
+    <None Remove="Interface\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Dapper" Version="1.60.6" />
+    <PackageReference Include="log4net" Version="2.0.8" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="2.2.0" />
     <PackageReference Include="Npgsql" Version="4.0.7" />
     <PackageReference Include="NetTopologySuite" Version="1.15.2" />
@@ -18,9 +25,6 @@
     <ProjectReference Include="..\..\Models\HRCoreBordersModel\HRCoreBordersModel.csproj" />
     <ProjectReference Include="..\..\Tools\HRCommonTools\HRCommonTools.csproj" />
     <ProjectReference Include="..\..\Tools\HRGeometryConverters\HRGeometryConverters.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Interface\" />
   </ItemGroup>
 
 </Project>

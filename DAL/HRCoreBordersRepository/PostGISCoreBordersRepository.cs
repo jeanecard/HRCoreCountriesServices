@@ -6,6 +6,7 @@ using HRCommonTools;
 using HRCommonTools.Interface;
 using HRCoreBordersModel;
 using HRCoreRepository.Interface;
+using log4net;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
 using System;
@@ -18,6 +19,7 @@ namespace HRCoreBordersRepository
 {
     public class PostGISCoreBordersRepository : IHRCoreRepository<HRBorder>, ISortable, IPaginable
     {
+        private readonly ILog _logger = null;
         private readonly IConfiguration _config = null;
         private static readonly String _DBUSER = "HRCountries:Username";
         private static readonly String _DBPASSWORD = "HRCountries:Password";
@@ -48,9 +50,12 @@ namespace HRCoreBordersRepository
         /// Constructor for DI with Configuration dependency.
         /// 1- Set Config.
         /// 2- Add field avalaible for ORDER QUERY.
+        /// 3- Add logger Service.
         /// </summary>
         /// <param name="config"></param>
-        public PostGISCoreBordersRepository(IConfiguration config, IHRPaginer<HRBorder> paginer)
+        public PostGISCoreBordersRepository(IConfiguration config, 
+            IHRPaginer<HRBorder> paginer,
+            ILog logger = null)
         {
             //1-
             _config = config;
@@ -68,6 +73,8 @@ namespace HRCoreBordersRepository
             _whiteListOfAvaialbleFields.Add("SUBREGION", 1);
             _whiteListOfAvaialbleFields.Add("LON", 1);
             _whiteListOfAvaialbleFields.Add("LAT", 1);
+            //3-
+            _logger = logger;
         }
         /// <summary>
         /// Call the ReaderMethod.
@@ -100,8 +107,8 @@ namespace HRCoreBordersRepository
         /// <summary>
         /// Mapping from DataBase with Dapper
         /// </summary>
-        /// <param name="borderID"></param>
-        /// <returns></returns>
+        /// <param name="borderID">a BorderID</param>
+        /// <returns>A list with the corresponding HRBorder. Can throw Exception.</returns>
         private async Task<IEnumerable<HRBorder>> ReadBordersWithDapperAsync(String borderID)
         {
             IEnumerable<HRBorder> retour = null;
@@ -118,9 +125,12 @@ namespace HRCoreBordersRepository
                         retour = retourTask.Result;
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    //!log here. 
+                    if(_logger != null)
+                    {
+                        _logger.Error(ex.Message);
+                    }
                     throw;
                 }
             }
@@ -151,7 +161,7 @@ namespace HRCoreBordersRepository
                 && borderID.Length == 2)
             {
                 sb.Append("WHERE FIPS = '");
-                //Cheat Code to avoid SQL injection. Indeed pbm with SQL Command and SQLPArameters on GeometryColumn with postgis.
+                //Cheat Code to avoid SQL injection. Indeed pbm with SQL Command and SQLParameters on GeometryColumn with postgis.
                 sb.Append(borderID.Substring(0, 2));
                 sb.Append("'");
             }
@@ -206,7 +216,6 @@ namespace HRCoreBordersRepository
                     sb.Append(" OFFSET ");
                     sb.Append(pageInModel.PageNumber * pageInModel.PageSize);
                     sb.Append(" ");
-
                 }
             }
 
@@ -229,10 +238,10 @@ namespace HRCoreBordersRepository
             return true;
         }
         /// <summary>
-        /// 
+        /// Get All Border ordered by orderBy
         /// </summary>
-        /// <param name="orderBy"></param>
-        /// <returns></returns>
+        /// <param name="orderBy">orderBy to apply</param>
+        /// <returns>All Borders. Can throw Exception.</returns>
         public async Task<IEnumerable<HRBorder>> GetOrderedsAsync(HRSortingParamModel orderBy)
         {
             IEnumerable<HRBorder> retour = null;
@@ -249,9 +258,12 @@ namespace HRCoreBordersRepository
                         retour = retourTask.Result;
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    //!log here. 
+                    if (_logger != null)
+                    {
+                        _logger.Error(ex.Message);
+                    }
                     throw;
                 }
             }
@@ -260,7 +272,7 @@ namespace HRCoreBordersRepository
         /// <summary>
         /// Call GetOrderedsAsync with null OrderBy
         /// </summary>
-        /// <returns></returns>
+        /// <returns>All Border from DB. No Order garanty/</returns>
         public async Task<IEnumerable<HRBorder>> GetFullsAsync()
         {
             IEnumerable<HRBorder> retour = null;
@@ -322,9 +334,12 @@ namespace HRCoreBordersRepository
                         throw new IndexOutOfRangeException("Pagination out of existing range.");
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    //!log here. 
+                    if (_logger != null)
+                    {
+                        _logger.Error(ex.Message);
+                    }
                     throw;
                 }
                 return retour;
@@ -333,8 +348,8 @@ namespace HRCoreBordersRepository
         /// <summary>
         /// Call GetOrderedAndPaginatedsAsync with orederBy set to null.
         /// </summary>
-        /// <param name="pageModel"></param>
-        /// <returns></returns>
+        /// <param name="pageModel">the pageModel.</param>
+        /// <returns>The HRBorders corresponding Page</returns>
         public async Task<PagingParameterOutModel<HRBorder>> GetPaginatedsAsync(PagingParameterInModel pageModel)
         {
             PagingParameterOutModel<HRBorder> retour = null;
