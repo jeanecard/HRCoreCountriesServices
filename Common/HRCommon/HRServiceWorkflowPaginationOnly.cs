@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace HRCommon
 {
+    //x
     public class HRServiceWorkflowPaginationOnly<T> : IServiceWorkflowOnHRCoreRepository<T>
     {
         private readonly IHRCoreRepository<T> _repository = null;
