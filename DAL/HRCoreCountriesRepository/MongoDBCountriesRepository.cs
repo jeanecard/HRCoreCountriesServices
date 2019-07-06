@@ -2,6 +2,7 @@ using HRCommon.Interface;
 using HRCommonModel;
 using HRCommonModels;
 using HRCoreRepository.Interface;
+using log4net;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
 using QuickType;
@@ -16,6 +17,7 @@ namespace HRCoreCountriesRepository
     /// </summary>
     public class MongoDBCountriesRepository : IHRCoreRepository<HRCountry>, IPaginable, ISortable
     {
+        private readonly ILog _logger = null;
         private readonly IConfiguration _config = null;
         private static readonly String _MONGO_CX_STRING_KEY = "CountriesConnection";
         private static readonly String _MONGO_CLUSTER = "MongoDBDataBaseName:ClusterName";
@@ -29,17 +31,17 @@ namespace HRCoreCountriesRepository
         {
         }
         //Constructor for DI with Configuration
-        public MongoDBCountriesRepository(IConfiguration injectedMongoConfig)
+        public MongoDBCountriesRepository(IConfiguration injectedMongoConfig, ILog logger = null)
         {
             _config = injectedMongoConfig;
+            _logger = logger;
         }
         /// <summary>
-        /// !TODO revoir commentaire.
         /// 1- Get collection of Countries from Mongo
         ///     1.1- If collection is valid
         ///         1.1.2- Create an Empty Filter to get All Countries and create the corresponding task
         ///         1.1.3- await task result and if Result is not null return :
-        ///             1.1.3.1 - Full result if objectID nt supplied
+        ///             1.1.3.1 - Full result if objectID not supplied
         ///             1.1.3.2 - A collection with the single element queried. Algorithm has to be improve in next
         ///             iteration (Link, Filter MongoDB ..)
         ///     1.2- Else
@@ -52,7 +54,7 @@ namespace HRCoreCountriesRepository
         ///     ArgumentOutOfRangeException if objectID supplied can not be converted in MongoDB ID
         ///     System Exception as is if any other exception is thrown.
         /// </returns>
-        /// //!TODO Why IsDisposabl not called ???
+        /// //!TODO Why IsDisposable not called warning ???
         public async Task<IEnumerable<HRCountry>> GetCountriesAsync(String id = null)
         {
             IEnumerable<HRCountry> retour = null;
@@ -69,6 +71,8 @@ namespace HRCoreCountriesRepository
                     retourTask = collection.FindAsync(bld.Empty);
                     //1.1.3-
                     await retourTask;
+                    //Message IDE0067 Disposable object created by 'await retourTask' is never disposed whereas finally dispose exists ?
+
                     if (retourTask.Result != null)
                     {
                         //1.1.3.1-
@@ -95,9 +99,9 @@ namespace HRCoreCountriesRepository
                                     }
                                 }
                             }
+                            //Error on ObjectID conversion.
                             catch (Exception)
                             {
-                                retourTask.Dispose();
                                 throw new ArgumentOutOfRangeException();
                             }
                         }
@@ -106,12 +110,15 @@ namespace HRCoreCountriesRepository
                 //1.2-
                 else
                 {
-                    throw new InvalidOperationException("Collection not found.");
+                    throw new  InvalidOperationException("Collection not found.");
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                //Log pattern to apply.
+                if (_logger != null)
+                {
+                    _logger.Error(ex.Message);
+                }
                 throw;
             }
             finally
@@ -189,6 +196,7 @@ namespace HRCoreCountriesRepository
                        ((!String.IsNullOrEmpty(country.Alpha3Code)) && (country.Alpha3Code == idToSearch))));
                         //1.1.3-
                         await retourTask;
+                        //Message IDE0067 Disposable object created by 'await retourTask' is never disposed whereas finally dispose exists ?
                         if (retourTask.Result != null)
                         {
                             retour = retourTask.Result.FirstOrDefault();
@@ -200,9 +208,12 @@ namespace HRCoreCountriesRepository
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                //Log pattern to apply.
+                if (_logger != null)
+                {
+                    _logger.Error(ex.Message);
+                }
                 throw;
             }
             //2-
@@ -239,6 +250,7 @@ namespace HRCoreCountriesRepository
                     {
                         //1.1.3-
                         await retourTask;
+                        //Message IDE0067 Disposable object created by 'await retourTask' is never disposed whereas using dispose exists ?
                         if (retourTask.Result != null)
                         {
                             //Force to list to avoid return asyn enum that can be enumerate only once.
@@ -251,9 +263,12 @@ namespace HRCoreCountriesRepository
                     throw new InvalidOperationException("Collection not found.");
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                //Log pattern to apply.
+                if(_logger != null)
+                {
+                    _logger.Error(ex.Message);
+                }
                 throw;
             }
             //2-

@@ -3,7 +3,14 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
+
   <ItemGroup>
+    <Compile Remove="Interface\**" />
+    <EmbeddedResource Remove="Interface\**" />
+    <None Remove="Interface\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="log4net" Version="2.0.8" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="2.2.0" />
     <PackageReference Include="System.Runtime" Version="4.3.1" />
     <ProjectReference Include="..\..\Common\HRCommon\HRCommon.csproj" />
@@ -14,9 +21,6 @@
     <PackageReference Include="MongoDB.BSon" Version="2.8.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     <PackageReference Include="Newtonsoft.Json.Bson" Version="1.0.2" />   
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Interface\" />
   </ItemGroup>
 
 </Project>
