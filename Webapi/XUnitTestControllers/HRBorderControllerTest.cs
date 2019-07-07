@@ -120,7 +120,7 @@ namespace XUnitTestControllers
             }
             CoreBordersServiceStub service = new CoreBordersServiceStub(list);
             HRBordersController ctrl = new HRBordersController(null, service);
-            PagingParameterInModel validModel = new PagingParameterInModel() { PageNumber = 1, PageSize = 100 };
+            PagingParameterInModel validModel = new PagingParameterInModel() { PageNumber = 1, PageSize = 50 };
             Task<(int, PagingParameterOutModel<HRBorder>)> resultService = ctrl.GetFromPaging(validModel, null);
             await resultService;
             Assert.True(resultService.Result.Item1 == StatusCodes.Status200OK);
