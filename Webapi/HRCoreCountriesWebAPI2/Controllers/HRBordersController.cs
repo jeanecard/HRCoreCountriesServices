@@ -1,4 +1,5 @@
-﻿using HRCommonModel;
+﻿using HRBordersAndCountriesWebAPI2.Utils;
+using HRCommonModel;
 using HRCommonModels;
 using HRCommonTools;
 using HRCoreBordersModel;
@@ -13,6 +14,7 @@ namespace HRCoreCountriesWebAPI2.Controllers
 {
     [Produces("application/json")]
     [Route("api/v1.0/[controller]")]
+    [Route("")]
     [ApiController]
     public class HRBordersController : ControllerBase
     {
@@ -49,7 +51,7 @@ namespace HRCoreCountriesWebAPI2.Controllers
 
         public async Task<ActionResult<HRBorder>> Get([FromRoute] String id)
         {
-            Task<(int, HRBorder)> result = GetFromID(id);
+            Task<(int, HRBorder)> result = HRBordersControllersForker.GetFromID(id, _borderService);
             await result;
             if (result.Result.Item2 != null)
             {
@@ -58,52 +60,6 @@ namespace HRCoreCountriesWebAPI2.Controllers
             else
             {
                 return StatusCode(result.Result.Item1);
-            }
-        }
-
-        /// <summary>
-        /// 1- Check input consistance
-        /// 2- Call service async
-        /// 3- Process result of action as a single HRBorder.
-        /// </summary>
-        /// <param name="id">the FIPS value searched</param>
-        /// <returns>StatusCode, HRBorder result</returns>
-        public async Task<(int, HRBorder)> GetFromID(String id)
-        {
-            //1-
-            if (String.IsNullOrEmpty(id))
-            {
-                //Could not happen as Get(PageModel = null) exists)
-                return (StatusCodes.Status400BadRequest, null);
-            }
-            if (_borderService == null)
-            {
-                return (StatusCodes.Status500InternalServerError, null);
-            }
-            //2-
-            try
-            {
-                Task<HRBorder> bordersAction = _borderService.GetBorderAsync(id);
-                await bordersAction;
-                //3-
-                HRBorder resultAction = bordersAction.Result;
-                if (resultAction != null)
-                {
-                    if (!String.IsNullOrEmpty(resultAction.FIPS)
-                        && resultAction.FIPS.ToUpper() == id.ToUpper())
-                    {
-                        return (StatusCodes.Status200OK, resultAction);
-                    }
-                    else
-                    {
-                        return (StatusCodes.Status404NotFound, null);
-                    }
-                }
-                return (StatusCodes.Status404NotFound, null);
-            }
-            catch (Exception)
-            {
-                return (StatusCodes.Status500InternalServerError, null);
             }
         }
 
@@ -120,10 +76,22 @@ namespace HRCoreCountriesWebAPI2.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status416RequestedRangeNotSatisfiable)]
         [ProducesResponseType(StatusCodes.Status413PayloadTooLarge)]
-        public async Task<ActionResult<PagingParameterOutModel<HRBorder>>> Get([FromQuery] PagingParameterInModel pageModel,
+        public async Task<ActionResult<PagingParameterOutModel<HRBorder>>> Get(
+            [FromQuery] PagingParameterInModel pageModel,
             [FromQuery]  HRSortingParamModel orderBy)
         {
-            Task<(int, PagingParameterOutModel<HRBorder>)> result = GetFromPaging(pageModel, orderBy);
+            //1-
+            if (pageModel == null)
+            {
+                pageModel = GetDefaultPagingInParameter();
+            }
+
+            Task<(int, PagingParameterOutModel<HRBorder>)> result = HRBordersControllersForker.GetFromPaging(
+                pageModel, 
+                orderBy,
+                _borderService,
+                _maxPageSize
+                );
             await result;
             if (result.Result.Item2 != null)
             {
@@ -132,67 +100,6 @@ namespace HRCoreCountriesWebAPI2.Controllers
             else
             {
                 return StatusCode(result.Result.Item1);
-            }
-        }
-
-
-        /// <summary>
-        /// 1- Process PagingInParameter if not supplied
-        /// 2- Get the HRBorders from service
-        /// 3- Paginate previous result
-        /// !Strange we have to âss from query even for an "internal" method ... to untderstand.
-        /// </summary>
-        /// <param name="pageModel">The Paging Model</param>
-        /// <returns>(http Status Code, PagingParameterOutModel)</returns>
-        public async Task<(int, PagingParameterOutModel<HRBorder>)> GetFromPaging(
-            [FromQuery] PagingParameterInModel pageModel,
-            [FromQuery]  HRSortingParamModel orderBy)
-        {
-            if (_borderService != null)
-            {
-                if (orderBy != null && orderBy.IsInitialised())
-                {
-                    if (!_borderService.IsSortable())
-                    {
-                        return (StatusCodes.Status400BadRequest, null);
-                    }
-                    else if (!HRSortingParamModelDeserializer.IsValid(orderBy))
-                    {
-                        return (StatusCodes.Status400BadRequest, null);
-                    }
-                }
-                //1-
-                if (pageModel == null)
-                {
-                    pageModel = GetDefaultPagingInParameter();
-                }
-                //!Add tu on this
-                if (pageModel.PageSize > _maxPageSize)
-                {
-                    return (StatusCodes.Status413PayloadTooLarge, null);
-                }
-                try
-                {
-                    //2-
-                    Task<PagingParameterOutModel<HRBorder>> bordersAction = _borderService.GetBordersAsync(pageModel, orderBy);
-                    await bordersAction;
-                    //3-
-                    return (StatusCodes.Status200OK, bordersAction.Result);
-
-                }
-                catch (IndexOutOfRangeException)
-                {
-                    //!Add tu on this
-                    return (StatusCodes.Status416RequestedRangeNotSatisfiable, null);
-                }
-                catch (Exception)
-                {
-                    return (StatusCodes.Status500InternalServerError, null);
-                }
-            }
-            else
-            {
-                return (StatusCodes.Status500InternalServerError, null);
             }
         }
 

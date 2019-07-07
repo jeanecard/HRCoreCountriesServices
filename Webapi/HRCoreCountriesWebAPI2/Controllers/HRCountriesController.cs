@@ -1,4 +1,5 @@
-﻿using HRCommonModel;
+﻿using HRBordersAndCountriesWebAPI2.Utils;
+using HRCommonModel;
 using HRCommonModels;
 using HRCommonTools;
 using HRCoreCountriesServices;
@@ -37,7 +38,7 @@ namespace HRCoreCountriesWebAPI2.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<HRCountry>> Get([FromRoute] String id)
         {
-            Task<(int, HRCountry)> result = GetFromID(id);
+            Task<(int, HRCountry)> result = HRCountriesControllersForker.GetFromID(id, _service);
             await result;
             if (result.Result.Item2 != null)
             {
@@ -46,52 +47,6 @@ namespace HRCoreCountriesWebAPI2.Controllers
             else
             {
                 return StatusCode(result.Result.Item1);
-            }
-        }
-        /// <summary>
-        /// Get a Country by ID (ALPHA2_3CODE)
-        /// </summary>
-        /// <param name="id">the country ID</param>
-        /// <returns>the status code (http) and the Country.</returns>
-        public async Task<(int, HRCountry)> GetFromID(string id)
-        {
-            //1-
-            if (String.IsNullOrEmpty(id))
-            {
-                //Could not happen as Get(PageModel = null) exists)
-                return (StatusCodes.Status400BadRequest, null);
-            }
-            if (_service == null)
-            {
-                return (StatusCodes.Status500InternalServerError, null);
-            }
-            //2-
-            try
-            {
-                String idToCompare = id.ToUpper();
-                Task<HRCountry> countryAction = _service.GetCountryAsync(id);
-                await countryAction;
-                //3-
-                if (countryAction.Result != null)
-                {
-
-                    //Last check necessary ??
-                    HRCountry candidateCountry = countryAction.Result;
-                    if ((!String.IsNullOrEmpty(candidateCountry.Alpha2Code) && candidateCountry.Alpha2Code.ToUpper() == idToCompare)
-                        || (!String.IsNullOrEmpty(candidateCountry.Alpha3Code) && (candidateCountry.Alpha3Code == idToCompare)))
-                    {
-                        return (StatusCodes.Status200OK, countryAction.Result);
-                    }
-                    else
-                    {
-                        return (StatusCodes.Status404NotFound, null);
-                    }
-                }
-                return (StatusCodes.Status404NotFound, null);
-            }
-            catch (Exception)
-            {
-                return (StatusCodes.Status500InternalServerError, null);
             }
         }
 
@@ -109,7 +64,13 @@ namespace HRCoreCountriesWebAPI2.Controllers
             [FromQuery] PagingParameterInModel pageModel,
             [FromQuery]  HRSortingParamModel orderBy)
         {
-            Task<(int, PagingParameterOutModel<HRCountry>)> result = GetFromPaging(pageModel, orderBy);
+            //1-
+            if (pageModel == null)
+            {
+                pageModel = GetDefaultPagingInParameter();
+            }
+
+            Task<(int, PagingParameterOutModel<HRCountry>)> result = HRCountriesControllersForker.GetFromPaging(pageModel, orderBy, _service, _maxPageSize);
             await result;
             if (result.Result.Item2 != null)
             {
@@ -118,64 +79,6 @@ namespace HRCoreCountriesWebAPI2.Controllers
             else
             {
                 return StatusCode(result.Result.Item1);
-            }
-        }
-        /// <summary>
-        /// 1- Process PagingInParameter if not supplied
-        /// 2- Get the HRCountry from service
-        /// 3- Paginate previous result
-        /// </summary>
-        /// <param name="pageModel"></param>
-        /// <returns></returns>
-        public async Task<(int, PagingParameterOutModel<HRCountry>)> GetFromPaging(
-            [FromQuery] PagingParameterInModel pageModel,
-            [FromQuery]HRSortingParamModel orderBy)
-        {
-            if (_service != null)
-            {
-                if (orderBy != null && orderBy.IsInitialised())
-                {
-                    if (!_service.IsSortable())
-                    {
-                        return (StatusCodes.Status400BadRequest, null);
-                    }
-                    else if (!HRSortingParamModelDeserializer.IsValid(orderBy))
-                    {
-                        return (StatusCodes.Status400BadRequest, null);
-                    }
-                }
-                //1-
-                if (pageModel == null)
-                {
-                    pageModel = GetDefaultPagingInParameter();
-                }
-                //!Add tu on this
-                if (pageModel.PageSize > _maxPageSize)
-                {
-                    return (StatusCodes.Status413PayloadTooLarge, null);
-                }
-                try
-                {
-                    //2-
-                    Task<PagingParameterOutModel<HRCountry>> countriesAction = _service.GetCountriesAsync(pageModel, orderBy);
-                    await countriesAction;
-                    //3-
-                    return (StatusCodes.Status200OK, countriesAction.Result);
-
-                }
-                catch (IndexOutOfRangeException)
-                {
-                    //!Add tu on this
-                    return (StatusCodes.Status416RequestedRangeNotSatisfiable, null);
-                }
-                catch (Exception)
-                {
-                    return (StatusCodes.Status500InternalServerError, null);
-                }
-            }
-            else
-            {
-                return (StatusCodes.Status500InternalServerError, null);
             }
         }
 

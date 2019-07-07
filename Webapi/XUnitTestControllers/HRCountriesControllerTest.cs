@@ -1,3 +1,4 @@
+using HRBordersAndCountriesWebAPI2.Utils;
 using HRCommonModel;
 using HRCoreCountriesWebAPI2.Controllers;
 using Microsoft.AspNetCore.Http;
@@ -22,10 +23,7 @@ namespace XUnitTestControllers
             List<String> list = new List<String>() {
                 "FR",
                 "US" };
-            CoreCountriesServiceStub service = new CoreCountriesServiceStub(list);
-            HRCountriesController ctrl = new HRCountriesController(service, null);
-
-            Task<(int, HRCountry)> resultService = ctrl.GetFromID("AA");
+            Task<(int, HRCountry)> resultService = HRCountriesControllersForker.GetFromID("AA", new CoreCountriesServiceStub(list));
             await resultService;
             Assert.True(resultService.Result.Item1 == StatusCodes.Status404NotFound);
             Assert.True(resultService.Result.Item2 == null);
@@ -42,8 +40,7 @@ namespace XUnitTestControllers
                 "FR",
                 "US" };
             CoreCountriesServiceStub service = new CoreCountriesServiceStub(list);
-            HRCountriesController ctrl = new HRCountriesController(service, null);
-            Task<(int, HRCountry)> resultService = ctrl.GetFromID(null);
+            Task<(int, HRCountry)> resultService = HRCountriesControllersForker.GetFromID(null, service);
             await resultService;
             Assert.True(resultService.Result.Item1 == StatusCodes.Status400BadRequest);
             Assert.True(resultService.Result.Item2 == null);
@@ -56,8 +53,7 @@ namespace XUnitTestControllers
         [Fact]
         public async void HRCountriesControllerOnGetByIDWithNullServiceExpectStatus500InternalServerError()
         {
-            HRCountriesController ctrl = new HRCountriesController(null, null);
-            Task<(int, HRCountry)> resultService = ctrl.GetFromID("507f191e810c19729de860ea");
+            Task<(int, HRCountry)> resultService = HRCountriesControllersForker.GetFromID("507f191e810c19729de860ea", null);
             await resultService;
             Assert.True(resultService.Result.Item1 == StatusCodes.Status500InternalServerError);
             Assert.True(resultService.Result.Item2 == null);
@@ -73,10 +69,7 @@ namespace XUnitTestControllers
             List<String> list = new List<String>() {
                 "FR",
                 "US" };
-            CoreCountriesServiceStub service = new CoreCountriesServiceStub(list);
-            HRCountriesController ctrl = new HRCountriesController(service, null);
-            service.ThrowException = true;
-            Task<(int, HRCountry)> resultService = ctrl.GetFromID("507f191e810c19729de860ea");
+            Task<(int, HRCountry)> resultService = HRCountriesControllersForker.GetFromID("507f191e810c19729de860ea", new CoreCountriesServiceStub(list) { ThrowException = true });
             await resultService;
             Assert.True(resultService.Result.Item1 == StatusCodes.Status500InternalServerError);
             Assert.True(resultService.Result.Item2 == null);
@@ -90,9 +83,7 @@ namespace XUnitTestControllers
         public async void HRCountriesControllerOnGetByIDWithExistingItemExpectItemAndCodeStatus200()
         {
             List<String> list = new List<String>() {"FR",  "US" };
-            CoreCountriesServiceStub service = new CoreCountriesServiceStub(list);
-            HRCountriesController ctrl = new HRCountriesController(service, null);
-            Task<(int, HRCountry)> resultService = ctrl.GetFromID("FR");
+            Task<(int, HRCountry)> resultService = HRCountriesControllersForker.GetFromID("FR", new CoreCountriesServiceStub(list));
             await resultService;
             Assert.True(resultService.Result.Item1 == StatusCodes.Status200OK);
             Assert.True(resultService.Result.Item2 != null && resultService.Result.Item2.Alpha2Code.Equals("FR"));
@@ -111,10 +102,13 @@ namespace XUnitTestControllers
                 "FR",
                 "US" };
 
-            CoreCountriesServiceStub service = new CoreCountriesServiceStub(list) { ThrowException = true, Exception = new IndexOutOfRangeException() };
-            HRCountriesController ctrl = new HRCountriesController(service, null);
             PagingParameterInModel invalidModel = new PagingParameterInModel() { PageNumber = 2, PageSize = 50 };
-            Task<(int, PagingParameterOutModel<HRCountry>)> resultService = ctrl.GetFromPaging(invalidModel, null);
+            Task<(int, PagingParameterOutModel<HRCountry>)> resultService = HRCountriesControllersForker.GetFromPaging(
+                invalidModel, 
+                null,
+                new CoreCountriesServiceStub(list) { ThrowException = true, Exception = new IndexOutOfRangeException() },
+                50);
+
             await resultService;
             Assert.True(resultService.Result.Item1 == StatusCodes.Status416RequestedRangeNotSatisfiable);
             Assert.True(resultService.Result.Item2 == null);
@@ -131,10 +125,13 @@ namespace XUnitTestControllers
                 "FR",
                 "US" };
 
-            CoreCountriesServiceStub service = new CoreCountriesServiceStub(list) { ThrowException = true };
-            HRCountriesController ctrl = new HRCountriesController(service, null);
-            PagingParameterInModel invalidModel = new PagingParameterInModel() { PageNumber = 2, PageSize = 100 };
-            Task<(int, PagingParameterOutModel<HRCountry>)> resultService = ctrl.GetFromPaging(invalidModel, null);
+            PagingParameterInModel invalidModel = new PagingParameterInModel() { PageNumber = 2, PageSize = 50 };
+            Task<(int, PagingParameterOutModel<HRCountry>)> resultService = HRCountriesControllersForker.GetFromPaging(
+                invalidModel, 
+                null,
+                new CoreCountriesServiceStub(list) { ThrowException = true },
+                50
+                );
             await resultService;
             Assert.True(resultService.Result.Item1 == StatusCodes.Status500InternalServerError);
             Assert.True(resultService.Result.Item2 == null);
@@ -149,10 +146,13 @@ namespace XUnitTestControllers
             List<String> list = new List<String>() {
                 "FR",
                 "US" };
-            CoreCountriesServiceStub service = new CoreCountriesServiceStub(list);
-            HRCountriesController ctrl = new HRCountriesController(service, null);
             PagingParameterInModel invalidModel = new PagingParameterInModel() { PageNumber = 1, PageSize = 50 };
-            Task<(int, PagingParameterOutModel<HRCountry>)> resultService = ctrl.GetFromPaging(invalidModel, null);
+            Task<(int, PagingParameterOutModel<HRCountry>)> resultService = HRCountriesControllersForker.GetFromPaging(
+                invalidModel, 
+                null,
+                new CoreCountriesServiceStub(list),
+                50
+                );
             await resultService;
             Assert.True(resultService.Result.Item1 == StatusCodes.Status200OK);
         }

@@ -21,11 +21,11 @@ namespace HRCommonModels
             set => _sortingParamsQuery = value;
         }
 
-        public String SortingParamsQuery
-        {
-            get => _sortingParamsQuery;
-            set => _sortingParamsQuery = value;
-        }
+        //public String SortingParamsQuery
+        //{
+        //    get => _sortingParamsQuery;
+        //    set => _sortingParamsQuery = value;
+        //}
         /// <summary>
         /// Check if object is not on default state.
         /// </summary>
