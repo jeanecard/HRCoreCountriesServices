@@ -14,7 +14,6 @@ namespace HRCoreCountriesWebAPI2.Controllers
 {
     [Produces("application/json")]
     [Route("api/v1.0/[controller]")]
-    [Route("")]
     [ApiController]
     public class HRBordersController : ControllerBase
     {
