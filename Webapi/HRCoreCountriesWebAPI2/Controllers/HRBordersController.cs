@@ -12,6 +12,9 @@ using System.Threading.Tasks;
 
 namespace HRCoreCountriesWebAPI2.Controllers
 {
+    /// <summary>
+    /// Controller  for HRBorder
+    /// </summary>
     [Produces("application/json")]
     [Route("api/v1.0/[controller]")]
     [ApiController]
@@ -21,9 +24,10 @@ namespace HRCoreCountriesWebAPI2.Controllers
         private readonly IConfiguration _config = null;
         private readonly static ushort _maxPageSize = 50;
         /// <summary>
-        /// Public constructor with services DI
+        /// Constructor for DI
         /// </summary>
-        /// <param name="paginer">a Paginer Implementation.</param>
+        /// <param name="config">a MS Config</param>
+        /// <param name="borderService">a IBorderService</param>
         public HRBordersController(IConfiguration config, ICoreBordersService borderService)
         {
             _config = config;
@@ -38,10 +42,10 @@ namespace HRCoreCountriesWebAPI2.Controllers
         }
 
         /// <summary>
-        /// Get by ID Rest Method based on GetFromID(String id) method
+        /// Method to get a specific HRBorder by its FIPS
         /// </summary>
-        /// <param name="id">Border id</param>
-        /// <returns>HRBorder corresponding</returns>
+        /// <param name="id">Border id (FIPS)</param>
+        /// <returns>the corresponding HRBorder</returns>
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -64,10 +68,10 @@ namespace HRCoreCountriesWebAPI2.Controllers
 
 
         /// <summary>
-        /// Get by PagingInParameter based on GetFromPaging method
+        /// Method to get a list of ordered HRBorders. Server limit page size is 50 items. Beyond this value a http Status 416 : Requested Range Not Satisfiable is returned.
         /// </summary>
         /// <param name="pageModel">The PagingInParameter. Can be null (will be set to server Default)</param>
-        /// <param name="orderBy">The ordering param. Retrun a status 400 bad request is underlying services don't know how to order. Can be null.</param>
+        /// <param name="orderBy">The ordering param. Retrun a status 400 bad request is underlying services don't know how to order. Can be null. Sample : "FIPS;ASC;ISO2;DESC"</param>
         /// <returns>The HRBorders corresponding to pageModel parameter. Can throw MemberAccessException if any service is not consistant.</returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -105,7 +109,7 @@ namespace HRCoreCountriesWebAPI2.Controllers
         /// <summary>
         /// No Post implemented.
         /// </summary>
-        /// <param name="value"></param>
+        /// <param name="value">-</param>
         /// <returns></returns>
         [HttpPost]
         //[ProducesResponseType(StatusCodes.Status501NotImplemented)]
@@ -117,8 +121,8 @@ namespace HRCoreCountriesWebAPI2.Controllers
         /// <summary>
         /// No Put implemented.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="value"></param>
+        /// <param name="id">-</param>
+        /// <param name="value">-</param>
         /// <returns></returns>
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status501NotImplemented)]
@@ -130,7 +134,7 @@ namespace HRCoreCountriesWebAPI2.Controllers
         /// <summary>
         /// No Delete Implemented.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">-</param>
         /// <returns></returns>
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status501NotImplemented)]

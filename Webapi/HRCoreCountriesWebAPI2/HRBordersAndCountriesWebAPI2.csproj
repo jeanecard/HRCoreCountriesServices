@@ -8,6 +8,10 @@
     <NeutralLanguage>en</NeutralLanguage>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>C:\Users\a647998\Source\Repos\HRCoreCountriesServices\Webapi\HRCoreCountriesWebAPI2\HRBordersAndCountriesWebAPI2.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Remove="Controllers\HRBordersController - Copie.cs" />
   </ItemGroup>

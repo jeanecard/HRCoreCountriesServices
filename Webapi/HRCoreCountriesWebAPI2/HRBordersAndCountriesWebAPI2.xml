@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>HRBordersAndCountriesWebAPI2</name>
+    </assembly>
+    <members>
+        <member name="T:HRCoreCountriesWebAPI2.Controllers.HRBordersController">
+            <summary>
+            Controller  for HRBorder
+            </summary>
+        </member>
+        <member name="M:HRCoreCountriesWebAPI2.Controllers.HRBordersController.#ctor(Microsoft.Extensions.Configuration.IConfiguration,HRCoreBordersServices.ICoreBordersService)">
+            <summary>
+            Constructor for DI
+            </summary>
+            <param name="config">a MS Config</param>
+            <param name="borderService">a IBorderService</param>
+        </member>
+        <member name="M:HRCoreCountriesWebAPI2.Controllers.HRBordersController.#ctor">
+            <summary>
+            Private default constructor.
+            </summary>
+        </member>
+        <member name="M:HRCoreCountriesWebAPI2.Controllers.HRBordersController.Get(System.String)">
+            <summary>
+            Method to get a specific HRBorder by its FIPS
+            </summary>
+            <param name="id">Border id (FIPS)</param>
+            <returns>the corresponding HRBorder</returns>
+        </member>
+        <member name="M:HRCoreCountriesWebAPI2.Controllers.HRBordersController.Get(HRCommonModel.PagingParameterInModel,HRCommonModels.HRSortingParamModel)">
+            <summary>
+            Method to get a list of ordered HRBorders. Server limit page size is 50 items. Beyond this value a http Status 416 : Requested Range Not Satisfiable is returned.
+            </summary>
+            <param name="pageModel">The PagingInParameter. Can be null (will be set to server Default)</param>
+            <param name="orderBy">The ordering param. Retrun a status 400 bad request is underlying services don't know how to order. Can be null. Sample : "FIPS;ASC;ISO2;DESC"</param>
+            <returns>The HRBorders corresponding to pageModel parameter. Can throw MemberAccessException if any service is not consistant.</returns>
+        </member>
+        <member name="M:HRCoreCountriesWebAPI2.Controllers.HRBordersController.Post(System.String)">
+            <summary>
+            No Post implemented.
+            </summary>
+            <param name="value">-</param>
+            <returns></returns>
+        </member>
+        <member name="M:HRCoreCountriesWebAPI2.Controllers.HRBordersController.Put(System.Int32,System.String)">
+            <summary>
+            No Put implemented.
+            </summary>
+            <param name="id">-</param>
+            <param name="value">-</param>
+            <returns></returns>
+        </member>
+        <member name="M:HRCoreCountriesWebAPI2.Controllers.HRBordersController.Delete(System.Int32)">
+            <summary>
+            No Delete Implemented.
+            </summary>
+            <param name="id">-</param>
+            <returns></returns>
+        </member>
+        <member name="M:HRCoreCountriesWebAPI2.Controllers.HRBordersController.GetDefaultPagingInParameter">
+            <summary>
+            Set and return the Default PagingParameter for all the class. Does not throw any Exception.
+            </summary>
+            <returns>The default PagingInParamter</returns>
+        </member>
+        <member name="M:HRCoreCountriesWebAPI2.Controllers.HRCountriesController.Get(System.String)">
+            <summary>
+            Get by ID Rest Method based on GetFromID(String id) method
+            </summary>
+            <param name="id">Country ID (MongoDB ID as hexadedcimal).</param>
+            <returns>HRCountry corresponding</returns>
+        </member>
+        <member name="M:HRCoreCountriesWebAPI2.Controllers.HRCountriesController.Get(HRCommonModel.PagingParameterInModel,HRCommonModels.HRSortingParamModel)">
+            <summary>
+            Get by PagingInParameter based on GetFromPaging method
+            </summary>
+            <param name="pageModel">If pageModel is null return the first page else the querried one.</param>
+            <returns>The expected PagingParameterOutModel or a null result with the http status code.</returns>
+        </member>
+        <member name="M:HRCoreCountriesWebAPI2.Controllers.HRCountriesController.GetDefaultPagingInParameter">
+            <summary>
+            Create the default Paging without throwing any Exception.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:HRBordersAndCountriesWebAPI2.Utils.HRBordersControllersForker.GetFromID(System.String,HRCoreBordersServices.ICoreBordersService)">
+            <summary>
+            1- Check input consistance
+            2- Call service async
+            3- Process result of action as a single HRBorder.
+            </summary>
+            <param name="id">the FIPS value searched</param>
+            <returns>StatusCode, HRBorder result</returns>
+        </member>
+        <member name="M:HRBordersAndCountriesWebAPI2.Utils.HRBordersControllersForker.GetFromPaging(HRCommonModel.PagingParameterInModel,HRCommonModels.HRSortingParamModel,HRCoreBordersServices.ICoreBordersService,System.UInt16)">
+            <summary>
+            1- Process PagingInParameter if not supplied
+            2- Get the HRBorders from service
+            3- Paginate previous result
+            !Strange we have to âss from query even for an "internal" method ... to untderstand.
+            </summary>
+            <param name="pageModel">The Paging Model</param>
+            <returns>(http Status Code, PagingParameterOutModel)</returns>
+        </member>
+        <member name="M:HRBordersAndCountriesWebAPI2.Utils.HRCountriesControllersForker.GetFromID(System.String,HRCoreCountriesServices.ICoreCountriesService)">
+            <summary>
+            Get a Country by ID (ALPHA2_3CODE)
+            </summary>
+            <param name="id">the country ID</param>
+            <returns>the status code (http) and the Country.</returns>
+        </member>
+        <member name="M:HRBordersAndCountriesWebAPI2.Utils.HRCountriesControllersForker.GetFromPaging(HRCommonModel.PagingParameterInModel,HRCommonModels.HRSortingParamModel,HRCoreCountriesServices.ICoreCountriesService,System.UInt16)">
+            <summary>
+            1- Process PagingInParameter if not supplied
+            2- Get the HRCountry from service
+            3- Paginate previous result
+            </summary>
+            <param name="pageModel"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
