@@ -11,12 +11,16 @@ using System.Threading.Tasks;
 
 namespace HRBordersAndCountriesWebAPI2.Utils
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class HRCountriesControllersForker
     {
         /// <summary>
         /// Get a Country by ID (ALPHA2_3CODE)
         /// </summary>
         /// <param name="id">the country ID</param>
+        /// <param name="service">the core countries service</param>
         /// <returns>the status code (http) and the Country.</returns>
         public static async Task<(int, HRCountry)> GetFromID(string id, ICoreCountriesService service)
         {
@@ -65,7 +69,10 @@ namespace HRBordersAndCountriesWebAPI2.Utils
         /// 2- Get the HRCountry from service
         /// 3- Paginate previous result
         /// </summary>
-        /// <param name="pageModel"></param>
+        /// <param name="pageModel">the paging model</param>
+        /// <param name="orderBy">The order by clause</param>
+        /// <param name="service">the Core countries service</param>
+        /// <param name="maxPageSize">the maxPage size allowed for pagination.</param>
         /// <returns></returns>
         public static async Task<(int, PagingParameterOutModel<HRCountry>)> GetFromPaging(
             PagingParameterInModel pageModel,

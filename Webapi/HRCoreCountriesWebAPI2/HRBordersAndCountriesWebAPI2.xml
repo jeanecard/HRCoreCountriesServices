@@ -64,6 +64,18 @@
             </summary>
             <returns>The default PagingInParamter</returns>
         </member>
+        <member name="T:HRCoreCountriesWebAPI2.Controllers.HRCountriesController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:HRCoreCountriesWebAPI2.Controllers.HRCountriesController.#ctor(HRCoreCountriesServices.ICoreCountriesService,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            
+            </summary>
+            <param name="service"></param>
+            <param name="config"></param>
+        </member>
         <member name="M:HRCoreCountriesWebAPI2.Controllers.HRCountriesController.Get(System.String)">
             <summary>
             Get by ID Rest Method based on GetFromID(String id) method
@@ -76,6 +88,7 @@
             Get by PagingInParameter based on GetFromPaging method
             </summary>
             <param name="pageModel">If pageModel is null return the first page else the querried one.</param>
+            <param name="orderBy">Order by clause. Sample : "ISO2;ASC"</param>
             <returns>The expected PagingParameterOutModel or a null result with the http status code.</returns>
         </member>
         <member name="M:HRCoreCountriesWebAPI2.Controllers.HRCountriesController.GetDefaultPagingInParameter">
@@ -84,6 +97,58 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:HRCoreCountriesWebAPI2.Program">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:HRCoreCountriesWebAPI2.Program.Main(System.String[])">
+            <summary>
+            
+            </summary>
+            <param name="args"></param>
+        </member>
+        <member name="M:HRCoreCountriesWebAPI2.Program.CreateWebHostBuilder(System.String[])">
+            <summary>
+            
+            </summary>
+            <param name="args"></param>
+            <returns></returns>
+        </member>
+        <member name="T:HRCoreCountriesWebAPI2.Startup">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:HRCoreCountriesWebAPI2.Startup.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            
+            </summary>
+            <param name="configuration"></param>
+        </member>
+        <member name="P:HRCoreCountriesWebAPI2.Startup.Configuration">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:HRCoreCountriesWebAPI2.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+             <summary>
+            This method gets called by the runtime. Use this method to add services to the container. 
+             </summary>
+             <param name="services"></param>
+        </member>
+        <member name="M:HRCoreCountriesWebAPI2.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IHostingEnvironment)">
+            <summary>
+            This method gets called by the runtime. Use this method to configure the HTTP request pipeline. 
+            </summary>
+            <param name="app"></param>
+            <param name="env"></param>
+        </member>
+        <member name="T:HRBordersAndCountriesWebAPI2.Utils.HRBordersControllersForker">
+            <summary>
+            Border Controller
+            </summary>
+        </member>
         <member name="M:HRBordersAndCountriesWebAPI2.Utils.HRBordersControllersForker.GetFromID(System.String,HRCoreBordersServices.ICoreBordersService)">
             <summary>
             1- Check input consistance
@@ -91,6 +156,7 @@
             3- Process result of action as a single HRBorder.
             </summary>
             <param name="id">the FIPS value searched</param>
+            <param name="borderService">the Border service</param>
             <returns>StatusCode, HRBorder result</returns>
         </member>
         <member name="M:HRBordersAndCountriesWebAPI2.Utils.HRBordersControllersForker.GetFromPaging(HRCommonModel.PagingParameterInModel,HRCommonModels.HRSortingParamModel,HRCoreBordersServices.ICoreBordersService,System.UInt16)">
@@ -101,13 +167,22 @@
             !Strange we have to âss from query even for an "internal" method ... to untderstand.
             </summary>
             <param name="pageModel">The Paging Model</param>
+            <param name="orderBy">The order by clause. Sample : "ISO2;DESC"</param>
+            <param name="borderService">The countries service</param>
+            <param name="maxPageSize">The max PAgeSize of pagination</param>
             <returns>(http Status Code, PagingParameterOutModel)</returns>
+        </member>
+        <member name="T:HRBordersAndCountriesWebAPI2.Utils.HRCountriesControllersForker">
+            <summary>
+            
+            </summary>
         </member>
         <member name="M:HRBordersAndCountriesWebAPI2.Utils.HRCountriesControllersForker.GetFromID(System.String,HRCoreCountriesServices.ICoreCountriesService)">
             <summary>
             Get a Country by ID (ALPHA2_3CODE)
             </summary>
             <param name="id">the country ID</param>
+            <param name="service">the core countries service</param>
             <returns>the status code (http) and the Country.</returns>
         </member>
         <member name="M:HRBordersAndCountriesWebAPI2.Utils.HRCountriesControllersForker.GetFromPaging(HRCommonModel.PagingParameterInModel,HRCommonModels.HRSortingParamModel,HRCoreCountriesServices.ICoreCountriesService,System.UInt16)">
@@ -116,7 +191,10 @@
             2- Get the HRCountry from service
             3- Paginate previous result
             </summary>
-            <param name="pageModel"></param>
+            <param name="pageModel">the paging model</param>
+            <param name="orderBy">The order by clause</param>
+            <param name="service">the Core countries service</param>
+            <param name="maxPageSize">the maxPage size allowed for pagination.</param>
             <returns></returns>
         </member>
     </members>

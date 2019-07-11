@@ -12,6 +12,9 @@ using System.Threading.Tasks;
 
 namespace HRCoreCountriesWebAPI2.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Produces("application/json")]
     [Route("api/v1.0/[controller]")]
     [ApiController]
@@ -20,6 +23,11 @@ namespace HRCoreCountriesWebAPI2.Controllers
         private readonly ICoreCountriesService _service = null;
         private readonly IConfiguration _config;
         private readonly ushort _maxPageSize = 100;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="service"></param>
+        /// <param name="config"></param>
         public HRCountriesController(ICoreCountriesService service, IConfiguration config)
         {
             _service = service;
@@ -55,6 +63,7 @@ namespace HRCoreCountriesWebAPI2.Controllers
         /// Get by PagingInParameter based on GetFromPaging method
         /// </summary>
         /// <param name="pageModel">If pageModel is null return the first page else the querried one.</param>
+        /// <param name="orderBy">Order by clause. Sample : "ISO2;ASC"</param>
         /// <returns>The expected PagingParameterOutModel or a null result with the http status code.</returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]

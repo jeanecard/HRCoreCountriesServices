@@ -12,6 +12,9 @@ using System.Threading.Tasks;
 
 namespace HRBordersAndCountriesWebAPI2.Utils
 {
+    /// <summary>
+    /// Border Controller
+    /// </summary>
     public static class HRBordersControllersForker
     {
         /// <summary>
@@ -20,6 +23,7 @@ namespace HRBordersAndCountriesWebAPI2.Utils
         /// 3- Process result of action as a single HRBorder.
         /// </summary>
         /// <param name="id">the FIPS value searched</param>
+        /// <param name="borderService">the Border service</param>
         /// <returns>StatusCode, HRBorder result</returns>
 
         public static async Task<(int, HRBorder)> GetFromID(String id, ICoreBordersService borderService)
@@ -68,6 +72,9 @@ namespace HRBordersAndCountriesWebAPI2.Utils
         /// !Strange we have to âss from query even for an "internal" method ... to untderstand.
         /// </summary>
         /// <param name="pageModel">The Paging Model</param>
+        /// <param name="orderBy">The order by clause. Sample : "ISO2;DESC"</param>
+        /// <param name="borderService">The countries service</param>
+        /// <param name="maxPageSize">The max PAgeSize of pagination</param>
         /// <returns>(http Status Code, PagingParameterOutModel)</returns>
         public static async Task<(int, PagingParameterOutModel<HRBorder>)> GetFromPaging(
             PagingParameterInModel pageModel,

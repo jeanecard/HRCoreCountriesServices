@@ -8,4 +8,8 @@
     <DocumentationFile>C:\Users\a647998\Source\Repos\HRCoreCountriesServices\Models\HRCommonModels\HRCommonModels.xml</DocumentationFile>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>C:\Users\a647998\Source\Repos\HRCoreCountriesServices\Models\HRCommonModels\HRCommonModels.xml</DocumentationFile>
+  </PropertyGroup>
+
 </Project>

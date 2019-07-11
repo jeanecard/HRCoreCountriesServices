@@ -16,16 +16,28 @@ using QuickType;
 
 namespace HRCoreCountriesWebAPI2
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Startup
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="configuration"></param>
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        /// <summary>
+        ///This method gets called by the runtime. Use this method to add services to the container. 
+        /// </summary>
+        /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
             //Rework DI please
@@ -45,10 +57,17 @@ namespace HRCoreCountriesWebAPI2
                     new HRPaginer<HRBorder>())));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             // Register the Swagger services
-            services.AddSwaggerDocument();
+            services.AddSwaggerDocument(swagger => {
+                swagger.Version = "Version 1 Release candidate";
+                swagger.Title = "HR Core Services";
+                swagger.GenerateEnumMappingDescription = true;
+            }) ;
         }
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline. 
+        /// </summary>
+        /// <param name="app"></param>
+        /// <param name="env"></param>
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
