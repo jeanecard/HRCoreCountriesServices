@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>HRCommonModels</name>
+    </assembly>
+    <members>
+        <member name="T:HRCommonModels.HRSortingParamModel">
+            <summary>
+            Implements a generic ordering of fields.
+            The following format is expected : 
+            FieldName1;ASC or DESC;FieldName2;ASC or DESC
+            All parts are mandatory. ASC and DESC are key insensitive.
+            </summary>
+        </member>
+        <member name="P:HRCommonModels.HRSortingParamModel.OrderBy">
+            <summary>
+            The orderby Query. Expected : "Field1;DESC;Field2;ASC". No defauld value allowed for ASC or DESC. These values must be explicitly specified.
+            </summary>
+        </member>
+        <member name="M:HRCommonModels.HRSortingParamModel.IsInitialised">
+            <summary>
+            Check if object is not on default state.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:HRCommonModel.PagingParameterInModel">
+            <summary>
+            Input parameter to query a Pagination.
+            Prefered custom one to top, skip, count standard.
+            In superior version a proxy can be done over this object with the classical top, skip, count server pagination.
+            </summary>
+        </member>
+        <member name="M:HRCommonModel.PagingParameterInModel.#ctor">
+            <summary>
+            Dummy constructor.
+            </summary>
+        </member>
+        <member name="P:HRCommonModel.PagingParameterInModel.PageSize">
+            <summary>
+            The number of items (capacity) per page.
+            </summary>
+        </member>
+        <member name="P:HRCommonModel.PagingParameterInModel.PageNumber">
+            <summary>
+            The number of page, 0 based index.
+            </summary>
+        </member>
+        <member name="T:HRCommonModel.PagingParameterOutModel`1">
+            <summary>
+            Output resyult of a Pagination
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="P:HRCommonModel.PagingParameterOutModel`1.TotalItemsCount">
+            <summary>
+            Total items count in the query
+            </summary>
+        </member>
+        <member name="P:HRCommonModel.PagingParameterOutModel`1.PageSize">
+            <summary>
+            Max Number of items in a page
+            </summary>
+        </member>
+        <member name="P:HRCommonModel.PagingParameterOutModel`1.CurrentPage">
+            <summary>
+            The index (0 based) of the current page
+            </summary>
+        </member>
+        <member name="P:HRCommonModel.PagingParameterOutModel`1.TotalPages">
+            <summary>
+            The number of Page in the query
+            </summary>
+        </member>
+        <member name="P:HRCommonModel.PagingParameterOutModel`1.HasPreviousPage">
+            <summary>
+            Return true if current page has a previous page
+            </summary>
+        </member>
+        <member name="P:HRCommonModel.PagingParameterOutModel`1.HasNextPage">
+            <summary>
+            Return true if current page has a next page
+            </summary>
+        </member>
+        <member name="P:HRCommonModel.PagingParameterOutModel`1.PageItems">
+            <summary>
+            Return the items in the page.
+            </summary>
+        </member>
+    </members>
+</doc>
