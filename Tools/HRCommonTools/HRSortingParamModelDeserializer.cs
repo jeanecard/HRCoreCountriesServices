@@ -76,7 +76,7 @@ namespace HRCommonTools
         /// <summary>
         /// Evaluate validity of model.
         /// 1- Null models are valid
-        /// 2- Version 1 : Not null models are valid if they can be deserialized without Exception).
+        /// 2- Version 1 : Not null models are valid if they can be deserialized without Exception.
         /// </summary>
         /// <param name="model">The input model.</param>
         /// <returns>true if model is valid. Don't throw any exception.</returns>

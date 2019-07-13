@@ -13,7 +13,7 @@ namespace HRCommonModels
         private String _sortingParamsQuery = String.Empty;
 
         /// <summary>
-        /// 
+        /// The orderby Query. Expected : "Field1;DESC;Field2;ASC". No defauld value allowed for ASC or DESC. These values must be explicitly specified.
         /// </summary>
         public string OrderBy
         {
@@ -21,11 +21,6 @@ namespace HRCommonModels
             set => _sortingParamsQuery = value;
         }
 
-        public String SortingParamsQuery
-        {
-            get => _sortingParamsQuery;
-            set => _sortingParamsQuery = value;
-        }
         /// <summary>
         /// Check if object is not on default state.
         /// </summary>

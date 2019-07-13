@@ -12,6 +12,21 @@ namespace XUnitTestControllers
     {
         private readonly List<HRCountry> _list = new List<HRCountry>();
         public bool ThrowException = false;
+        private Exception _exceptionToThrow = null;
+
+        public Exception ExceptionToThrow { get
+            {
+                if(_exceptionToThrow == null)
+                {
+                    _exceptionToThrow = new Exception();
+                }
+                return _exceptionToThrow;
+            }
+            internal set
+            {
+                _exceptionToThrow = value;
+            }
+        }
 
         /// <summary>
         /// Return list or raise exception.
@@ -19,10 +34,14 @@ namespace XUnitTestControllers
         /// <returns></returns>
         public async Task<IEnumerable<HRCountry>> GetCountriesAsync(string id = null)
         {
+            if (ThrowException)
+            {
+                throw ExceptionToThrow;
+            }
+            List<HRCountry> retour = new List<HRCountry>();
             await Task.Delay(1);
             if (!String.IsNullOrEmpty(id))
             {
-                List<HRCountry> retour = new List<HRCountry>();
                 foreach (HRCountry iterator in _list)
                 {
                     if (iterator._id.Equals(new MongoDB.Bson.ObjectId(id)))
@@ -35,40 +54,68 @@ namespace XUnitTestControllers
             {
                 throw new Exception("");
             }
-            return _list;
+            return retour;
         }
 
-        public Task<HRCountry> GetCountryAsync(string id)
+        public async  Task<HRCountry> GetCountryAsync(string id)
         {
-            throw new NotImplementedException();
+            await Task.Delay(1);
+            if (ThrowException)
+            {
+                throw ExceptionToThrow;
+            }
+
+            if (!String.IsNullOrEmpty(id))
+            {
+                foreach (HRCountry iterator in _list)
+                {
+                    if (iterator.Alpha2Code.Equals(id) 
+                        || iterator.Alpha3Code.Equals(id))
+                    {
+                        return iterator;
+                    }
+                }
+            }
+            return null;
         }
 
-        public Task<PagingParameterOutModel<HRCountry>> GetCountriesAsync(PagingParameterInModel pageModel, HRSortingParamModel orderBy)
+        public async Task<PagingParameterOutModel<HRCountry>> GetCountriesAsync(PagingParameterInModel pageModel, HRSortingParamModel orderBy)
         {
-            throw new NotImplementedException();
+            await Task.Delay(1);
+            if (ThrowException)
+            {
+                throw ExceptionToThrow;
+            }
+            PagingParameterOutModel<HRCountry> retour = new PagingParameterOutModel<HRCountry>()
+            {
+                CurrentPage = 0,
+                PageItems = _list,
+                TotalItemsCount = 5
+             };
+            return retour;
         }
 
         public bool IsSortable()
         {
-            throw new NotImplementedException();
+            return true;
         }
 
         public bool IsPaginable()
         {
-            throw new NotImplementedException();
+            return true;
         }
 
         /// <summary>
         /// Construct a list of HRCountry from ID String list.
         /// </summary>
         /// <param name="countriesID"></param>
-        public CoreCountriesServiceStub(List<MongoDB.Bson.ObjectId> countriesID)
+        public CoreCountriesServiceStub(List<String> countriesID)
         {
             if (countriesID != null)
             {
-                foreach (MongoDB.Bson.ObjectId iterator in countriesID)
+                foreach (String iterator in countriesID)
                 {
-                    HRCountry countryi = new HRCountry() { _id = iterator };
+                    HRCountry countryi = new HRCountry() { Alpha2Code = iterator, Alpha3Code = iterator };
                     _list.Add(countryi);
                 }
             }

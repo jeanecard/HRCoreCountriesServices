@@ -14,171 +14,534 @@ namespace QuickType
     using System.Globalization;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Converters;
-
+    /// <summary>
+    /// HR Country model
+    /// </summary>
     public partial class HRCountry
     {
+        /// <summary>
+        /// MongoDB ID
+        /// </summary>
         [JsonProperty("_id")]
         public MongoDB.Bson.ObjectId _id;
 
+        /// <summary>
+        /// Country name
+        /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
 
+        /// <summary>
+        /// topLevelDomain
+        /// </summary>
         [JsonProperty("topLevelDomain")]
         public string[] TopLevelDomain { get; set; }
-
+        /// <summary>
+        /// ISO code (2char)
+        /// </summary>
         [JsonProperty("alpha2Code")]
         public string Alpha2Code { get; set; }
-
+        /// <summary>
+        /// Iso Code (3 char)
+        /// </summary>
         [JsonProperty("alpha3Code")]
         public string Alpha3Code { get; set; }
-
+        /// <summary>
+        /// Prefix phne number.
+        /// </summary>
         [JsonProperty("callingCodes")]
         public string[] CallingCodes { get; set; }
-
+        /// <summary>
+        /// Capital
+        /// </summary>
         [JsonProperty("capital")]
         public string Capital { get; set; }
-
+        /// <summary>
+        /// altSpellings
+        /// </summary>
         [JsonProperty("altSpellings")]
         public string[] AltSpellings { get; set; }
-
+        /// <summary>
+        /// Region (as continent)
+        /// </summary>
         [JsonProperty("region")]
         public Region Region { get; set; }
-
+        /// <summary>
+        /// SubRegion
+        /// </summary>
         [JsonProperty("subregion")]
         public string Subregion { get; set; }
-
+        /// <summary>
+        /// Number of inhabitant
+        /// </summary>
         [JsonProperty("population")]
         public long Population { get; set; }
-
+        /// <summary>
+        /// Lat / Lon probably WGS 84
+        /// </summary>
         [JsonProperty("latlng")]
         public double[] Latlng { get; set; }
-
+        /// <summary>
+        /// demonym
+        /// </summary>
         [JsonProperty("demonym")]
         public string Demonym { get; set; }
-
+        /// <summary>
+        /// Area
+        /// </summary>
         [JsonProperty("area")]
         public double? Area { get; set; }
-
+        /// <summary>
+        /// gini
+        /// </summary>
         [JsonProperty("gini")]
         public double? Gini { get; set; }
-
+        /// <summary>
+        /// Lit of time zones
+        /// </summary>
         [JsonProperty("timezones")]
         public string[] Timezones { get; set; }
-
+        /// <summary>
+        /// Countries in borders
+        /// </summary>
         [JsonProperty("borders")]
         public string[] Borders { get; set; }
-
+        /// <summary>
+        /// Name in native langage
+        /// </summary>
         [JsonProperty("nativeName")]
         public string NativeName { get; set; }
-
+        /// <summary>
+        /// numeric code
+        /// </summary>
         [JsonProperty("numericCode")]
         public string NumericCode { get; set; }
-
+        /// <summary>
+        /// List of curencies available
+        /// </summary>
         [JsonProperty("currencies")]
         public Currency[] Currencies { get; set; }
-
+        /// <summary>
+        /// List of langages spoken
+        /// </summary>
         [JsonProperty("languages")]
         public Language[] Languages { get; set; }
-
+        /// <summary>
+        /// List of translated native name
+        /// </summary>
         [JsonProperty("translations")]
         public Translations Translations { get; set; }
-
+        /// <summary>
+        /// Url of svg flag
+        /// </summary>
         [JsonProperty("flag")]
         public Uri Flag { get; set; }
-
+        /// <summary>
+        /// List of regionalBlocs
+        /// </summary>
         [JsonProperty("regionalBlocs")]
         public RegionalBloc[] RegionalBlocs { get; set; }
     }
-
+    /// <summary>
+    /// Class for currency
+    /// </summary>
     public partial class Currency
     {
+        /// <summary>
+        /// Currency code
+        /// </summary>
         [JsonProperty("code")]
         public string Code { get; set; }
-
+        /// <summary>
+        /// Currency name
+        /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
-
+        /// <summary>
+        /// Currency Symbol
+        /// </summary>
         [JsonProperty("symbol")]
         public string Symbol { get; set; }
     }
-
+    /// <summary>
+    /// Language class.
+    /// </summary>
     public partial class Language
     {
+        /// <summary>
+        /// Name of langage in iso639 1
+        /// </summary>
         [JsonProperty("iso639_1")]
         public string Iso6391 { get; set; }
+        /// <summary>
+        /// Name of langage in iso639 2
+        /// </summary>
 
         [JsonProperty("iso639_2")]
         public string Iso6392 { get; set; }
-
+        /// <summary>
+        /// Name of langage
+        /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
+        /// <summary>
+        /// Native name of langage
+        /// </summary>
 
         [JsonProperty("nativeName")]
         public string NativeName { get; set; }
     }
-
+    /// <summary>
+    /// Regional bloc class
+    /// </summary>
     public partial class RegionalBloc
     {
+        /// <summary>
+        /// acronym
+        /// </summary>
         [JsonProperty("acronym")]
         public Acronym Acronym { get; set; }
-
+        /// <summary>
+        /// name
+        /// </summary>
         [JsonProperty("name")]
         public Name Name { get; set; }
-
+        /// <summary>
+        /// otherAcronyms
+        /// </summary>
         [JsonProperty("otherAcronyms")]
         public OtherAcronym[] OtherAcronyms { get; set; }
-
+        /// <summary>
+        /// otherNames
+        /// </summary>
         [JsonProperty("otherNames")]
         public OtherName[] OtherNames { get; set; }
     }
-
+    /// <summary>
+    /// Class for Translations
+    /// </summary>
     public partial class Translations
     {
+        /// <summary>
+        /// Deutshland
+        /// </summary>
         [JsonProperty("de")]
         public string De { get; set; }
-
+        /// <summary>
+        /// Spain
+        /// </summary>
         [JsonProperty("es")]
         public string Es { get; set; }
-
+        /// <summary>
+        /// France
+        /// </summary>
         [JsonProperty("fr")]
         public string Fr { get; set; }
-
+        /// <summary>
+        /// Japan
+        /// </summary>
         [JsonProperty("ja")]
         public string Ja { get; set; }
-
+        /// <summary>
+        /// Italy
+        /// </summary>
         [JsonProperty("it")]
         public string It { get; set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
         [JsonProperty("br")]
         public string Br { get; set; }
-
+        /// <summary>
+        /// Br
+        /// </summary>
         [JsonProperty("pt")]
         public string Pt { get; set; }
-
+        /// <summary>
+        /// Nederlands
+        /// </summary>
         [JsonProperty("nl")]
         public string Nl { get; set; }
-
+        /// <summary>
+        /// hr, promise it's not me :-)
+        /// </summary>
         [JsonProperty("hr")]
         public string Hr { get; set; }
     }
-
-    public enum Region { Africa, Americas, Asia, Empty, Europe, Oceania, Polar };
-
-    public enum Acronym { Al, Asean, Au, Cais, Caricom, Cefta, Eeu, Efta, Eu, Nafta, Pa, Saarc, Usan };
-
-    public enum Name { AfricanUnion, ArabLeague, AssociationOfSoutheastAsianNations, CaribbeanCommunity, CentralAmericanIntegrationSystem, CentralEuropeanFreeTradeAgreement, EurasianEconomicUnion, EuropeanFreeTradeAssociation, EuropeanUnion, NorthAmericanFreeTradeAgreement, PacificAlliance, SouthAsianAssociationForRegionalCooperation, UnionOfSouthAmericanNations };
-
-    public enum OtherAcronym { Eaeu, Sica, Unasul, Unasur, Uzan };
-
-    public enum OtherName { AccordDeLibreÉchangeNordAméricain, AlianzaDelPacífico, CaribischeGemeenschap, CommunautéCaribéenne, ComunidadDelCaribe, JāmiAtAdDuwalAlArabīyah, LeagueOfArabStates, SistemaDeLaIntegraciónCentroamericana, SouthAmericanUnion, TratadoDeLibreComercioDeAméricaDelNorte, UmojaWaAfrika, UnieVanZuidAmerikaanseNaties, UnionAfricaine, UniãoAfricana, UniãoDeNaçõesSulAmericanas, UniónAfricana, UniónDeNacionesSuramericanas, الاتحادالأفريقي, جامعةالدولالعربية };
-
+    /// <summary>
+    /// Region enum
+    /// </summary>
+    public enum Region {
+        /// <summary>
+        /// 
+        /// </summary>
+        Africa,
+        /// <summary>
+        /// 
+        /// </summary>
+        Americas,
+        /// <summary>
+        /// 
+        /// </summary>
+        Asia,
+        /// <summary>
+        /// 
+        /// </summary>
+        Empty,
+        /// <summary>
+        /// 
+        /// </summary>
+        Europe,
+        /// <summary>
+        /// 
+        /// </summary>
+        Oceania,
+        /// <summary>
+        /// 
+        /// </summary>
+        Polar };
+    /// <summary>
+    /// Acronym enum
+    /// </summary>
+    public enum Acronym {
+        /// <summary>
+        /// African League
+        /// </summary>
+        Al,
+        /// <summary>
+        /// Association Of South East Asian Nations
+        /// </summary>
+        Asean,
+        /// <summary>
+        /// African Union
+        /// </summary>
+        Au,
+        /// <summary>
+        /// Central American Integration System
+        /// </summary>
+        Cais,
+        /// <summary>
+        /// Caribena Community
+        /// </summary>
+        Caricom,
+        /// <summary>
+        /// Central European Free Trade Agreement
+        /// </summary>
+        Cefta,
+        /// <summary>
+        /// Eurasian Economic Union
+        /// </summary>
+        Eeu,
+        /// <summary>
+        /// European Free Trade Association
+        /// </summary>
+        Efta,
+        /// <summary>
+        /// European Union
+        /// </summary>
+        Eu,
+        /// <summary>
+        /// North American Free Trade Agreement
+        /// </summary>
+        Nafta,
+        /// <summary>
+        /// Pacific Alliance
+        /// </summary>
+        Pa,
+        /// <summary>
+        /// South Asian Association For Regional Cooperation
+        /// </summary>
+        Saarc,
+        /// <summary>
+        /// Union Of South American Nations
+        /// </summary>
+        Usan
+    };
+    /// <summary>
+    /// Name enum
+    /// </summary>
+    public enum Name {
+        /// <summary>
+        /// AfricanUnion
+        /// </summary>
+        AfricanUnion,
+        /// <summary>
+        /// ArabLeague
+        /// </summary>
+        ArabLeague,
+        /// <summary>
+        /// AssociationOfSoutheastAsianNations
+        /// </summary>
+        AssociationOfSoutheastAsianNations,
+        /// <summary>
+        /// CaribbeanCommunity
+        /// </summary>
+        CaribbeanCommunity,
+        /// <summary>
+        /// CentralAmericanIntegrationSystem
+        /// </summary>
+        CentralAmericanIntegrationSystem,
+        /// <summary>
+        /// CentralEuropeanFreeTradeAgreement
+        /// </summary>
+        CentralEuropeanFreeTradeAgreement,
+        /// <summary>
+        /// EurasianEconomicUnion
+        /// </summary>
+        EurasianEconomicUnion,
+        /// <summary>
+        /// EuropeanFreeTradeAssociation
+        /// </summary>
+        EuropeanFreeTradeAssociation,
+        /// <summary>
+        /// EuropeanUnion
+        /// </summary>
+        EuropeanUnion,
+        /// <summary>
+        /// NorthAmericanFreeTradeAgreement
+        /// </summary>
+        NorthAmericanFreeTradeAgreement,
+        /// <summary>
+        /// PacificAlliance
+        /// </summary>
+        PacificAlliance,
+        /// <summary>
+        /// SouthAsianAssociationForRegionalCooperation
+        /// </summary>
+        SouthAsianAssociationForRegionalCooperation,
+        /// <summary>
+        /// UnionOfSouthAmericanNations
+        /// </summary>
+        UnionOfSouthAmericanNations
+    };
+    /// <summary>
+    /// Other acronym enum
+    /// </summary>
+    public enum OtherAcronym {
+        /// <summary>
+        /// Eurasian Economic Union
+        /// </summary>
+        Eaeu,
+        /// <summary>
+        /// Unknown acronym.
+        /// </summary>
+        Sica,
+        /// <summary>
+        /// Union of South American Nations
+        /// </summary>
+        Unasul,
+        /// <summary>
+        /// Union of South American Nations
+        /// </summary>
+        Unasur,
+        /// <summary>
+        /// Unknown acronym.
+        /// </summary>
+        Uzan
+    };
+    /// <summary>
+    /// Othername enum
+    /// </summary>
+    public enum OtherName {
+        /// <summary>
+        /// AccordDeLibreÉchangeNordAméricain
+        /// </summary>
+        AccordDeLibreÉchangeNordAméricain,
+        /// <summary>
+        /// AlianzaDelPacífico
+        /// </summary>
+        AlianzaDelPacífico,
+        /// <summary>
+        /// CaribischeGemeenschap
+        /// </summary>
+        CaribischeGemeenschap,
+        /// <summary>
+        /// CommunautéCaribéenne
+        /// </summary>
+        CommunautéCaribéenne,
+        /// <summary>
+        /// ComunidadDelCaribe
+        /// </summary>
+        ComunidadDelCaribe,
+        /// <summary>
+        /// JāmiAtAdDuwalAlArabīyah
+        /// </summary>
+        JāmiAtAdDuwalAlArabīyah,
+        /// <summary>
+        /// LeagueOfArabStates
+        /// </summary>
+        LeagueOfArabStates,
+        /// <summary>
+        /// SistemaDeLaIntegraciónCentroamericana
+        /// </summary>
+        SistemaDeLaIntegraciónCentroamericana,
+        /// <summary>
+        /// SouthAmericanUnion
+        /// </summary>
+        SouthAmericanUnion,
+        /// <summary>
+        /// TratadoDeLibreComercioDeAméricaDelNorte
+        /// </summary>
+        TratadoDeLibreComercioDeAméricaDelNorte,
+        /// <summary>
+        /// UmojaWaAfrika
+        /// </summary>
+        UmojaWaAfrika,
+        /// <summary>
+        /// UnieVanZuidAmerikaanseNaties
+        /// </summary>
+        UnieVanZuidAmerikaanseNaties,
+        /// <summary>
+        /// UnionAfricaine
+        /// </summary>
+        UnionAfricaine,
+        /// <summary>
+        /// UniãoAfricana
+        /// </summary>
+        UniãoAfricana,
+        /// <summary>
+        /// UniãoDeNaçõesSulAmericanas
+        /// </summary>
+        UniãoDeNaçõesSulAmericanas,
+        /// <summary>
+        /// UniónAfricana
+        /// </summary>
+        UniónAfricana,
+        /// <summary>
+        /// UniónDeNacionesSuramericanas
+        /// </summary>
+        UniónDeNacionesSuramericanas,
+        /// <summary>
+        /// الاتحادالأفريقي
+        /// </summary>
+        الاتحادالأفريقي,
+        /// <summary>
+        /// جامعةالدولالعربية
+        /// </summary>
+        جامعةالدولالعربية
+    };
+    /// <summary>
+    /// Class HRCountry
+    /// </summary>
     public partial class HRCountry
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="json"></param>
+        /// <returns></returns>
         public static HRCountry[] FromJson(string json) => JsonConvert.DeserializeObject<HRCountry[]>(json, QuickType.Converter.Settings);
     }
-
+    /// <summary>
+    /// Class serialze
+    /// </summary>
     public static class Serialize
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="self"></param>
+        /// <returns></returns>
         public static string ToJson(this HRCountry[] self) => JsonConvert.SerializeObject(self, QuickType.Converter.Settings);
     }
 

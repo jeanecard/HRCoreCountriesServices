@@ -1,4 +1,5 @@
-﻿using HRCommonModel;
+﻿using HRCommon.Interface;
+using HRCommonModel;
 using HRCommonModels;
 using HRCoreBordersModel;
 using HRCoreBordersServices;
@@ -12,12 +13,29 @@ namespace XUnitTestControllers
     {
         private readonly List<HRBorder> _list = new List<HRBorder>();
         public bool ThrowException = false;
+        public bool IsSortable = true;
+        public bool IsPaginable = true;
+        private Exception _exception = null;
+
+        public Exception ExceptionToThrow { get
+            {
+                if (_exception == null)
+                {
+                    _exception = new Exception();
+                }
+                return _exception;
+            }
+            internal set
+            {
+                _exception = value;
+            } }
+
         public async Task<HRBorder> GetBorderAsync(string borderID)
         {
             await Task.Delay(1);
             if (ThrowException)
             {
-                throw new Exception("");
+                throw ExceptionToThrow;
             }
             if (borderID != null)
             {
@@ -32,17 +50,13 @@ namespace XUnitTestControllers
             return null;
         }
 
-        public bool IsSortable()
-        {
-            throw new NotImplementedException();
-        }
 
         public async Task<PagingParameterOutModel<HRBorder>> GetBordersAsync(PagingParameterInModel pageModel, HRSortingParamModel orderBy)
         {
             await Task.Delay(1);
             if (ThrowException)
             {
-                throw new Exception("");
+                throw ExceptionToThrow;
             }
             PagingParameterOutModel<HRBorder> retour = new PagingParameterOutModel<HRBorder>()
             {
@@ -53,9 +67,14 @@ namespace XUnitTestControllers
             return retour;
         }
 
-        public bool IsPaginable()
+        bool ISortable.IsSortable()
         {
-            throw new NotImplementedException();
+            return IsSortable;
+        }
+
+        bool IPaginable.IsPaginable()
+        {
+            return IsPaginable;
         }
 
         public CoreBordersServiceStub(List<String> bordersID)

@@ -3,6 +3,7 @@ using HRCommonModel;
 using HRCommonModels;
 using HRCoreBordersModel;
 using HRCoreRepository.Interface;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
@@ -13,8 +14,10 @@ namespace HRCoreBordersServices
         private readonly IServiceWorkflowOnHRCoreRepository<HRBorder> _workflow = null;
         private readonly IHRCoreRepository<HRBorder> _bordersRepository = null;
         private readonly static ushort _maxPageSize = 50;
+        private readonly ILogger<HRCoreBordersService> _logger = null;
         public HRCoreBordersService(IHRCoreRepository<HRBorder> repo,
-            IServiceWorkflowOnHRCoreRepository<HRBorder> workflow)
+            IServiceWorkflowOnHRCoreRepository<HRBorder> workflow,
+            ILogger<HRCoreBordersService> logger)
         {
             _bordersRepository = repo;
             _workflow = workflow;
@@ -22,6 +25,7 @@ namespace HRCoreBordersServices
             {
                 _workflow.MaxPageSize = _maxPageSize;
             }
+            _logger = logger;
         }
 
         public bool IsSortable()
@@ -32,6 +36,10 @@ namespace HRCoreBordersServices
             }
             else
             {
+                if(_logger != null)
+                {
+                    _logger.LogError("_bordersRepository is null in HRCoreBordersServices");
+                }
                 throw new MemberAccessException();
             }
         }
@@ -48,36 +56,60 @@ namespace HRCoreBordersServices
         /// Throw MemberAccessException if repository is null.</returns>
         public async Task<HRBorder> GetBorderAsync(String borderID)
         {
+            HRBorder retour = null;
             //1-
             if (_bordersRepository != null)
             {
                 //1.2-
-                Task<HRBorder> bordersTask = _bordersRepository.GetAsync(borderID);
-                await bordersTask;
-                //1.3-
-                return bordersTask.Result;
+                using (Task<HRBorder> bordersTask = _bordersRepository.GetAsync(borderID))
+                { 
+                    await bordersTask;
+                    //1.3-
+                    retour = bordersTask.Result;
+                }
             }
             //2-
             else
             {
+                if (_logger != null)
+                {
+                    _logger.LogError("_bordersRepository is null in HRCoreBordersServices");
+                }
                 throw new MemberAccessException();
             }
+            return retour;
         }
         /// <summary>
-        /// TODO
+        /// Get Paginated items.
         /// </summary>
-        /// <param name="pageModel"></param>
-        /// <param name="orderBy"></param>
-        /// <returns></returns>
+        /// <param name="pageModel">the PagingParameterInModel. Must not be null.</param>
+        /// <param name="orderBy">an optionnal orderByClause.</param>
+        /// <returns>The corresponding borders paginated an optionnaly</returns>
         public async Task<PagingParameterOutModel<HRBorder>> GetBordersAsync(PagingParameterInModel pageModel, HRSortingParamModel orderBy = null)
         {
+            PagingParameterOutModel<HRBorder> retour = null;
             if (_workflow == null)
             {
+                if (_logger != null)
+                {
+                    _logger.LogError("_workflow is null in HRCoreBordersServices");
+                }
                 throw new MemberAccessException();
             }
-            Task<PagingParameterOutModel<HRBorder>> retourTask = _workflow.GetQueryResultsAsync(pageModel, orderBy);
-            await retourTask;
-            return retourTask.Result;
+            if(pageModel == null)
+            {
+                if (_logger != null)
+                {
+                    _logger.LogError("pageModel is null in HRCoreBordersServices : GetBordersAsync");
+                }
+                throw new ArgumentNullException();
+            }
+            using (Task<PagingParameterOutModel<HRBorder>> retourTask = _workflow.GetQueryResultsAsync(pageModel, orderBy))
+            {
+                await retourTask;
+                retour = retourTask.Result;
+            }
+            return retour;
         }
         /// <summary>
         /// All Pagination are available
