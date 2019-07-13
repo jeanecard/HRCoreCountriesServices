@@ -12,11 +12,16 @@ https://fullcoreservices-1-dev-as.azurewebsites.net/
 
 All projects are in .net Standard 2.0 but the WebApiProject depends on Windows Platform in this candidate Release.
 
+Cloud Databases use for Azure are the following
+- http://db.qgiscloud.com for PostGis (PostGres + Geospatial option) necessary to store HRBorders Geometries.
+- https://cloud.mongodb.com for mongoDB necessary to store HRCountry objects.
+
+
 Credentials for ConnectionString are stored :
 - secrets.json locally
 - Azure Settings for CI and Release.
 
-Tips to create your own MongoDB repositoey for HRCountry model :
+Tips to create your own MongoDB repository for HRCountry model :
 
 To create mongodb cloud Database with geojson documents
 
