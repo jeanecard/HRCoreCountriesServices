@@ -78,7 +78,12 @@ namespace HRCoreCountriesRepository
                 //1.2-
                 else
                 {
-                    throw new InvalidOperationException("Collection not found.");
+                    String ErrorMessage = "Collection not found in MongoDBCountriesRepository GetCountriesAsync";
+                    if (_looger != null)
+                    {
+                        _looger.LogError(ErrorMessage);
+                    }
+                    throw new InvalidOperationException(ErrorMessage);
                 }
             }
             catch (Exception ex)
@@ -109,7 +114,13 @@ namespace HRCoreCountriesRepository
         {
             if (_config == null)
             {
-                throw new MemberAccessException("No config available.");
+                String ErrorMessage = "No config available in MongoDBCountriesRepository GetCountriesCollection";
+                if (_looger != null)
+                {
+                    _looger.LogError(ErrorMessage);
+                }
+
+                throw new MemberAccessException(ErrorMessage);
             }
             IMongoCollection<HRCountry> retour = null;
             //1-
@@ -226,7 +237,12 @@ namespace HRCoreCountriesRepository
                 }
                 else
                 {
-                    throw new InvalidOperationException("Collection not found.");
+                    String ErrorMessage = "No Collection found in MongoDBCountriesRepository GetFullsAsync";
+                    if (_looger != null)
+                    {
+                        _looger.LogError(ErrorMessage);
+                    }
+                    throw new InvalidOperationException(ErrorMessage);
                 }
             }
             catch (Exception ex)

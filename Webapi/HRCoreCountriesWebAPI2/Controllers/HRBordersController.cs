@@ -7,6 +7,7 @@ using HRCoreBordersServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
@@ -20,6 +21,7 @@ namespace HRCoreCountriesWebAPI2.Controllers
     [ApiController]
     public class HRBordersController : ControllerBase
     {
+        private readonly ILogger<HRBordersController> _logger = null;
         private readonly ICoreBordersService _borderService = null;
         private readonly IConfiguration _config = null;
         private readonly static ushort _maxPageSize = 50;
@@ -30,13 +32,16 @@ namespace HRCoreCountriesWebAPI2.Controllers
         /// <param name="config">a MS Config</param>
         /// <param name="borderService">a IBorderService</param>
         /// <param name="util">a Commonutil</param>
+        /// <param name="logger">a MS Logger</param>
         public HRBordersController(IConfiguration config, 
             ICoreBordersService borderService,
-            IHRBordersControllersForker util)
+            IHRBordersControllersForker util,
+            ILogger<HRBordersController> logger)
         {
             _config = config;
             _borderService = borderService;
             _util = util;
+            _logger = logger;
         }
         /// <summary>
         /// Private default constructor.
@@ -59,6 +64,10 @@ namespace HRCoreCountriesWebAPI2.Controllers
 
         public async Task<ActionResult<HRBorder>> Get([FromRoute] String id)
         {
+            if(_logger != null)
+            {
+                _logger.LogError("HR test in HRBordersController:GET");
+            }
             if (_util != null)
             {
                 using (Task<(int, HRBorder)> result = _util.GetFromIDAsync(id, _borderService))
@@ -76,6 +85,10 @@ namespace HRCoreCountriesWebAPI2.Controllers
             }
             else
             {
+                if(_logger != null)
+                {
+                    _logger.LogError("_util is null in HRBordersController");
+                }
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
@@ -125,6 +138,10 @@ namespace HRCoreCountriesWebAPI2.Controllers
             }
             else
             {
+                if (_logger != null)
+                {
+                    _logger.LogError("_util is null in HRBordersController");
+                }
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }

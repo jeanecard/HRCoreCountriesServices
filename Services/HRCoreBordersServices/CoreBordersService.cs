@@ -3,6 +3,7 @@ using HRCommonModel;
 using HRCommonModels;
 using HRCoreBordersModel;
 using HRCoreRepository.Interface;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
@@ -13,8 +14,10 @@ namespace HRCoreBordersServices
         private readonly IServiceWorkflowOnHRCoreRepository<HRBorder> _workflow = null;
         private readonly IHRCoreRepository<HRBorder> _bordersRepository = null;
         private readonly static ushort _maxPageSize = 50;
+        private readonly ILogger<HRCoreBordersService> _logger = null;
         public HRCoreBordersService(IHRCoreRepository<HRBorder> repo,
-            IServiceWorkflowOnHRCoreRepository<HRBorder> workflow)
+            IServiceWorkflowOnHRCoreRepository<HRBorder> workflow,
+            ILogger<HRCoreBordersService> logger)
         {
             _bordersRepository = repo;
             _workflow = workflow;
@@ -22,6 +25,7 @@ namespace HRCoreBordersServices
             {
                 _workflow.MaxPageSize = _maxPageSize;
             }
+            _logger = logger;
         }
 
         public bool IsSortable()
@@ -32,6 +36,10 @@ namespace HRCoreBordersServices
             }
             else
             {
+                if(_logger != null)
+                {
+                    _logger.LogError("_bordersRepository is null in HRCoreBordersServices");
+                }
                 throw new MemberAccessException();
             }
         }
@@ -63,6 +71,10 @@ namespace HRCoreBordersServices
             //2-
             else
             {
+                if (_logger != null)
+                {
+                    _logger.LogError("_bordersRepository is null in HRCoreBordersServices");
+                }
                 throw new MemberAccessException();
             }
             return retour;
@@ -78,10 +90,18 @@ namespace HRCoreBordersServices
             PagingParameterOutModel<HRBorder> retour = null;
             if (_workflow == null)
             {
+                if (_logger != null)
+                {
+                    _logger.LogError("_workflow is null in HRCoreBordersServices");
+                }
                 throw new MemberAccessException();
             }
             if(pageModel == null)
             {
+                if (_logger != null)
+                {
+                    _logger.LogError("pageModel is null in HRCoreBordersServices : GetBordersAsync");
+                }
                 throw new ArgumentNullException();
             }
             using (Task<PagingParameterOutModel<HRBorder>> retourTask = _workflow.GetQueryResultsAsync(pageModel, orderBy))

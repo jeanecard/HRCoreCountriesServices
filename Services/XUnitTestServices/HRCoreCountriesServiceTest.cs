@@ -23,7 +23,7 @@ namespace XUnitTestServices
         public async void CountriesServiceOnGetCountriesAsyncThrowMemberAccessExceptionIfRepositoryIsNullExpectTrue()
         {
             IServiceWorkflowOnHRCoreRepository<HRCountry> workflow = new HRServiceWorkflowPaginationOnly<HRCountry>(null, null);
-            CoreCountriesService service = new CoreCountriesService(null, workflow);
+            CoreCountriesService service = new CoreCountriesService(null, workflow, null);
             bool exceptionThrown = false;
             try
             {
@@ -51,7 +51,7 @@ namespace XUnitTestServices
         [Fact]
         public async void CountriesServiceOnGetCountriesAsyncThrowMemberAccessExceptionIfWorkflowIsNullExpectTrue()
         {
-            CoreCountriesService service = new CoreCountriesService(new HRCoreCountriesRepositoryStub(null, null), null);
+            CoreCountriesService service = new CoreCountriesService(new HRCoreCountriesRepositoryStub(null, null), null, null);
             bool exceptionThrown = false;
             try
             {
@@ -83,7 +83,8 @@ namespace XUnitTestServices
                 repository,
                 new HRServiceWorkflowPaginationOnly<HRCountry>(
                     repository,
-                    new HRPaginer<HRCountry>())
+                    new HRPaginer<HRCountry>()),
+                null
                 );
             using (Task<HRCountry> repoResult = service.GetCountryAsync("aa"))
             { 
@@ -104,7 +105,8 @@ namespace XUnitTestServices
                 repository,
                 new HRServiceWorkflowPaginationOnly<HRCountry>(
                     repository,
-                    new HRPaginer<HRCountry>())
+                    new HRPaginer<HRCountry>()),
+                null
                 );
             PagingParameterInModel pageModel = new PagingParameterInModel() { PageNumber = 0, PageSize = 10 };
 

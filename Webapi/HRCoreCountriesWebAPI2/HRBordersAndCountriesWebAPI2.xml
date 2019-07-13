@@ -9,13 +9,14 @@
             Controller  for HRBorder
             </summary>
         </member>
-        <member name="M:HRCoreCountriesWebAPI2.Controllers.HRBordersController.#ctor(Microsoft.Extensions.Configuration.IConfiguration,HRCoreBordersServices.ICoreBordersService,HRBordersAndCountriesWebAPI2.Utils.IHRBordersControllersForker)">
+        <member name="M:HRCoreCountriesWebAPI2.Controllers.HRBordersController.#ctor(Microsoft.Extensions.Configuration.IConfiguration,HRCoreBordersServices.ICoreBordersService,HRBordersAndCountriesWebAPI2.Utils.IHRBordersControllersForker,Microsoft.Extensions.Logging.ILogger{HRCoreCountriesWebAPI2.Controllers.HRBordersController})">
             <summary>
             Constructor for DI
             </summary>
             <param name="config">a MS Config</param>
             <param name="borderService">a IBorderService</param>
             <param name="util">a Commonutil</param>
+            <param name="logger">a MS Logger</param>
         </member>
         <member name="M:HRCoreCountriesWebAPI2.Controllers.HRBordersController.#ctor">
             <summary>
@@ -70,13 +71,14 @@
             HRCountries Controller
             </summary>
         </member>
-        <member name="M:HRCoreCountriesWebAPI2.Controllers.HRCountriesController.#ctor(HRCoreCountriesServices.ICoreCountriesService,Microsoft.Extensions.Configuration.IConfiguration,HRBordersAndCountriesWebAPI2.Utils.IHRCountriesControllersForker)">
+        <member name="M:HRCoreCountriesWebAPI2.Controllers.HRCountriesController.#ctor(HRCoreCountriesServices.ICoreCountriesService,Microsoft.Extensions.Configuration.IConfiguration,HRBordersAndCountriesWebAPI2.Utils.IHRCountriesControllersForker,Microsoft.Extensions.Logging.ILogger{HRCoreCountriesWebAPI2.Controllers.HRCountriesController})">
             <summary>
             Construcotr for DI.
             </summary>
             <param name="service">Country service.</param>
             <param name="config">MS Config.</param>
             <param name="forker">Country forker.</param>
+            <param name="logger">MS logger.</param>
         </member>
         <member name="M:HRCoreCountriesWebAPI2.Controllers.HRCountriesController.Get(System.String)">
             <summary>

@@ -14,7 +14,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-//Swagger Dependencies
 using QuickType;
 using System;
 
@@ -59,11 +58,6 @@ namespace HRCoreCountriesWebAPI2
             services.AddTransient<IServiceWorkflowOnHRCoreRepository<HRBorder>, HRServiceWorkflowPaginationOnly<HRBorder>>();
 
             services.AddSingleton<IHRCoreRepository<HRBorder>, PostGISCoreBordersRepository>();
-            //services.AddSingleton<IHRCoreRepository<HRBorder>>(sp =>
-            //    new PostGISCoreBordersRepository(Configuration, sp.GetRequiredService<IHRPaginer<HRBorder>>(), null)
-
-            // );
-            //services.AddSingleton<IHRCoreRepository<HRCountry>>(new MongoDBCountriesRepository(Configuration, null));
             services.AddSingleton<IHRCoreRepository<HRCountry>, MongoDBCountriesRepository>();
 
             services.AddTransient<ICoreCountriesService, CoreCountriesService>();

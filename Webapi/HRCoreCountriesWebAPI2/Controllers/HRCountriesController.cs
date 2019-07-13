@@ -6,6 +6,7 @@ using HRCoreCountriesServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using QuickType;
 using System;
 using System.Threading.Tasks;
@@ -17,9 +18,10 @@ namespace HRCoreCountriesWebAPI2.Controllers
     /// </summary>
     [Produces("application/json")]
     [Route("api/v1.0/[controller]")]
-    [ApiController]
+    [ApiController] 
     public class HRCountriesController : ControllerBase
     {
+        private readonly ILogger<HRCountriesController> _logger = null;
         private readonly ICoreCountriesService _service = null;
         private readonly IConfiguration _config;
         private readonly ushort _maxPageSize = 100;
@@ -30,14 +32,17 @@ namespace HRCoreCountriesWebAPI2.Controllers
         /// <param name="service">Country service.</param>
         /// <param name="config">MS Config.</param>
         /// <param name="forker">Country forker.</param>
+        /// <param name="logger">MS logger.</param>
         public HRCountriesController(
             ICoreCountriesService service, 
             IConfiguration config,
-            IHRCountriesControllersForker forker)
+            IHRCountriesControllersForker forker,
+            ILogger<HRCountriesController> logger)
         {
             _service = service;
             _config = config;
             _forker = forker;
+            _logger = logger;
         }
         private HRCountriesController()
         {
@@ -73,6 +78,10 @@ namespace HRCoreCountriesWebAPI2.Controllers
             }
             else
             {
+                if(_logger != null)
+                {
+                    _logger.LogError("_forker instance is null in HRCountriesController.");
+                }
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
@@ -115,6 +124,10 @@ namespace HRCoreCountriesWebAPI2.Controllers
             }
             else
             {
+                if (_logger != null)
+                {
+                    _logger.LogError("_forker instance is null in HRCountriesController.");
+                }
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }

@@ -2,6 +2,7 @@
 using HRCommonModel;
 using HRCommonModels;
 using HRCoreRepository.Interface;
+using Microsoft.Extensions.Logging;
 using QuickType;
 using System;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ namespace HRCoreCountriesServices
 {
     public class CoreCountriesService : ICoreCountriesService
     {
+        private readonly ILogger<CoreCountriesService> _logger = null;
         private readonly IHRCoreRepository<HRCountry> _repository = null;
         private readonly IServiceWorkflowOnHRCoreRepository<HRCountry> _workflow = null;
         private readonly static ushort _maxPageSize = 50;
@@ -20,7 +22,8 @@ namespace HRCoreCountriesServices
         //1- Constructor injection of CountiresRepository
         public CoreCountriesService(
             IHRCoreRepository<HRCountry> repo,
-            IServiceWorkflowOnHRCoreRepository<HRCountry> workflow)
+            IServiceWorkflowOnHRCoreRepository<HRCountry> workflow,
+            ILogger<CoreCountriesService> logger)
         {
             //1-
             _repository = repo;
@@ -29,6 +32,7 @@ namespace HRCoreCountriesServices
             {
                 _workflow.MaxPageSize = _maxPageSize;
             }
+            _logger = logger;
         }
 
         /// <summary>
@@ -57,6 +61,10 @@ namespace HRCoreCountriesServices
             }
             else
             {
+                if(_logger != null)
+                {
+                    _logger.LogError("_repository is null in CoreCountriesService:GetCountryAsync");
+                }
                 //2-
                 throw new MemberAccessException("CoreCountriesService initialization failed..");
             }
@@ -90,10 +98,20 @@ namespace HRCoreCountriesServices
             PagingParameterOutModel<HRCountry> retour = null;
             if (_workflow == null)
             {
+                if (_logger != null)
+                {
+                    _logger.LogError("_workflow is null in CoreCountriesService:GetCountriesAsync");
+                }
+
                 throw new MemberAccessException();
             }
             if(pageModel == null)
             {
+                if (_logger != null)
+                {
+                    _logger.LogError("pageModel is null in CoreCountriesService:GetCountriesAsync");
+                }
+
                 throw new ArgumentNullException();
             }
             using (Task<PagingParameterOutModel<HRCountry>> retourTask = _workflow.GetQueryResultsAsync(pageModel, orderBy))

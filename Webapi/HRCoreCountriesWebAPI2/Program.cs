@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging.AzureAppServices;
 
 namespace HRCoreCountriesWebAPI2
 {
@@ -53,6 +54,7 @@ namespace HRCoreCountriesWebAPI2
                     logging.ClearProviders();
                     logging.AddDebug();
                     logging.AddConsole();
+                    logging.AddAzureWebAppDiagnostics();
                 });
     }
 }
