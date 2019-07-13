@@ -2,13 +2,10 @@
 .net Core access to countries data and boundaries
 
 The Rest service is fully documented via Swagger at the following link :
-https://fullcoreservices-1-dev-as.azurewebsites.net/swagger/
+https://fullcoreservices-release.azurewebsites.net/swagger/index.html
 
 All services are async.
-This project is integrated in Azure Dev ops for Continuous integration and Release.
-
-Deployment is done in Azure too :
-https://fullcoreservices-1-dev-as.azurewebsites.net/
+This project is integrated in Azure Dev ops for Continuous integration and Release and continous delivery.
 
 All projects are in .net Standard 2.0 but the WebApiProject depends on Windows Platform in this candidate Release.
 
