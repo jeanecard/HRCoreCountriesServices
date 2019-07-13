@@ -39,6 +39,18 @@ namespace HRCoreBordersRepository
         /// </summary>
         public static string SQLQUERYFORDAPPER { get; } = " SELECT ST_AsText(wkb_geometry) AS WKT_GEOMETRY, FIPS, ISO2, ISO3, UN, NAME, AREA, POP2005, REGION, SUBREGION, LON, LAT FROM boundaries ";
 
+        private static readonly String _WKT_GEOMETRY = "WKT_GEOMETRY";
+        private static readonly String _FIPS = "FIPS";
+        private static readonly String _ISO2 = "ISO2";
+        private static readonly String _ISO3 = "ISO3";
+        private static readonly String _UN = "UN";
+        private static readonly String _NAME = "NAME";
+        private static readonly String _AREA = "AREA";
+        private static readonly String _POP2005 = "POP2005";
+        private static readonly String _REGION = "REGION";
+        private static readonly String _SUBREGION = "SUBREGION";
+        private static readonly String _LON = "LON";
+        private static readonly String _LAT = "LAT";
         /// <summary>
         /// Dummy default constructor. Private for DI.
         /// </summary>
@@ -61,18 +73,18 @@ namespace HRCoreBordersRepository
             _config = config;
             _paginer = paginer;
             //2-
-            _whiteListOfAvaialbleFields.Add("WKT_GEOMETRY", 1);
-            _whiteListOfAvaialbleFields.Add("FIPS", 1);
-            _whiteListOfAvaialbleFields.Add("ISO2", 1);
-            _whiteListOfAvaialbleFields.Add("ISO3", 1);
-            _whiteListOfAvaialbleFields.Add("UN", 1);
-            _whiteListOfAvaialbleFields.Add("NAME", 1);
-            _whiteListOfAvaialbleFields.Add("AREA", 1);
-            _whiteListOfAvaialbleFields.Add("POP2005", 1);
-            _whiteListOfAvaialbleFields.Add("REGION", 1);
-            _whiteListOfAvaialbleFields.Add("SUBREGION", 1);
-            _whiteListOfAvaialbleFields.Add("LON", 1);
-            _whiteListOfAvaialbleFields.Add("LAT", 1);
+            _whiteListOfAvaialbleFields.Add(_WKT_GEOMETRY, 1);
+            _whiteListOfAvaialbleFields.Add(_FIPS, 1);
+            _whiteListOfAvaialbleFields.Add(_ISO2, 1);
+            _whiteListOfAvaialbleFields.Add(_ISO3, 1);
+            _whiteListOfAvaialbleFields.Add(_UN, 1);
+            _whiteListOfAvaialbleFields.Add(_NAME, 1);
+            _whiteListOfAvaialbleFields.Add(_AREA, 1);
+            _whiteListOfAvaialbleFields.Add(_POP2005, 1);
+            _whiteListOfAvaialbleFields.Add(_REGION, 1);
+            _whiteListOfAvaialbleFields.Add(_SUBREGION, 1);
+            _whiteListOfAvaialbleFields.Add(_LON, 1);
+            _whiteListOfAvaialbleFields.Add(_LAT, 1);
             //3-
             _logger = logger;
         }
@@ -80,7 +92,6 @@ namespace HRCoreBordersRepository
         /// Call the ReaderMethod.
         /// 1- Get the Result Action
         /// 2- Return the first element or null.
-        /// TODO UT this please !!
         /// </summary>
         /// <param name="borderID">the borderID to look for.</param>
         /// <returns>A collection with the Border with the borderID querried or all Borders if borderID is not supplied.</returns>

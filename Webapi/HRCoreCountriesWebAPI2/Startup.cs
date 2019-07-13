@@ -1,4 +1,5 @@
-﻿using HRCommon;
+﻿using HRBordersAndCountriesWebAPI2.Utils;
+using HRCommon;
 using HRCommonTools;
 using HRCommonTools.Interface;
 using HRCoreBordersModel;
@@ -41,6 +42,10 @@ namespace HRCoreCountriesWebAPI2
         public void ConfigureServices(IServiceCollection services)
         {
             //Rework DI please
+            services.AddSingleton<IHRBordersControllersForker>(new HRBordersControllersForker(new HRCommonForkerUtils()));
+            services.AddSingleton<IHRCountriesControllersForker>(new HRCountriesControllersForker(new HRCommonForkerUtils()));
+            services.AddSingleton<IHRCommonForkerUtils>(new HRCommonForkerUtils());
+
             services.AddSingleton<ICoreCountriesService>(new CoreCountriesService((
                 new MongoDBCountriesRepository(Configuration)),
                 new HRServiceWorkflowPaginationOnly<HRCountry>(new MongoDBCountriesRepository(Configuration), new HRPaginer<HRCountry>())

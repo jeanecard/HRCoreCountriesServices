@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace HRCoreCountriesWebAPI2.Controllers
 {
     /// <summary>
-    /// 
+    /// HRCountries Controller
     /// </summary>
     [Produces("application/json")]
     [Route("api/v1.0/[controller]")]
@@ -23,21 +23,31 @@ namespace HRCoreCountriesWebAPI2.Controllers
         private readonly ICoreCountriesService _service = null;
         private readonly IConfiguration _config;
         private readonly ushort _maxPageSize = 100;
+        private readonly IHRCountriesControllersForker _forker = null;
         /// <summary>
-        /// 
+        /// Construcotr for DI.
         /// </summary>
-        /// <param name="service"></param>
-        /// <param name="config"></param>
-        public HRCountriesController(ICoreCountriesService service, IConfiguration config)
+        /// <param name="service">Country service.</param>
+        /// <param name="config">MS Config.</param>
+        /// <param name="forker">Country forker.</param>
+        public HRCountriesController(
+            ICoreCountriesService service, 
+            IConfiguration config,
+            IHRCountriesControllersForker forker)
         {
             _service = service;
             _config = config;
+            _forker = forker;
+        }
+        private HRCountriesController()
+        {
+            //Dummy.
         }
 
         /// <summary>
         /// Get by ID Rest Method based on GetFromID(String id) method
         /// </summary>
-        /// <param name="id">Country ID (MongoDB ID as hexadedcimal).</param>
+        /// <param name="id">Get a Country by ID (ALPHA2_3CODE).</param>
         /// <returns>HRCountry corresponding</returns>
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -46,15 +56,24 @@ namespace HRCoreCountriesWebAPI2.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<HRCountry>> Get([FromRoute] String id)
         {
-            Task<(int, HRCountry)> result = HRCountriesControllersForker.GetFromID(id, _service);
-            await result;
-            if (result.Result.Item2 != null)
+            if (_forker != null)
             {
-                return result.Result.Item2;
+                using (Task<(int, HRCountry)> result = _forker.GetFromIDAsync(id, _service))
+                {
+                    await result;
+                    if (result.Result.Item2 != null)
+                    {
+                        return result.Result.Item2;
+                    }
+                    else
+                    {
+                        return StatusCode(result.Result.Item1);
+                    }
+                }
             }
             else
             {
-                return StatusCode(result.Result.Item1);
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
 
@@ -73,21 +92,30 @@ namespace HRCoreCountriesWebAPI2.Controllers
             [FromQuery] PagingParameterInModel pageModel,
             [FromQuery]  HRSortingParamModel orderBy)
         {
-            //1-
-            if (pageModel == null)
+            if (_forker != null)
             {
-                pageModel = GetDefaultPagingInParameter();
-            }
+                //1-
+                if (pageModel == null)
+                {
+                    pageModel = GetDefaultPagingInParameter();
+                }
 
-            Task<(int, PagingParameterOutModel<HRCountry>)> result = HRCountriesControllersForker.GetFromPaging(pageModel, orderBy, _service, _maxPageSize);
-            await result;
-            if (result.Result.Item2 != null)
-            {
-                return result.Result.Item2;
+                using (Task<(int, PagingParameterOutModel<HRCountry>)> result = _forker.GetFromPagingAsync(pageModel, orderBy, _service, _maxPageSize))
+                {
+                    await result;
+                    if (result.Result.Item2 != null)
+                    {
+                        return result.Result.Item2;
+                    }
+                    else
+                    {
+                        return StatusCode(result.Result.Item1);
+                    }
+                }
             }
             else
             {
-                return StatusCode(result.Result.Item1);
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
 

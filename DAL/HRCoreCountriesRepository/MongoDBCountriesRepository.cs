@@ -40,10 +40,7 @@ namespace HRCoreCountriesRepository
         /// 1- Get collection of Countries from Mongo
         ///     1.1- If collection is valid
         ///         1.1.2- Create an Empty Filter to get All Countries and create the corresponding task
-        ///         1.1.3- await task result and if Result is not null return :
-        ///             1.1.3.1 - Full result if objectID not supplied
-        ///             1.1.3.2 - A collection with the single element queried. Algorithm has to be improve in next
-        ///             iteration (Link, Filter MongoDB ..)
+        ///         1.1.3- await task result and if Result is not null return result
         ///     1.2- Else
         ///         Throw Code InvalidOperationException
         /// 2- Return null result if previous algorithm does not throw any exception and does not return any result.
@@ -54,8 +51,7 @@ namespace HRCoreCountriesRepository
         ///     ArgumentOutOfRangeException if objectID supplied can not be converted in MongoDB ID
         ///     System Exception as is if any other exception is thrown.
         /// </returns>
-        /// //!TODO Why IsDisposable not called warning ???
-        public async Task<IEnumerable<HRCountry>> GetCountriesAsync(String id = null)
+        public async Task<IEnumerable<HRCountry>> GetCountriesAsync()
         {
             IEnumerable<HRCountry> retour = null;
             Task<IAsyncCursor<HRCountry>> retourTask = null;
@@ -75,42 +71,14 @@ namespace HRCoreCountriesRepository
 
                     if (retourTask.Result != null)
                     {
-                        //1.1.3.1-
-                        if (String.IsNullOrEmpty(id))
-                        {
-                            //Force to list to avoid return asyn enum that can be enumerate only once.
-                            retour = retourTask.Result.ToList();
-                        }
-                        //1.1.3.2-
-                        else
-                        {
-                            List<HRCountry> fullCountries = retourTask.Result.ToList();
-                            List<HRCountry> countries = new List<HRCountry>();
-                            try
-                            {
-                                MongoDB.Bson.ObjectId key = new MongoDB.Bson.ObjectId(id);
-                                foreach (HRCountry iterator in fullCountries)
-                                {
-                                    if (iterator._id != null && iterator._id.Equals(key))
-                                    {
-                                        countries.Add(iterator);
-                                        retour = countries;
-                                        break;
-                                    }
-                                }
-                            }
-                            //Error on ObjectID conversion.
-                            catch (Exception)
-                            {
-                                throw new ArgumentOutOfRangeException();
-                            }
-                        }
+                        //Force to list to avoid return asyn enum that can be enumerate only once.
+                        retour = retourTask.Result.ToList();
                     }
                 }
                 //1.2-
                 else
                 {
-                    throw new  InvalidOperationException("Collection not found.");
+                    throw new InvalidOperationException("Collection not found.");
                 }
             }
             catch (Exception ex)
@@ -172,7 +140,6 @@ namespace HRCoreCountriesRepository
         /// <param name="id">The searched ID (Alpha2 or Alpha3)</param>
         /// <returns>The corrresponding HRCountry or null if not found. Can throw the following exception :
         /// </returns>
-        /// //!TODO why non disposable warning ??
         public async Task<HRCountry> GetAsync(string id)
         {
             HRCountry retour = null;
@@ -233,7 +200,6 @@ namespace HRCoreCountriesRepository
         /// Get All Countries.
         /// </summary>
         /// <returns></returns>
-        /// //TODO ? Why disposble warning
         public async Task<IEnumerable<HRCountry>> GetFullsAsync()
         {
             IEnumerable<HRCountry> retour = null;
@@ -265,7 +231,7 @@ namespace HRCoreCountriesRepository
             }
             catch (Exception ex)
             {
-                if(_logger != null)
+                if (_logger != null)
                 {
                     _logger.Error(ex.Message);
                 }

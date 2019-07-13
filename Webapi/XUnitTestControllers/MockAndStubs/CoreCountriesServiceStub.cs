@@ -12,8 +12,21 @@ namespace XUnitTestControllers
     {
         private readonly List<HRCountry> _list = new List<HRCountry>();
         public bool ThrowException = false;
+        private Exception _exceptionToThrow = null;
 
-        public IndexOutOfRangeException Exception { get; internal set; }
+        public Exception ExceptionToThrow { get
+            {
+                if(_exceptionToThrow == null)
+                {
+                    _exceptionToThrow = new Exception();
+                }
+                return _exceptionToThrow;
+            }
+            internal set
+            {
+                _exceptionToThrow = value;
+            }
+        }
 
         /// <summary>
         /// Return list or raise exception.
@@ -23,7 +36,7 @@ namespace XUnitTestControllers
         {
             if (ThrowException)
             {
-                throw Exception;
+                throw ExceptionToThrow;
             }
             List<HRCountry> retour = new List<HRCountry>();
             await Task.Delay(1);
@@ -49,7 +62,7 @@ namespace XUnitTestControllers
             await Task.Delay(1);
             if (ThrowException)
             {
-                throw Exception;
+                throw ExceptionToThrow;
             }
 
             if (!String.IsNullOrEmpty(id))
@@ -71,7 +84,7 @@ namespace XUnitTestControllers
             await Task.Delay(1);
             if (ThrowException)
             {
-                throw Exception;
+                throw ExceptionToThrow;
             }
             PagingParameterOutModel<HRCountry> retour = new PagingParameterOutModel<HRCountry>()
             {

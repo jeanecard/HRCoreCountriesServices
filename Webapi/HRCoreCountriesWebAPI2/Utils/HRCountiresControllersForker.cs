@@ -14,15 +14,28 @@ namespace HRBordersAndCountriesWebAPI2.Utils
     /// <summary>
     /// 
     /// </summary>
-    public static class HRCountriesControllersForker
+    public class HRCountriesControllersForker : IHRCountriesControllersForker
     {
+        private readonly IHRCommonForkerUtils _util = null;
+        private HRCountriesControllersForker()
+        {
+            //Dummy.
+        }
+        /// <summary>
+        /// Constructor for DI.
+        /// </summary>
+        /// <param name="util"></param>
+        public HRCountriesControllersForker(IHRCommonForkerUtils util)
+        {
+            _util = util;
+        }
         /// <summary>
         /// Get a Country by ID (ALPHA2_3CODE)
         /// </summary>
         /// <param name="id">the country ID</param>
         /// <param name="service">the core countries service</param>
         /// <returns>the status code (http) and the Country.</returns>
-        public static async Task<(int, HRCountry)> GetFromID(string id, ICoreCountriesService service)
+        public  async Task<(int, HRCountry)> GetFromIDAsync(string id, ICoreCountriesService service)
         {
             //1-
             if (String.IsNullOrEmpty(id))
@@ -74,25 +87,19 @@ namespace HRBordersAndCountriesWebAPI2.Utils
         /// <param name="service">the Core countries service</param>
         /// <param name="maxPageSize">the maxPage size allowed for pagination.</param>
         /// <returns></returns>
-        public static async Task<(int, PagingParameterOutModel<HRCountry>)> GetFromPaging(
+        public  async Task<(int, PagingParameterOutModel<HRCountry>)> GetFromPagingAsync(
             PagingParameterInModel pageModel,
             HRSortingParamModel orderBy,
             ICoreCountriesService service,
             ushort maxPageSize)
         {
-            if (service != null)
+            if (service != null && _util != null)
             {
-                if (orderBy != null && orderBy.IsInitialised())
+                if (!_util.CanOrder(orderBy, service))
                 {
-                    if (!service.IsSortable())
-                    {
-                        return (StatusCodes.Status400BadRequest, null);
-                    }
-                    else if (!HRSortingParamModelDeserializer.IsValid(orderBy))
-                    {
-                        return (StatusCodes.Status400BadRequest, null);
-                    }
+                    return (StatusCodes.Status400BadRequest, null);
                 }
+
                 //!Add tu on this
                 if (pageModel.PageSize > maxPageSize)
                 {

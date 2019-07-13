@@ -23,15 +23,20 @@ namespace HRCoreCountriesWebAPI2.Controllers
         private readonly ICoreBordersService _borderService = null;
         private readonly IConfiguration _config = null;
         private readonly static ushort _maxPageSize = 50;
+        private readonly IHRBordersControllersForker _util = null;
         /// <summary>
         /// Constructor for DI
         /// </summary>
         /// <param name="config">a MS Config</param>
         /// <param name="borderService">a IBorderService</param>
-        public HRBordersController(IConfiguration config, ICoreBordersService borderService)
+        /// <param name="util">a Commonutil</param>
+        public HRBordersController(IConfiguration config, 
+            ICoreBordersService borderService,
+            IHRBordersControllersForker util)
         {
             _config = config;
             _borderService = borderService;
+            _util = util;
         }
         /// <summary>
         /// Private default constructor.
@@ -54,15 +59,24 @@ namespace HRCoreCountriesWebAPI2.Controllers
 
         public async Task<ActionResult<HRBorder>> Get([FromRoute] String id)
         {
-            Task<(int, HRBorder)> result = HRBordersControllersForker.GetFromID(id, _borderService);
-            await result;
-            if (result.Result.Item2 != null)
+            if (_util != null)
             {
-                return result.Result.Item2;
+                using (Task<(int, HRBorder)> result = _util.GetFromIDAsync(id, _borderService))
+                {
+                    await result;
+                    if (result.Result.Item2 != null)
+                    {
+                        return result.Result.Item2;
+                    }
+                    else
+                    {
+                        return StatusCode(result.Result.Item1);
+                    }
+                }
             }
             else
             {
-                return StatusCode(result.Result.Item1);
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
 
@@ -83,26 +97,35 @@ namespace HRCoreCountriesWebAPI2.Controllers
             [FromQuery] PagingParameterInModel pageModel,
             [FromQuery]  HRSortingParamModel orderBy)
         {
-            //1-
-            if (pageModel == null)
+            if (_util != null)
             {
-                pageModel = GetDefaultPagingInParameter();
-            }
+                //1-
+                if (pageModel == null)
+                {
+                    pageModel = GetDefaultPagingInParameter();
+                }
 
-            Task<(int, PagingParameterOutModel<HRBorder>)> result = HRBordersControllersForker.GetFromPaging(
-                pageModel, 
-                orderBy,
-                _borderService,
-                _maxPageSize
-                );
-            await result;
-            if (result.Result.Item2 != null)
-            {
-                return result.Result.Item2;
+                using (Task<(int, PagingParameterOutModel<HRBorder>)> result = _util.GetFromPagingAsync(
+                    pageModel,
+                    orderBy,
+                    _borderService,
+                    _maxPageSize
+                    ))
+                {
+                    await result;
+                    if (result.Result.Item2 != null)
+                    {
+                        return result.Result.Item2;
+                    }
+                    else
+                    {
+                        return StatusCode(result.Result.Item1);
+                    }
+                }
             }
             else
             {
-                return StatusCode(result.Result.Item1);
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
 

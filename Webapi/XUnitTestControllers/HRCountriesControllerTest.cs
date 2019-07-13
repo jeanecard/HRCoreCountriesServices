@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
-
+using XUnitTestControllers.MockAndStubs;
 
 namespace XUnitTestControllers
 {
@@ -23,10 +23,14 @@ namespace XUnitTestControllers
             List<String> list = new List<String>() {
                 "FR",
                 "US" };
-            Task<(int, HRCountry)> resultService = HRCountriesControllersForker.GetFromID("AA", new CoreCountriesServiceStub(list));
-            await resultService;
-            Assert.True(resultService.Result.Item1 == StatusCodes.Status404NotFound);
-            Assert.True(resultService.Result.Item2 == null);
+            IHRCommonForkerUtils util = new HRCommonForkerUtilsStub() { CanOrderReturn = true };
+            HRCountriesControllersForker forker = new HRCountriesControllersForker(util);
+            using (Task<(int, HRCountry)> resultService = forker.GetFromIDAsync("AA", new CoreCountriesServiceStub(list)))
+            {
+                await resultService;
+                Assert.True(resultService.Result.Item1 == StatusCodes.Status404NotFound);
+                Assert.True(resultService.Result.Item2 == null);
+            }
 
         }
         /// <summary>
@@ -40,12 +44,15 @@ namespace XUnitTestControllers
                 "FR",
                 "US" };
             CoreCountriesServiceStub service = new CoreCountriesServiceStub(list);
-            Task<(int, HRCountry)> resultService = HRCountriesControllersForker.GetFromID(null, service);
-            await resultService;
-            Assert.True(resultService.Result.Item1 == StatusCodes.Status400BadRequest);
-            Assert.True(resultService.Result.Item2 == null);
+            IHRCommonForkerUtils util = new HRCommonForkerUtilsStub() { CanOrderReturn = true };
+            HRCountriesControllersForker forker = new HRCountriesControllersForker(util);
 
-
+            using (Task<(int, HRCountry)> resultService = forker.GetFromIDAsync(null, service))
+            {
+                await resultService;
+                Assert.True(resultService.Result.Item1 == StatusCodes.Status400BadRequest);
+                Assert.True(resultService.Result.Item2 == null);
+            }
         }
         /// <summary>
         /// Test that GetID return status code 500 if his _service is null (problem with DI)
@@ -53,10 +60,15 @@ namespace XUnitTestControllers
         [Fact]
         public async void HRCountriesControllerOnGetByIDWithNullServiceExpectStatus500InternalServerError()
         {
-            Task<(int, HRCountry)> resultService = HRCountriesControllersForker.GetFromID("507f191e810c19729de860ea", null);
-            await resultService;
-            Assert.True(resultService.Result.Item1 == StatusCodes.Status500InternalServerError);
-            Assert.True(resultService.Result.Item2 == null);
+            IHRCommonForkerUtils util = new HRCommonForkerUtilsStub() { CanOrderReturn = true };
+            HRCountriesControllersForker forker = new HRCountriesControllersForker(util);
+
+            using (Task<(int, HRCountry)> resultService = forker.GetFromIDAsync("xx", null))
+            {
+                await resultService;
+                Assert.True(resultService.Result.Item1 == StatusCodes.Status500InternalServerError);
+                Assert.True(resultService.Result.Item2 == null);
+            }
 
 
         }
@@ -69,10 +81,15 @@ namespace XUnitTestControllers
             List<String> list = new List<String>() {
                 "FR",
                 "US" };
-            Task<(int, HRCountry)> resultService = HRCountriesControllersForker.GetFromID("507f191e810c19729de860ea", new CoreCountriesServiceStub(list) { ThrowException = true });
-            await resultService;
-            Assert.True(resultService.Result.Item1 == StatusCodes.Status500InternalServerError);
-            Assert.True(resultService.Result.Item2 == null);
+            IHRCommonForkerUtils util = new HRCommonForkerUtilsStub() { CanOrderReturn = true };
+            HRCountriesControllersForker forker = new HRCountriesControllersForker(util);
+
+            using (Task<(int, HRCountry)> resultService = forker.GetFromIDAsync("xx", new CoreCountriesServiceStub(list) { ThrowException = true }))
+            {
+                await resultService;
+                Assert.True(resultService.Result.Item1 == StatusCodes.Status500InternalServerError);
+                Assert.True(resultService.Result.Item2 == null);
+            }
 
         }
 
@@ -83,10 +100,15 @@ namespace XUnitTestControllers
         public async void HRCountriesControllerOnGetByIDWithExistingItemExpectItemAndCodeStatus200()
         {
             List<String> list = new List<String>() {"FR",  "US" };
-            Task<(int, HRCountry)> resultService = HRCountriesControllersForker.GetFromID("FR", new CoreCountriesServiceStub(list));
-            await resultService;
-            Assert.True(resultService.Result.Item1 == StatusCodes.Status200OK);
-            Assert.True(resultService.Result.Item2 != null && resultService.Result.Item2.Alpha2Code.Equals("FR"));
+            IHRCommonForkerUtils util = new HRCommonForkerUtilsStub() { CanOrderReturn = true };
+            HRCountriesControllersForker forker = new HRCountriesControllersForker(util);
+
+            using (Task<(int, HRCountry)> resultService = forker.GetFromIDAsync("FR", new CoreCountriesServiceStub(list)))
+            {
+                await resultService;
+                Assert.True(resultService.Result.Item1 == StatusCodes.Status200OK);
+                Assert.True(resultService.Result.Item2 != null && resultService.Result.Item2.Alpha2Code.Equals("FR"));
+            }
         }
 
         #endregion
@@ -103,16 +125,19 @@ namespace XUnitTestControllers
                 "US" };
 
             PagingParameterInModel invalidModel = new PagingParameterInModel() { PageNumber = 2, PageSize = 50 };
-            Task<(int, PagingParameterOutModel<HRCountry>)> resultService = HRCountriesControllersForker.GetFromPaging(
-                invalidModel, 
+            IHRCommonForkerUtils util = new HRCommonForkerUtilsStub() { CanOrderReturn = true };
+            HRCountriesControllersForker forker = new HRCountriesControllersForker(util);
+
+            using (Task<(int, PagingParameterOutModel<HRCountry>)> resultService = forker.GetFromPagingAsync(
+                invalidModel,
                 null,
-                new CoreCountriesServiceStub(list) { ThrowException = true, Exception = new IndexOutOfRangeException() },
-                50);
-
-            await resultService;
-            Assert.True(resultService.Result.Item1 == StatusCodes.Status416RequestedRangeNotSatisfiable);
-            Assert.True(resultService.Result.Item2 == null);
-
+                new CoreCountriesServiceStub(list) { ThrowException = true, ExceptionToThrow = new IndexOutOfRangeException() },
+                50))
+            {
+                await resultService;
+                Assert.True(resultService.Result.Item1 == StatusCodes.Status416RequestedRangeNotSatisfiable);
+                Assert.True(resultService.Result.Item2 == null);
+            }
         }
 
         /// <summary>
@@ -126,16 +151,20 @@ namespace XUnitTestControllers
                 "US" };
 
             PagingParameterInModel invalidModel = new PagingParameterInModel() { PageNumber = 2, PageSize = 50 };
-            Task<(int, PagingParameterOutModel<HRCountry>)> resultService = HRCountriesControllersForker.GetFromPaging(
-                invalidModel, 
+            IHRCommonForkerUtils util = new HRCommonForkerUtilsStub() { CanOrderReturn = true };
+            HRCountriesControllersForker forker = new HRCountriesControllersForker(util);
+
+            using (Task<(int, PagingParameterOutModel<HRCountry>)> resultService = forker.GetFromPagingAsync(
+                invalidModel,
                 null,
                 new CoreCountriesServiceStub(list) { ThrowException = true },
                 50
-                );
-            await resultService;
-            Assert.True(resultService.Result.Item1 == StatusCodes.Status500InternalServerError);
-            Assert.True(resultService.Result.Item2 == null);
-
+                ))
+            {
+                await resultService;
+                Assert.True(resultService.Result.Item1 == StatusCodes.Status500InternalServerError);
+                Assert.True(resultService.Result.Item2 == null);
+            }
         }
         /// <summary>
         /// Test normal condition Success and partial result returned.
@@ -147,14 +176,19 @@ namespace XUnitTestControllers
                 "FR",
                 "US" };
             PagingParameterInModel invalidModel = new PagingParameterInModel() { PageNumber = 1, PageSize = 50 };
-            Task<(int, PagingParameterOutModel<HRCountry>)> resultService = HRCountriesControllersForker.GetFromPaging(
-                invalidModel, 
+            IHRCommonForkerUtils util = new HRCommonForkerUtilsStub() { CanOrderReturn = true };
+            HRCountriesControllersForker forker = new HRCountriesControllersForker(util);
+
+            using (Task<(int, PagingParameterOutModel<HRCountry>)> resultService = forker.GetFromPagingAsync(
+                invalidModel,
                 null,
                 new CoreCountriesServiceStub(list),
                 50
-                );
-            await resultService;
-            Assert.True(resultService.Result.Item1 == StatusCodes.Status200OK);
+                ))
+            {
+                await resultService;
+                Assert.True(resultService.Result.Item1 == StatusCodes.Status200OK);
+            }
         }
         #endregion
     }

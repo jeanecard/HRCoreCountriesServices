@@ -37,7 +37,7 @@ namespace HRCoreCountriesServices
         //  1.3- Get back result when wee get it.
         //  2- Else, return basic Exception in this very first version
         /// </summary>
-        /// <param name="id">the MondoDB ID (hexadecimal)</param>
+        /// <param name="id">the ISO2 or ISO23 code</param>
         /// <returns>The corresponding Countries. Can throw MemberAccessException if repository is null.</returns>
         public async Task<HRCountry> GetCountryAsync(String id = null)
         {

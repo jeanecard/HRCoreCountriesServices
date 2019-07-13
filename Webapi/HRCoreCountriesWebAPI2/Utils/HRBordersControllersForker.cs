@@ -1,4 +1,5 @@
-﻿using HRCommonModel;
+﻿using HRCommon.Interface;
+using HRCommonModel;
 using HRCommonModels;
 using HRCommonTools;
 using HRCoreBordersModel;
@@ -12,23 +13,45 @@ using System.Threading.Tasks;
 
 namespace HRBordersAndCountriesWebAPI2.Utils
 {
+
     /// <summary>
-    /// Border Controller
+    /// Border Controller.
     /// </summary>
-    public static class HRBordersControllersForker
+    public class HRBordersControllersForker : IHRBordersControllersForker
     {
+        private readonly IHRCommonForkerUtils _util = null;
         /// <summary>
-        /// 1- Check input consistance
-        /// 2- Call service async
+        /// Not Allowed.
+        /// </summary>
+        private HRBordersControllersForker()
+        {
+
+        }
+        /// <summary>
+        /// Constructor for DI.
+        /// </summary>
+        public HRBordersControllersForker(IHRCommonForkerUtils util)
+        {
+            _util = util;
+        }
+
+        
+        /// <summary>
+        /// 1- Check input consistance.
+        /// 2- Call service async.
         /// 3- Process result of action as a single HRBorder.
         /// </summary>
-        /// <param name="id">the FIPS value searched</param>
-        /// <param name="borderService">the Border service</param>
-        /// <returns>StatusCode, HRBorder result</returns>
+        /// <param name="id">the FIPS value searched.</param>
+        /// <param name="borderService">the Border service.</param>
+        /// <returns>StatusCode, HRBorder result.</returns>
 
-        public static async Task<(int, HRBorder)> GetFromID(String id, ICoreBordersService borderService)
+        public async Task<(int, HRBorder)> GetFromIDAsync(String id, ICoreBordersService borderService)
         {
             //1-
+            if(_util == null)
+            {
+                return (StatusCodes.Status500InternalServerError, null);
+            }
             if (String.IsNullOrEmpty(id))
             {
                 //Could not happen as Get(PageModel = null) exists)
@@ -66,64 +89,62 @@ namespace HRBordersAndCountriesWebAPI2.Utils
         }
 
         /// <summary>
-        /// 1- Process PagingInParameter if not supplied
+        /// 1- Check consistency before calling service
+        ///     1.1- Service must be supplied
+        ///     1.2- If OrderBy is supplied, check that service have the skill to order and that the OrderBy is valid.
+        ///     1.3- PageModel.PageSize must be lower than MaxPage
         /// 2- Get the HRBorders from service
-        /// 3- Paginate previous result
-        /// !Strange we have to âss from query even for an "internal" method ... to untderstand.
+        ///     2.1- If result is OK, return code200
+        ///     2.2- Else if IndexOutOfRangeException is catch return Status416RequestedRangeNotSatisfiable
+        ///     2.3 Else for any other Exception return Status500InternalServerError
         /// </summary>
-        /// <param name="pageModel">The Paging Model</param>
-        /// <param name="orderBy">The order by clause. Sample : "ISO2;DESC"</param>
-        /// <param name="borderService">The countries service</param>
-        /// <param name="maxPageSize">The max PAgeSize of pagination</param>
-        /// <returns>(http Status Code, PagingParameterOutModel)</returns>
-        public static async Task<(int, PagingParameterOutModel<HRBorder>)> GetFromPaging(
+        /// <param name="pageModel">The Paging Model.</param>
+        /// <param name="orderBy">The order by clause. Sample : "ISO2;DESC".</param>
+        /// <param name="borderService">The countries service.</param>
+        /// <param name="maxPageSize">The max PageSize of pagination.</param>
+        /// <returns>(http Status Code, PagingParameterOutModel).</returns>
+        public async Task<(int, PagingParameterOutModel<HRBorder>)> GetFromPagingAsync(
             PagingParameterInModel pageModel,
             HRSortingParamModel orderBy,
             ICoreBordersService borderService,
             ushort maxPageSize)
         {
-            if (borderService != null)
+            //1-
+            //1.1-
+            if (borderService == null || _util == null)
             {
-                if (orderBy != null && orderBy.IsInitialised())
-                {
-                    if (!borderService.IsSortable())
-                    {
-                        return (StatusCodes.Status400BadRequest, null);
-                    }
-                    else if (!HRSortingParamModelDeserializer.IsValid(orderBy))
-                    {
-                        return (StatusCodes.Status400BadRequest, null);
-                    }
-                }
-                //1-
-                //!TODO Add tu on this
-                if (pageModel.PageSize > maxPageSize)
-                {
-                    return (StatusCodes.Status413PayloadTooLarge, null);
-                }
-                try
-                {
-                    //2-
-                    Task<PagingParameterOutModel<HRBorder>> bordersAction = borderService.GetBordersAsync(pageModel, orderBy);
-                    await bordersAction;
-                    //3-
-                    return (StatusCodes.Status200OK, bordersAction.Result);
-
-                }
-                catch (IndexOutOfRangeException)
-                {
-                    //!Add tu on this
-                    return (StatusCodes.Status416RequestedRangeNotSatisfiable, null);
-                }
-                catch (Exception)
-                {
-                    return (StatusCodes.Status500InternalServerError, null);
-                }
+                return (StatusCodes.Status500InternalServerError, null);
             }
-            else
+            //1.2-
+            if (!_util.CanOrder(orderBy, borderService))
+            {
+                return (StatusCodes.Status400BadRequest, null);
+            }
+            //1.3-
+            if (pageModel.PageSize > maxPageSize)
+            {
+                return (StatusCodes.Status413PayloadTooLarge, null);
+            }
+            try
+            {
+                //2-
+                Task<PagingParameterOutModel<HRBorder>> bordersAction = borderService.GetBordersAsync(pageModel, orderBy);
+                await bordersAction;
+                //2.1-
+                return (StatusCodes.Status200OK, bordersAction.Result);
+
+            }
+            //2.2-
+            catch (IndexOutOfRangeException)
+            {
+                return (StatusCodes.Status416RequestedRangeNotSatisfiable, null);
+            }
+            //2.3-
+            catch (Exception)
             {
                 return (StatusCodes.Status500InternalServerError, null);
             }
         }
     }
 }
+
