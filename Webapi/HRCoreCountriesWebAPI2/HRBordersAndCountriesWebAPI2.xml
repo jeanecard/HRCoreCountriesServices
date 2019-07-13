@@ -106,7 +106,10 @@
         </member>
         <member name="M:HRCoreCountriesWebAPI2.Program.Main(System.String[])">
             <summary>
-            
+            1- Create WebHost
+            2- Configure settings
+            3- Configure Logger
+            4- Run WebHost
             </summary>
             <param name="args"></param>
         </member>

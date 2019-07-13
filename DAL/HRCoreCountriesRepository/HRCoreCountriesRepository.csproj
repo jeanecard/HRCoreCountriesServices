@@ -10,8 +10,8 @@
     <None Remove="Interface\**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="log4net" Version="2.0.8" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.2.0" />
     <PackageReference Include="System.Runtime" Version="4.3.1" />
     <ProjectReference Include="..\..\Common\HRCommon\HRCommon.csproj" />
     <ProjectReference Include="..\..\Models\HRCommonModels\HRCommonModels.csproj" />

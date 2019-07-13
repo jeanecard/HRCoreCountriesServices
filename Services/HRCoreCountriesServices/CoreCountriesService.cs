@@ -18,7 +18,8 @@ namespace HRCoreCountriesServices
         {
         }
         //1- Constructor injection of CountiresRepository
-        public CoreCountriesService(IHRCoreRepository<HRCountry> repo,
+        public CoreCountriesService(
+            IHRCoreRepository<HRCountry> repo,
             IServiceWorkflowOnHRCoreRepository<HRCountry> workflow)
         {
             //1-

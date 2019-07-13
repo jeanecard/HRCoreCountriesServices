@@ -16,6 +16,7 @@
     <DocumentationFile>C:\Users\a647998\Source\Repos\HRCoreCountriesServices\Webapi\HRCoreCountriesWebAPI2\HRBordersAndCountriesWebAPI2.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+     <ProjectReference Include="..\..\DAL\HRCoreBordersRepository\HRCoreBordersRepository.csproj" />
      <ProjectReference Include="..\..\DAL\HRCoreCountriesRepository\HRCoreCountriesRepository.csproj" />
      <ProjectReference Include="..\..\Models\HRCommonModels\HRCommonModels.csproj" />
      <ProjectReference Include="..\..\Models\HRCoreBordersModel\HRCoreBordersModel.csproj" />

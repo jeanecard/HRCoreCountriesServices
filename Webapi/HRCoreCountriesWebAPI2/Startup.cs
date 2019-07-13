@@ -1,5 +1,6 @@
 ﻿using HRBordersAndCountriesWebAPI2.Utils;
 using HRCommon;
+using HRCommon.Interface;
 using HRCommonTools;
 using HRCommonTools.Interface;
 using HRCoreBordersModel;
@@ -7,6 +8,7 @@ using HRCoreBordersRepository;
 using HRCoreBordersServices;
 using HRCoreCountriesRepository;
 using HRCoreCountriesServices;
+using HRCoreRepository.Interface;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +16,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 //Swagger Dependencies
 using QuickType;
+using System;
 
 namespace HRCoreCountriesWebAPI2
 {
@@ -22,6 +25,9 @@ namespace HRCoreCountriesWebAPI2
     /// </summary>
     public class Startup
     {
+        private static readonly String _VERSION_FOR_SWAGGER_DISLPAY = "Version 1 Release candidate";
+        private static readonly String _NAME_FOR_SWAGGER_DISLPAY = "HR Core Services";
+
         /// <summary>
         /// 
         /// </summary>
@@ -41,30 +47,32 @@ namespace HRCoreCountriesWebAPI2
         /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
-            //Rework DI please
-            services.AddSingleton<IHRBordersControllersForker>(new HRBordersControllersForker(new HRCommonForkerUtils()));
-            services.AddSingleton<IHRCountriesControllersForker>(new HRCountriesControllersForker(new HRCommonForkerUtils()));
-            services.AddSingleton<IHRCommonForkerUtils>(new HRCommonForkerUtils());
-
-            services.AddSingleton<ICoreCountriesService>(new CoreCountriesService((
-                new MongoDBCountriesRepository(Configuration)),
-                new HRServiceWorkflowPaginationOnly<HRCountry>(new MongoDBCountriesRepository(Configuration), new HRPaginer<HRCountry>())
-                ));
-            services.AddSingleton<IHRPaginer<HRBorder>>(new HRPaginer<HRBorder>());
-            services.AddSingleton<IHRPaginer<HRCountry>>(new HRPaginer<HRCountry>());
-
+            services.AddTransient<IHRCommonForkerUtils, HRCommonForkerUtils>();
+            services.AddTransient<IHRBordersControllersForker, HRBordersControllersForker>();
+            services.AddTransient<IHRCountriesControllersForker, HRCountriesControllersForker>();
             services.AddSingleton(Configuration);
-            services.AddSingleton<ICoreBordersService>(new HRCoreBordersService(
-                new PostGISCoreBordersRepository(Configuration, new HRPaginer<HRBorder>()),
-                new HRServiceWorkflowPaginationOnly<HRBorder>(
-                    new PostGISCoreBordersRepository(Configuration,
-                        new HRPaginer<HRBorder>()),
-                    new HRPaginer<HRBorder>())));
+
+            services.AddTransient<IHRPaginer<HRBorder>, HRPaginer<HRBorder>>();
+            services.AddTransient<IHRPaginer<HRCountry>, HRPaginer<HRCountry>>();
+
+            services.AddTransient<IServiceWorkflowOnHRCoreRepository<HRCountry>, HRServiceWorkflowPaginationOnly<HRCountry>>();
+            services.AddTransient<IServiceWorkflowOnHRCoreRepository<HRBorder>, HRServiceWorkflowPaginationOnly<HRBorder>>();
+
+            services.AddSingleton<IHRCoreRepository<HRBorder>, PostGISCoreBordersRepository>();
+            //services.AddSingleton<IHRCoreRepository<HRBorder>>(sp =>
+            //    new PostGISCoreBordersRepository(Configuration, sp.GetRequiredService<IHRPaginer<HRBorder>>(), null)
+
+            // );
+            //services.AddSingleton<IHRCoreRepository<HRCountry>>(new MongoDBCountriesRepository(Configuration, null));
+            services.AddSingleton<IHRCoreRepository<HRCountry>, MongoDBCountriesRepository>();
+
+            services.AddTransient<ICoreCountriesService, CoreCountriesService>();
+            services.AddTransient<ICoreBordersService, HRCoreBordersService>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             // Register the Swagger services
             services.AddSwaggerDocument(swagger => {
-                swagger.Version = "Version 1 Release candidate";
-                swagger.Title = "HR Core Services";
+                swagger.Version = _VERSION_FOR_SWAGGER_DISLPAY;
+                swagger.Title = _NAME_FOR_SWAGGER_DISLPAY;
                 swagger.GenerateEnumMappingDescription = true;
             }) ;
         }

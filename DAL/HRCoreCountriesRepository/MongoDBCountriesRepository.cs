@@ -2,8 +2,8 @@ using HRCommon.Interface;
 using HRCommonModel;
 using HRCommonModels;
 using HRCoreRepository.Interface;
-using log4net;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using QuickType;
 using System;
@@ -17,7 +17,7 @@ namespace HRCoreCountriesRepository
     /// </summary>
     public class MongoDBCountriesRepository : IHRCoreRepository<HRCountry>, IPaginable, ISortable
     {
-        private readonly ILog _logger = null;
+        private readonly ILogger<MongoDBCountriesRepository> _looger = null;
         private readonly IConfiguration _config = null;
         private static readonly String _MONGO_CX_STRING_KEY = "CountriesConnection";
         private static readonly String _MONGO_CLUSTER = "MongoDBDataBaseName:ClusterName";
@@ -31,10 +31,10 @@ namespace HRCoreCountriesRepository
         {
         }
         //Constructor for DI with Configuration
-        public MongoDBCountriesRepository(IConfiguration injectedMongoConfig, ILog logger = null)
+        public MongoDBCountriesRepository(IConfiguration injectedMongoConfig, ILogger<MongoDBCountriesRepository> logger)
         {
             _config = injectedMongoConfig;
-            _logger = logger;
+            _looger = logger;
         }
         /// <summary>
         /// 1- Get collection of Countries from Mongo
@@ -83,9 +83,9 @@ namespace HRCoreCountriesRepository
             }
             catch (Exception ex)
             {
-                if (_logger != null)
+                if (_looger != null)
                 {
-                    _logger.Error(ex.Message);
+                    _looger.LogError(ex.Message);
                 }
                 throw;
             }
@@ -177,9 +177,9 @@ namespace HRCoreCountriesRepository
             }
             catch (Exception ex)
             {
-                if (_logger != null)
+                if(_looger != null)
                 {
-                    _logger.Error(ex.Message);
+                    _looger.LogError(ex.Message);
                 }
                 throw;
             }
@@ -231,9 +231,9 @@ namespace HRCoreCountriesRepository
             }
             catch (Exception ex)
             {
-                if (_logger != null)
+                if (_looger != null)
                 {
-                    _logger.Error(ex.Message);
+                    _looger.LogError(ex.Message);
                 }
                 throw;
             }
