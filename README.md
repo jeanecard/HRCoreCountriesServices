@@ -1,6 +1,23 @@
 # HRCoreCountriesServices
 .net Core access to countries data and boundaries
 
+The Rest service is fully documented via Swagger at the following link :
+https://fullcoreservices-1-dev-as.azurewebsites.net/swagger/
+
+All services are async.
+This project is integrated in Azure Dev ops for Continuous integration and Release.
+
+Deployment is done in Azure too :
+https://fullcoreservices-1-dev-as.azurewebsites.net/
+
+All projects are in .net Standard 2.0 but the WebApiProject depends on Windows Platform in this candidate Release.
+
+Credentials for ConnectionString are stored :
+- secrets.json locally
+- Azure Settings for CI and Release.
+
+Tips to create your own MongoDB repositoey for HRCountry model :
+
 To create mongodb cloud Database with geojson documents
 
 1- Create a cluster on https://cloud.mongodb.com
