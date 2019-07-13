@@ -18,42 +18,39 @@ namespace XUnitTestServices.MocksAndStubs
             {
                 foreach (String iter in countries)
                 {
-                    _countries.Add(new HRCountry() { _id = new MongoDB.Bson.ObjectId(iter) });
+                    _countries.Add(new HRCountry() { Alpha2Code = iter });
                 }
             }
             if (!String.IsNullOrEmpty(countrySelectable))
             {
-                _selected._id = new MongoDB.Bson.ObjectId(countrySelectable);
+                _selected.Alpha2Code = countrySelectable;
             }
         }
 
-        public Task<HRCountry> GetAsync(string id)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Retrun selected or full list.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public async Task<IEnumerable<HRCountry>> GetCountriesAsync(string id = null)
+        public async Task<HRCountry> GetAsync(string id)
         {
             await Task.Delay(1);
-            if (id != null)
+            foreach(HRCountry iter in _countries)
             {
-                List<HRCountry> retour = new List<HRCountry>() { _selected };
-                return retour;
+                if(iter.Alpha2Code == id)
+                {
+                    return iter;
+                }
             }
-            else
-            {
-                return _countries;
-            }
+            return null;
         }
 
-        public Task<HRCountry> GetCountryAsync(string id)
+        public async Task<HRCountry> GetCountryAsync(string id)
         {
-            throw new NotImplementedException();
+            await Task.Delay(1);
+            foreach (HRCountry iter in _countries)
+            {
+                if (iter.Alpha2Code == id)
+                {
+                    return iter;
+                }
+            }
+            return null;
         }
 
         public Task<IEnumerable<HRCountry>> GetFullCountriesAsync()
@@ -96,19 +93,25 @@ namespace XUnitTestServices.MocksAndStubs
             throw new NotImplementedException();
         }
 
-        public Task<PagingParameterOutModel<HRCountry>> GetPaginatedsAsync(PagingParameterInModel pageModel)
+        public async Task<PagingParameterOutModel<HRCountry>> GetPaginatedsAsync(PagingParameterInModel pageModel)
         {
-            throw new NotImplementedException();
+            await Task.Delay(1);
+            PagingParameterOutModel<HRCountry> retour = new PagingParameterOutModel<HRCountry>();
+            retour.PageItems = _countries;
+            retour.PageSize = 50;
+            retour.CurrentPage = 0;
+            retour.TotalItemsCount = 50;
+            return retour;
         }
 
         public bool IsPaginable()
         {
-            throw new NotImplementedException();
+            return true;
         }
 
         public bool IsSortable()
         {
-            throw new NotImplementedException();
+            return true;
         }
     }
 }

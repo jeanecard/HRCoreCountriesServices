@@ -1,11 +1,13 @@
+using HRBordersAndCountriesWebAPI2.Utils;
 using HRCommonModel;
 using HRCoreCountriesWebAPI2.Controllers;
 using Microsoft.AspNetCore.Http;
 using QuickType;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
-
+using XUnitTestControllers.MockAndStubs;
 
 namespace XUnitTestControllers
 {
@@ -18,16 +20,17 @@ namespace XUnitTestControllers
         [Fact]
         public async void HRCountriesControllerOnGetByIDUnknownExpectStatusCode404()
         {
-            List<MongoDB.Bson.ObjectId> list = new List<MongoDB.Bson.ObjectId>() {
-                new MongoDB.Bson.ObjectId("507f191e810c19729de860ea"),
-                new MongoDB.Bson.ObjectId("507f191e810c19729de860eb") };
-            CoreCountriesServiceStub service = new CoreCountriesServiceStub(list);
-            HRCountriesController ctrl = new HRCountriesController(service, null);
-
-            Task<(int, HRCountry)> resultService = ctrl.GetFromID("507f191e810c19729de860ec");
-            await resultService;
-            Assert.True(resultService.Result.Item1 == StatusCodes.Status404NotFound);
-            Assert.True(resultService.Result.Item2 == null);
+            List<String> list = new List<String>() {
+                "FR",
+                "US" };
+            IHRCommonForkerUtils util = new HRCommonForkerUtilsStub() { CanOrderReturn = true };
+            HRCountriesControllersForker forker = new HRCountriesControllersForker(util);
+            using (Task<(int, HRCountry)> resultService = forker.GetFromIDAsync("AA", new CoreCountriesServiceStub(list)))
+            {
+                await resultService;
+                Assert.True(resultService.Result.Item1 == StatusCodes.Status404NotFound);
+                Assert.True(resultService.Result.Item2 == null);
+            }
 
         }
         /// <summary>
@@ -37,17 +40,19 @@ namespace XUnitTestControllers
         [Fact]
         public async void HRCountriesControllerOnGetByIDNullExpectStatus400BadRequest()
         {
-            List<MongoDB.Bson.ObjectId> list = new List<MongoDB.Bson.ObjectId>() {
-                new MongoDB.Bson.ObjectId("507f191e810c19729de860ea"),
-                new MongoDB.Bson.ObjectId("507f191e810c19729de860eb") };
+            List<String> list = new List<String>() {
+                "FR",
+                "US" };
             CoreCountriesServiceStub service = new CoreCountriesServiceStub(list);
-            HRCountriesController ctrl = new HRCountriesController(service, null);
-            Task<(int, HRCountry)> resultService = ctrl.GetFromID(null);
-            await resultService;
-            Assert.True(resultService.Result.Item1 == StatusCodes.Status400BadRequest);
-            Assert.True(resultService.Result.Item2 == null);
+            IHRCommonForkerUtils util = new HRCommonForkerUtilsStub() { CanOrderReturn = true };
+            HRCountriesControllersForker forker = new HRCountriesControllersForker(util);
 
-
+            using (Task<(int, HRCountry)> resultService = forker.GetFromIDAsync(null, service))
+            {
+                await resultService;
+                Assert.True(resultService.Result.Item1 == StatusCodes.Status400BadRequest);
+                Assert.True(resultService.Result.Item2 == null);
+            }
         }
         /// <summary>
         /// Test that GetID return status code 500 if his _service is null (problem with DI)
@@ -55,29 +60,17 @@ namespace XUnitTestControllers
         [Fact]
         public async void HRCountriesControllerOnGetByIDWithNullServiceExpectStatus500InternalServerError()
         {
-            HRCountriesController ctrl = new HRCountriesController(null, null);
-            Task<(int, HRCountry)> resultService = ctrl.GetFromID("507f191e810c19729de860ea");
-            await resultService;
-            Assert.True(resultService.Result.Item1 == StatusCodes.Status500InternalServerError);
-            Assert.True(resultService.Result.Item2 == null);
+            IHRCommonForkerUtils util = new HRCommonForkerUtilsStub() { CanOrderReturn = true };
+            HRCountriesControllersForker forker = new HRCountriesControllersForker(util);
+
+            using (Task<(int, HRCountry)> resultService = forker.GetFromIDAsync("xx", null))
+            {
+                await resultService;
+                Assert.True(resultService.Result.Item1 == StatusCodes.Status500InternalServerError);
+                Assert.True(resultService.Result.Item2 == null);
+            }
 
 
-        }
-        /// <summary>
-        /// Test that GetID return status code 500 if his _service is null (problem with DI)
-        /// </summary>
-        [Fact]
-        public async void HRCountriesControllerOnGetByIDWithIDNotBsonIDExpectStatus500InternalServerError()
-        {
-            List<MongoDB.Bson.ObjectId> list = new List<MongoDB.Bson.ObjectId>() {
-                new MongoDB.Bson.ObjectId("507f191e810c19729de860ea"),
-                new MongoDB.Bson.ObjectId("507f191e810c19729de860eb") };
-            CoreCountriesServiceStub service = new CoreCountriesServiceStub(list);
-            HRCountriesController ctrl = new HRCountriesController(service, null);
-            Task<(int, HRCountry)> resultService = ctrl.GetFromID("507a");
-            await resultService;
-            Assert.True(resultService.Result.Item1 == StatusCodes.Status500InternalServerError);
-            Assert.True(resultService.Result.Item2 == null);
         }
         /// <summary>
         /// Test that GetID return status code 500 and HRBorder Null in case of any exception raised by service
@@ -85,16 +78,18 @@ namespace XUnitTestControllers
         [Fact]
         public async void HRCountriesControllerOnGetByIDWithExceptionThrownByServiceExpectStatus500InternalServerError()
         {
-            List<MongoDB.Bson.ObjectId> list = new List<MongoDB.Bson.ObjectId>() {
-                new MongoDB.Bson.ObjectId("507f191e810c19729de860ea"),
-                new MongoDB.Bson.ObjectId("507f191e810c19729de860eb") };
-            CoreCountriesServiceStub service = new CoreCountriesServiceStub(list);
-            HRCountriesController ctrl = new HRCountriesController(service, null);
-            service.ThrowException = true;
-            Task<(int, HRCountry)> resultService = ctrl.GetFromID("507f191e810c19729de860ea");
-            await resultService;
-            Assert.True(resultService.Result.Item1 == StatusCodes.Status500InternalServerError);
-            Assert.True(resultService.Result.Item2 == null);
+            List<String> list = new List<String>() {
+                "FR",
+                "US" };
+            IHRCommonForkerUtils util = new HRCommonForkerUtilsStub() { CanOrderReturn = true };
+            HRCountriesControllersForker forker = new HRCountriesControllersForker(util);
+
+            using (Task<(int, HRCountry)> resultService = forker.GetFromIDAsync("xx", new CoreCountriesServiceStub(list) { ThrowException = true }))
+            {
+                await resultService;
+                Assert.True(resultService.Result.Item1 == StatusCodes.Status500InternalServerError);
+                Assert.True(resultService.Result.Item2 == null);
+            }
 
         }
 
@@ -104,15 +99,16 @@ namespace XUnitTestControllers
         [Fact]
         public async void HRCountriesControllerOnGetByIDWithExistingItemExpectItemAndCodeStatus200()
         {
-            List<MongoDB.Bson.ObjectId> list = new List<MongoDB.Bson.ObjectId>() {
-                new MongoDB.Bson.ObjectId("507f191e810c19729de860ea"),
-                new MongoDB.Bson.ObjectId("507f191e810c19729de860eb") };
-            CoreCountriesServiceStub service = new CoreCountriesServiceStub(list);
-            HRCountriesController ctrl = new HRCountriesController(service, null);
-            Task<(int, HRCountry)> resultService = ctrl.GetFromID("507f191e810c19729de860ea");
-            await resultService;
-            Assert.True(resultService.Result.Item1 == StatusCodes.Status200OK);
-            Assert.True(resultService.Result.Item2 != null && resultService.Result.Item2._id.Equals(new MongoDB.Bson.ObjectId("507f191e810c19729de860ea")));
+            List<String> list = new List<String>() {"FR",  "US" };
+            IHRCommonForkerUtils util = new HRCommonForkerUtilsStub() { CanOrderReturn = true };
+            HRCountriesControllersForker forker = new HRCountriesControllersForker(util);
+
+            using (Task<(int, HRCountry)> resultService = forker.GetFromIDAsync("FR", new CoreCountriesServiceStub(list)))
+            {
+                await resultService;
+                Assert.True(resultService.Result.Item1 == StatusCodes.Status200OK);
+                Assert.True(resultService.Result.Item2 != null && resultService.Result.Item2.Alpha2Code.Equals("FR"));
+            }
         }
 
         #endregion
@@ -124,17 +120,24 @@ namespace XUnitTestControllers
         [Fact]
         public async void HRCountriesControllerOnGetAllWithInvalidPagingInExpectStatus416RequestedRangeNotSatisfiable()
         {
-            List<MongoDB.Bson.ObjectId> list = new List<MongoDB.Bson.ObjectId>() {
-                new MongoDB.Bson.ObjectId("507f191e810c19729de860ea"),
-                new MongoDB.Bson.ObjectId("507f191e810c19729de860eb") };
-            CoreCountriesServiceStub service = new CoreCountriesServiceStub(list);
-            HRCountriesController ctrl = new HRCountriesController(service, null);
-            PagingParameterInModel invalidModel = new PagingParameterInModel() { PageNumber = 2, PageSize = 100 };
-            Task<(int, PagingParameterOutModel<HRCountry>)> resultService = ctrl.GetFromPaging(invalidModel, null);
-            await resultService;
-            Assert.True(resultService.Result.Item1 == StatusCodes.Status416RequestedRangeNotSatisfiable);
-            Assert.True(resultService.Result.Item2 == null);
+            List<String> list = new List<String>() {
+                "FR",
+                "US" };
 
+            PagingParameterInModel invalidModel = new PagingParameterInModel() { PageNumber = 2, PageSize = 50 };
+            IHRCommonForkerUtils util = new HRCommonForkerUtilsStub() { CanOrderReturn = true };
+            HRCountriesControllersForker forker = new HRCountriesControllersForker(util);
+
+            using (Task<(int, PagingParameterOutModel<HRCountry>)> resultService = forker.GetFromPagingAsync(
+                invalidModel,
+                null,
+                new CoreCountriesServiceStub(list) { ThrowException = true, ExceptionToThrow = new IndexOutOfRangeException() },
+                50))
+            {
+                await resultService;
+                Assert.True(resultService.Result.Item1 == StatusCodes.Status416RequestedRangeNotSatisfiable);
+                Assert.True(resultService.Result.Item2 == null);
+            }
         }
 
         /// <summary>
@@ -143,17 +146,25 @@ namespace XUnitTestControllers
         [Fact]
         public async void HRCountriesControllerOnGetAllWithExceptionThrownByServiceExpectStatus500InternalServerError()
         {
-            List<MongoDB.Bson.ObjectId> list = new List<MongoDB.Bson.ObjectId>() {
-                new MongoDB.Bson.ObjectId("507f191e810c19729de860ea"),
-                new MongoDB.Bson.ObjectId("507f191e810c19729de860eb") };
-            CoreCountriesServiceStub service = new CoreCountriesServiceStub(list) { ThrowException = true };
-            HRCountriesController ctrl = new HRCountriesController(service, null);
-            PagingParameterInModel invalidModel = new PagingParameterInModel() { PageNumber = 2, PageSize = 100 };
-            Task<(int, PagingParameterOutModel<HRCountry>)> resultService = ctrl.GetFromPaging(invalidModel, null);
-            await resultService;
-            Assert.True(resultService.Result.Item1 == StatusCodes.Status500InternalServerError);
-            Assert.True(resultService.Result.Item2 == null);
+            List<String> list = new List<String>() {
+                "FR",
+                "US" };
 
+            PagingParameterInModel invalidModel = new PagingParameterInModel() { PageNumber = 2, PageSize = 50 };
+            IHRCommonForkerUtils util = new HRCommonForkerUtilsStub() { CanOrderReturn = true };
+            HRCountriesControllersForker forker = new HRCountriesControllersForker(util);
+
+            using (Task<(int, PagingParameterOutModel<HRCountry>)> resultService = forker.GetFromPagingAsync(
+                invalidModel,
+                null,
+                new CoreCountriesServiceStub(list) { ThrowException = true },
+                50
+                ))
+            {
+                await resultService;
+                Assert.True(resultService.Result.Item1 == StatusCodes.Status500InternalServerError);
+                Assert.True(resultService.Result.Item2 == null);
+            }
         }
         /// <summary>
         /// Test normal condition Success and partial result returned.
@@ -161,27 +172,23 @@ namespace XUnitTestControllers
         [Fact]
         public async void HRCountriesControllerOnGetAllWithValidPagingInExpectItemsAndCodeStatus200()
         {
-            List<MongoDB.Bson.ObjectId> list = new List<MongoDB.Bson.ObjectId>();
-            for (int i = 0; i < 300; i++)
+            List<String> list = new List<String>() {
+                "FR",
+                "US" };
+            PagingParameterInModel invalidModel = new PagingParameterInModel() { PageNumber = 1, PageSize = 50 };
+            IHRCommonForkerUtils util = new HRCommonForkerUtilsStub() { CanOrderReturn = true };
+            HRCountriesControllersForker forker = new HRCountriesControllersForker(util);
+
+            using (Task<(int, PagingParameterOutModel<HRCountry>)> resultService = forker.GetFromPagingAsync(
+                invalidModel,
+                null,
+                new CoreCountriesServiceStub(list),
+                50
+                ))
             {
-                list.Add(new MongoDB.Bson.ObjectId("507f191e810c19729de860ea"));
+                await resultService;
+                Assert.True(resultService.Result.Item1 == StatusCodes.Status200OK);
             }
-            CoreCountriesServiceStub service = new CoreCountriesServiceStub(list);
-            HRCountriesController ctrl = new HRCountriesController(service, null);
-            PagingParameterInModel invalidModel = new PagingParameterInModel() { PageNumber = 1, PageSize = 100 };
-            Task<(int, PagingParameterOutModel<HRCountry>)> resultService = ctrl.GetFromPaging(invalidModel, null);
-            await resultService;
-            Assert.True(resultService.Result.Item1 == StatusCodes.Status200OK);
-            Assert.True(resultService.Result.Item2 != null);
-            Assert.True(resultService.Result.Item2.HasNextPage);
-            Assert.True(resultService.Result.Item2.HasPreviousPage);
-            Assert.True(resultService.Result.Item2.TotalItemsCount == 300);
-            int j = 100;
-            foreach (HRCountry iterator in resultService.Result.Item2.PageItems)
-            {
-                j++;
-            }
-            Assert.True(j == 200);
         }
         #endregion
     }

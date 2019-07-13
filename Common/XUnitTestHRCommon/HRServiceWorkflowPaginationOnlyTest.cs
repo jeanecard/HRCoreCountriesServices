@@ -36,7 +36,7 @@ namespace XUnitTestHRCommon
 
         [Fact]
         /// <summary>
-        /// Test that GetQueryResultsAsync throw NotSupportedException with a unsuortable repository and a valid orderBy  
+        /// Test that GetQueryResultsAsync throw NotSupportedException with a unsortable repository and a valid orderBy  
         /// </summary>
         public async void GetQueryResultsAsyncThrowNotSupportedExceptionOnUnsortableRepository()
         {
@@ -44,11 +44,11 @@ namespace XUnitTestHRCommon
             repo._isSortable = false;
             HRServiceWorkflowPaginationOnly<int> classic = new HRServiceWorkflowPaginationOnly<int>(repo, new HRPaginer<int>());
 
-            await Assert.ThrowsAsync<NotSupportedException>(async () => await classic.GetQueryResultsAsync(new PagingParameterInModel(), new HRSortingParamModel() { SortingParamsQuery = "name;asc" })); ;
+            await Assert.ThrowsAsync<NotSupportedException>(async () => await classic.GetQueryResultsAsync(new PagingParameterInModel(), new HRSortingParamModel() { OrderBy = "name;asc" })); ;
         }
         [Fact]
         /// <summary>
-        /// Test that GetQueryResultsAsync Retrun SortableAndPAginable from repo with a valid orderBy  
+        /// Test that GetQueryResultsAsync Retrun SortableAndPaginable from repo with a valid orderBy  
         /// </summary>
         public async void GetQueryResultsAsyncRetrunRepositoryGetOrderedAndPaginatedsAsync()
         {
@@ -57,7 +57,7 @@ namespace XUnitTestHRCommon
             HRServiceWorkflowPaginationOnly<int> classic = new HRServiceWorkflowPaginationOnly<int>(repo, new HRPaginer<int>());
             Task<PagingParameterOutModel<int>> task = classic.GetQueryResultsAsync(
                 new PagingParameterInModel(),
-                new HRSortingParamModel() { SortingParamsQuery = "name;asc" });
+                new HRSortingParamModel() { OrderBy = "name;asc" });
             await task;
             Assert.NotNull(task);
             Assert.NotNull(task.Result);
@@ -75,7 +75,7 @@ namespace XUnitTestHRCommon
             HRServiceWorkflowPaginationOnly<int> classic = new HRServiceWorkflowPaginationOnly<int>(repo, new HRPaginer<int>());
             Task<PagingParameterOutModel<int>> task = classic.GetQueryResultsAsync(
                 new PagingParameterInModel() { PageNumber = 0, PageSize = 10 },
-                new HRSortingParamModel() { SortingParamsQuery = "name;asc" });
+                new HRSortingParamModel() { OrderBy = "name;asc" });
             await task;
             Assert.NotNull(task);
             Assert.NotNull(task.Result);
@@ -94,7 +94,7 @@ namespace XUnitTestHRCommon
             HRServiceWorkflowPaginationOnly<int> classic = new HRServiceWorkflowPaginationOnly<int>(repo, new HRPaginer<int>());
             await Assert.ThrowsAsync<InvalidProgramException>(async () => await classic.GetQueryResultsAsync(
                 new PagingParameterInModel() { PageNumber = 500, PageSize = 10 },
-                new HRSortingParamModel() { SortingParamsQuery = "name;asc" }));
+                new HRSortingParamModel() { OrderBy = "name;asc" }));
         }
         [Fact]
         /// <summary>
@@ -108,7 +108,7 @@ namespace XUnitTestHRCommon
             HRServiceWorkflowPaginationOnly<int> classic = new HRServiceWorkflowPaginationOnly<int>(repo, new HRPaginer<int>());
             Task<PagingParameterOutModel<int>> task = classic.GetQueryResultsAsync(
                 new PagingParameterInModel() { PageNumber = 0, PageSize = 20 },
-                new HRSortingParamModel() { SortingParamsQuery = "" });
+                new HRSortingParamModel() { OrderBy = "" });
             await task;
             Assert.NotNull(task);
             Assert.NotNull(task.Result);

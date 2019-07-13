@@ -14,7 +14,7 @@ namespace XUnitTestDAL
         [Fact]
         public async void TestGetAsyncReturnNullWithIDNullOrEmpty()
         {
-            MongoDBCountriesRepository repo = new MongoDBCountriesRepository(null);
+            MongoDBCountriesRepository repo = new MongoDBCountriesRepository(null, null);
             Task<HRCountry> task = repo.GetAsync(null);
             await task;
             Assert.Null(task.Result);

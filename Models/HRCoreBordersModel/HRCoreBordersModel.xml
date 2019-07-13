@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>HRCoreBordersModel</name>
+    </assembly>
+    <members>
+        <member name="T:HRCoreBordersModel.HRBorder">
+            <summary>
+            A Model of HRBorder
+            </summary>
+        </member>
+        <member name="F:HRCoreBordersModel.HRBorder.wkt_geom">
+            <summary>
+            This property is used if and only if wkb_geometry is null. 
+            </summary>
+        </member>
+        <member name="P:HRCoreBordersModel.HRBorder.WKB_GEOMETRY">
+            <summary>
+            Geometry in binary Format  (OpenGIS specification)
+            </summary>
+        </member>
+        <member name="P:HRCoreBordersModel.HRBorder.WKT_GEOMETRY">
+            <summary>
+            Geometry in txt format (OpenGIS specification)
+            </summary>
+        </member>
+        <member name="P:HRCoreBordersModel.HRBorder.FIPS">
+            <summary>
+            FIPS country code (US government id of countries)
+            </summary>
+        </member>
+        <member name="P:HRCoreBordersModel.HRBorder.ISO2">
+            <summary>
+            ISO code Country (2 characters)
+            </summary>
+        </member>
+        <member name="P:HRCoreBordersModel.HRBorder.ISO3">
+            <summary>
+            ISO code Country (3 characters)
+            </summary>
+        </member>
+        <member name="P:HRCoreBordersModel.HRBorder.UN">
+            <summary>
+            UN (Unikted Nations) code Country
+            </summary>
+        </member>
+        <member name="P:HRCoreBordersModel.HRBorder.NAME">
+            <summary>
+            Country name.
+            </summary>
+        </member>
+        <member name="P:HRCoreBordersModel.HRBorder.AREA">
+            <summary>
+            Area of country
+            </summary>
+        </member>
+        <member name="P:HRCoreBordersModel.HRBorder.POP2005">
+            <summary>
+            Total of human population in 2005
+            </summary>
+        </member>
+        <member name="P:HRCoreBordersModel.HRBorder.REGION">
+            <summary>
+            Region
+            </summary>
+        </member>
+        <member name="P:HRCoreBordersModel.HRBorder.SUBREGION">
+            <summary>
+            SubRegion
+            </summary>
+        </member>
+        <member name="P:HRCoreBordersModel.HRBorder.LON">
+            <summary>
+            Longitude of capital.
+            </summary>
+        </member>
+        <member name="P:HRCoreBordersModel.HRBorder.LAT">
+            <summary>
+            Lattitude of capital.
+            </summary>
+        </member>
+    </members>
+</doc>

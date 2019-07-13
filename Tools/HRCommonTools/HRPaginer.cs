@@ -59,11 +59,11 @@ namespace HRCommonTools
             }
         }
         /// <summary>
-        /// 
+        /// Process validity of PagingParameterIn with itemsCount
         /// </summary>
-        /// <param name="model"></param>
-        /// <param name="itemsCount"></param>
-        /// <returns></returns>
+        /// <param name="model">the PagingParameterIn</param>
+        /// <param name="itemsCount">The total number of items</param>
+        /// <returns>true if is valid.</returns>
         public bool IsValid(PagingParameterInModel model, uint itemsCount)
         {
             if (model == null)

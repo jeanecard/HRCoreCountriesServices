@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace XUnitTestHRCommon.Stubs
 {
+    /// <summary>
+    /// Stub, so comments are very lights :-)
+    /// </summary>
     class HRCoreRepositoryStub : IHRCoreRepository<int>
     {
         public bool _isSortable = true;

@@ -3,6 +3,7 @@ using HRCommonModel;
 using HRCommonModels;
 using HRCoreRepository.Interface;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using QuickType;
 using System;
@@ -16,6 +17,7 @@ namespace HRCoreCountriesRepository
     /// </summary>
     public class MongoDBCountriesRepository : IHRCoreRepository<HRCountry>, IPaginable, ISortable
     {
+        private readonly ILogger<MongoDBCountriesRepository> _looger = null;
         private readonly IConfiguration _config = null;
         private static readonly String _MONGO_CX_STRING_KEY = "CountriesConnection";
         private static readonly String _MONGO_CLUSTER = "MongoDBDataBaseName:ClusterName";
@@ -29,19 +31,16 @@ namespace HRCoreCountriesRepository
         {
         }
         //Constructor for DI with Configuration
-        public MongoDBCountriesRepository(IConfiguration injectedMongoConfig)
+        public MongoDBCountriesRepository(IConfiguration injectedMongoConfig, ILogger<MongoDBCountriesRepository> logger)
         {
             _config = injectedMongoConfig;
+            _looger = logger;
         }
         /// <summary>
-        /// !TODO revoir commentaire.
         /// 1- Get collection of Countries from Mongo
         ///     1.1- If collection is valid
         ///         1.1.2- Create an Empty Filter to get All Countries and create the corresponding task
-        ///         1.1.3- await task result and if Result is not null return :
-        ///             1.1.3.1 - Full result if objectID nt supplied
-        ///             1.1.3.2 - A collection with the single element queried. Algorithm has to be improve in next
-        ///             iteration (Link, Filter MongoDB ..)
+        ///         1.1.3- await task result and if Result is not null return result
         ///     1.2- Else
         ///         Throw Code InvalidOperationException
         /// 2- Return null result if previous algorithm does not throw any exception and does not return any result.
@@ -52,8 +51,7 @@ namespace HRCoreCountriesRepository
         ///     ArgumentOutOfRangeException if objectID supplied can not be converted in MongoDB ID
         ///     System Exception as is if any other exception is thrown.
         /// </returns>
-        /// //!TODO Why IsDisposabl not called ???
-        public async Task<IEnumerable<HRCountry>> GetCountriesAsync(String id = null)
+        public async Task<IEnumerable<HRCountry>> GetCountriesAsync()
         {
             IEnumerable<HRCountry> retour = null;
             Task<IAsyncCursor<HRCountry>> retourTask = null;
@@ -69,49 +67,31 @@ namespace HRCoreCountriesRepository
                     retourTask = collection.FindAsync(bld.Empty);
                     //1.1.3-
                     await retourTask;
+                    //Message IDE0067 Disposable object created by 'await retourTask' is never disposed whereas finally dispose exists ?
+
                     if (retourTask.Result != null)
                     {
-                        //1.1.3.1-
-                        if (String.IsNullOrEmpty(id))
-                        {
-                            //Force to list to avoid return asyn enum that can be enumerate only once.
-                            retour = retourTask.Result.ToList();
-                        }
-                        //1.1.3.2-
-                        else
-                        {
-                            List<HRCountry> fullCountries = retourTask.Result.ToList();
-                            List<HRCountry> countries = new List<HRCountry>();
-                            try
-                            {
-                                MongoDB.Bson.ObjectId key = new MongoDB.Bson.ObjectId(id);
-                                foreach (HRCountry iterator in fullCountries)
-                                {
-                                    if (iterator._id != null && iterator._id.Equals(key))
-                                    {
-                                        countries.Add(iterator);
-                                        retour = countries;
-                                        break;
-                                    }
-                                }
-                            }
-                            catch (Exception)
-                            {
-                                retourTask.Dispose();
-                                throw new ArgumentOutOfRangeException();
-                            }
-                        }
+                        //Force to list to avoid return asyn enum that can be enumerate only once.
+                        retour = retourTask.Result.ToList();
                     }
                 }
                 //1.2-
                 else
                 {
-                    throw new InvalidOperationException("Collection not found.");
+                    String ErrorMessage = "Collection not found in MongoDBCountriesRepository GetCountriesAsync";
+                    if (_looger != null)
+                    {
+                        _looger.LogError(ErrorMessage);
+                    }
+                    throw new InvalidOperationException(ErrorMessage);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                //Log pattern to apply.
+                if (_looger != null)
+                {
+                    _looger.LogError(ex.Message);
+                }
                 throw;
             }
             finally
@@ -134,7 +114,13 @@ namespace HRCoreCountriesRepository
         {
             if (_config == null)
             {
-                throw new MemberAccessException("No config available.");
+                String ErrorMessage = "No config available in MongoDBCountriesRepository GetCountriesCollection";
+                if (_looger != null)
+                {
+                    _looger.LogError(ErrorMessage);
+                }
+
+                throw new MemberAccessException(ErrorMessage);
             }
             IMongoCollection<HRCountry> retour = null;
             //1-
@@ -165,7 +151,6 @@ namespace HRCoreCountriesRepository
         /// <param name="id">The searched ID (Alpha2 or Alpha3)</param>
         /// <returns>The corrresponding HRCountry or null if not found. Can throw the following exception :
         /// </returns>
-        /// //!TODO why non disposable warning ??
         public async Task<HRCountry> GetAsync(string id)
         {
             HRCountry retour = null;
@@ -189,6 +174,7 @@ namespace HRCoreCountriesRepository
                        ((!String.IsNullOrEmpty(country.Alpha3Code)) && (country.Alpha3Code == idToSearch))));
                         //1.1.3-
                         await retourTask;
+                        //Message IDE0067 Disposable object created by 'await retourTask' is never disposed whereas finally dispose exists ?
                         if (retourTask.Result != null)
                         {
                             retour = retourTask.Result.FirstOrDefault();
@@ -200,9 +186,12 @@ namespace HRCoreCountriesRepository
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                //Log pattern to apply.
+                if(_looger != null)
+                {
+                    _looger.LogError(ex.Message);
+                }
                 throw;
             }
             //2-
@@ -222,7 +211,6 @@ namespace HRCoreCountriesRepository
         /// Get All Countries.
         /// </summary>
         /// <returns></returns>
-        /// //TODO ? Why disposble warning
         public async Task<IEnumerable<HRCountry>> GetFullsAsync()
         {
             IEnumerable<HRCountry> retour = null;
@@ -239,6 +227,7 @@ namespace HRCoreCountriesRepository
                     {
                         //1.1.3-
                         await retourTask;
+                        //Message IDE0067 Disposable object created by 'await retourTask' is never disposed whereas using dispose exists ?
                         if (retourTask.Result != null)
                         {
                             //Force to list to avoid return asyn enum that can be enumerate only once.
@@ -248,12 +237,20 @@ namespace HRCoreCountriesRepository
                 }
                 else
                 {
-                    throw new InvalidOperationException("Collection not found.");
+                    String ErrorMessage = "No Collection found in MongoDBCountriesRepository GetFullsAsync";
+                    if (_looger != null)
+                    {
+                        _looger.LogError(ErrorMessage);
+                    }
+                    throw new InvalidOperationException(ErrorMessage);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                //Log pattern to apply.
+                if (_looger != null)
+                {
+                    _looger.LogError(ex.Message);
+                }
                 throw;
             }
             //2-

@@ -39,7 +39,7 @@ namespace XUnitTestDAL
         public void GetSQLQueryWithValidOrderByExpectSelectWithOrderByClause()
         {
             PostGISCoreBordersRepository repo = new PostGISCoreBordersRepository(null, new HRPaginer<HRBorder>());
-            String sql = repo.GetSQLQuery(true, null, new HRCommonModels.HRSortingParamModel() { SortingParamsQuery = "name;asc" }, null);
+            String sql = repo.GetSQLQuery(true, null, new HRCommonModels.HRSortingParamModel() { OrderBy = "name;asc" }, null);
             Assert.NotNull(sql);
             Assert.Equal(sql, PostGISCoreBordersRepository.SQLQUERYFORDAPPER + " ORDER BY name ASC ");
         }

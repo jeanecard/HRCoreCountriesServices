@@ -1,0 +1,585 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>HRCoreCountriesModel</name>
+    </assembly>
+    <members>
+        <member name="T:QuickType.HRCountry">
+            <summary>
+            HR Country model
+            </summary>
+            <summary>
+            Class HRCountry
+            </summary>
+        </member>
+        <member name="F:QuickType.HRCountry._id">
+            <summary>
+            MongoDB ID
+            </summary>
+        </member>
+        <member name="P:QuickType.HRCountry.Name">
+            <summary>
+            Country name
+            </summary>
+        </member>
+        <member name="P:QuickType.HRCountry.TopLevelDomain">
+            <summary>
+            topLevelDomain
+            </summary>
+        </member>
+        <member name="P:QuickType.HRCountry.Alpha2Code">
+            <summary>
+            ISO code (2char)
+            </summary>
+        </member>
+        <member name="P:QuickType.HRCountry.Alpha3Code">
+            <summary>
+            Iso Code (3 char)
+            </summary>
+        </member>
+        <member name="P:QuickType.HRCountry.CallingCodes">
+            <summary>
+            Prefix phne number.
+            </summary>
+        </member>
+        <member name="P:QuickType.HRCountry.Capital">
+            <summary>
+            Capital
+            </summary>
+        </member>
+        <member name="P:QuickType.HRCountry.AltSpellings">
+            <summary>
+            altSpellings
+            </summary>
+        </member>
+        <member name="P:QuickType.HRCountry.Region">
+            <summary>
+            Region (as continent)
+            </summary>
+        </member>
+        <member name="P:QuickType.HRCountry.Subregion">
+            <summary>
+            SubRegion
+            </summary>
+        </member>
+        <member name="P:QuickType.HRCountry.Population">
+            <summary>
+            Number of inhabitant
+            </summary>
+        </member>
+        <member name="P:QuickType.HRCountry.Latlng">
+            <summary>
+            Lat / Lon probably WGS 84
+            </summary>
+        </member>
+        <member name="P:QuickType.HRCountry.Demonym">
+            <summary>
+            demonym
+            </summary>
+        </member>
+        <member name="P:QuickType.HRCountry.Area">
+            <summary>
+            Area
+            </summary>
+        </member>
+        <member name="P:QuickType.HRCountry.Gini">
+            <summary>
+            gini
+            </summary>
+        </member>
+        <member name="P:QuickType.HRCountry.Timezones">
+            <summary>
+            Lit of time zones
+            </summary>
+        </member>
+        <member name="P:QuickType.HRCountry.Borders">
+            <summary>
+            Countries in borders
+            </summary>
+        </member>
+        <member name="P:QuickType.HRCountry.NativeName">
+            <summary>
+            Name in native langage
+            </summary>
+        </member>
+        <member name="P:QuickType.HRCountry.NumericCode">
+            <summary>
+            numeric code
+            </summary>
+        </member>
+        <member name="P:QuickType.HRCountry.Currencies">
+            <summary>
+            List of curencies available
+            </summary>
+        </member>
+        <member name="P:QuickType.HRCountry.Languages">
+            <summary>
+            List of langages spoken
+            </summary>
+        </member>
+        <member name="P:QuickType.HRCountry.Translations">
+            <summary>
+            List of translated native name
+            </summary>
+        </member>
+        <member name="P:QuickType.HRCountry.Flag">
+            <summary>
+            Url of svg flag
+            </summary>
+        </member>
+        <member name="P:QuickType.HRCountry.RegionalBlocs">
+            <summary>
+            List of regionalBlocs
+            </summary>
+        </member>
+        <member name="M:QuickType.HRCountry.FromJson(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="json"></param>
+            <returns></returns>
+        </member>
+        <member name="T:QuickType.Currency">
+            <summary>
+            Class for currency
+            </summary>
+        </member>
+        <member name="P:QuickType.Currency.Code">
+            <summary>
+            Currency code
+            </summary>
+        </member>
+        <member name="P:QuickType.Currency.Name">
+            <summary>
+            Currency name
+            </summary>
+        </member>
+        <member name="P:QuickType.Currency.Symbol">
+            <summary>
+            Currency Symbol
+            </summary>
+        </member>
+        <member name="T:QuickType.Language">
+            <summary>
+            Language class.
+            </summary>
+        </member>
+        <member name="P:QuickType.Language.Iso6391">
+            <summary>
+            Name of langage in iso639 1
+            </summary>
+        </member>
+        <member name="P:QuickType.Language.Iso6392">
+            <summary>
+            Name of langage in iso639 2
+            </summary>
+        </member>
+        <member name="P:QuickType.Language.Name">
+            <summary>
+            Name of langage
+            </summary>
+        </member>
+        <member name="P:QuickType.Language.NativeName">
+            <summary>
+            Native name of langage
+            </summary>
+        </member>
+        <member name="T:QuickType.RegionalBloc">
+            <summary>
+            Regional bloc class
+            </summary>
+        </member>
+        <member name="P:QuickType.RegionalBloc.Acronym">
+            <summary>
+            acronym
+            </summary>
+        </member>
+        <member name="P:QuickType.RegionalBloc.Name">
+            <summary>
+            name
+            </summary>
+        </member>
+        <member name="P:QuickType.RegionalBloc.OtherAcronyms">
+            <summary>
+            otherAcronyms
+            </summary>
+        </member>
+        <member name="P:QuickType.RegionalBloc.OtherNames">
+            <summary>
+            otherNames
+            </summary>
+        </member>
+        <member name="T:QuickType.Translations">
+            <summary>
+            Class for Translations
+            </summary>
+        </member>
+        <member name="P:QuickType.Translations.De">
+            <summary>
+            Deutshland
+            </summary>
+        </member>
+        <member name="P:QuickType.Translations.Es">
+            <summary>
+            Spain
+            </summary>
+        </member>
+        <member name="P:QuickType.Translations.Fr">
+            <summary>
+            France
+            </summary>
+        </member>
+        <member name="P:QuickType.Translations.Ja">
+            <summary>
+            Japan
+            </summary>
+        </member>
+        <member name="P:QuickType.Translations.It">
+            <summary>
+            Italy
+            </summary>
+        </member>
+        <member name="P:QuickType.Translations.Br">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:QuickType.Translations.Pt">
+            <summary>
+            Br
+            </summary>
+        </member>
+        <member name="P:QuickType.Translations.Nl">
+            <summary>
+            Nederlands
+            </summary>
+        </member>
+        <member name="P:QuickType.Translations.Hr">
+            <summary>
+            hr, promise it's not me :-)
+            </summary>
+        </member>
+        <member name="T:QuickType.Region">
+            <summary>
+            Region enum
+            </summary>
+        </member>
+        <member name="F:QuickType.Region.Africa">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:QuickType.Region.Americas">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:QuickType.Region.Asia">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:QuickType.Region.Empty">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:QuickType.Region.Europe">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:QuickType.Region.Oceania">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:QuickType.Region.Polar">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:QuickType.Acronym">
+            <summary>
+            Acronym enum
+            </summary>
+        </member>
+        <member name="F:QuickType.Acronym.Al">
+            <summary>
+            African League
+            </summary>
+        </member>
+        <member name="F:QuickType.Acronym.Asean">
+            <summary>
+            Association Of South East Asian Nations
+            </summary>
+        </member>
+        <member name="F:QuickType.Acronym.Au">
+            <summary>
+            African Union
+            </summary>
+        </member>
+        <member name="F:QuickType.Acronym.Cais">
+            <summary>
+            Central American Integration System
+            </summary>
+        </member>
+        <member name="F:QuickType.Acronym.Caricom">
+            <summary>
+            Caribena Community
+            </summary>
+        </member>
+        <member name="F:QuickType.Acronym.Cefta">
+            <summary>
+            Central European Free Trade Agreement
+            </summary>
+        </member>
+        <member name="F:QuickType.Acronym.Eeu">
+            <summary>
+            Eurasian Economic Union
+            </summary>
+        </member>
+        <member name="F:QuickType.Acronym.Efta">
+            <summary>
+            European Free Trade Association
+            </summary>
+        </member>
+        <member name="F:QuickType.Acronym.Eu">
+            <summary>
+            European Union
+            </summary>
+        </member>
+        <member name="F:QuickType.Acronym.Nafta">
+            <summary>
+            North American Free Trade Agreement
+            </summary>
+        </member>
+        <member name="F:QuickType.Acronym.Pa">
+            <summary>
+            Pacific Alliance
+            </summary>
+        </member>
+        <member name="F:QuickType.Acronym.Saarc">
+            <summary>
+            South Asian Association For Regional Cooperation
+            </summary>
+        </member>
+        <member name="F:QuickType.Acronym.Usan">
+            <summary>
+            Union Of South American Nations
+            </summary>
+        </member>
+        <member name="T:QuickType.Name">
+            <summary>
+            Name enum
+            </summary>
+        </member>
+        <member name="F:QuickType.Name.AfricanUnion">
+            <summary>
+            AfricanUnion
+            </summary>
+        </member>
+        <member name="F:QuickType.Name.ArabLeague">
+            <summary>
+            ArabLeague
+            </summary>
+        </member>
+        <member name="F:QuickType.Name.AssociationOfSoutheastAsianNations">
+            <summary>
+            AssociationOfSoutheastAsianNations
+            </summary>
+        </member>
+        <member name="F:QuickType.Name.CaribbeanCommunity">
+            <summary>
+            CaribbeanCommunity
+            </summary>
+        </member>
+        <member name="F:QuickType.Name.CentralAmericanIntegrationSystem">
+            <summary>
+            CentralAmericanIntegrationSystem
+            </summary>
+        </member>
+        <member name="F:QuickType.Name.CentralEuropeanFreeTradeAgreement">
+            <summary>
+            CentralEuropeanFreeTradeAgreement
+            </summary>
+        </member>
+        <member name="F:QuickType.Name.EurasianEconomicUnion">
+            <summary>
+            EurasianEconomicUnion
+            </summary>
+        </member>
+        <member name="F:QuickType.Name.EuropeanFreeTradeAssociation">
+            <summary>
+            EuropeanFreeTradeAssociation
+            </summary>
+        </member>
+        <member name="F:QuickType.Name.EuropeanUnion">
+            <summary>
+            EuropeanUnion
+            </summary>
+        </member>
+        <member name="F:QuickType.Name.NorthAmericanFreeTradeAgreement">
+            <summary>
+            NorthAmericanFreeTradeAgreement
+            </summary>
+        </member>
+        <member name="F:QuickType.Name.PacificAlliance">
+            <summary>
+            PacificAlliance
+            </summary>
+        </member>
+        <member name="F:QuickType.Name.SouthAsianAssociationForRegionalCooperation">
+            <summary>
+            SouthAsianAssociationForRegionalCooperation
+            </summary>
+        </member>
+        <member name="F:QuickType.Name.UnionOfSouthAmericanNations">
+            <summary>
+            UnionOfSouthAmericanNations
+            </summary>
+        </member>
+        <member name="T:QuickType.OtherAcronym">
+            <summary>
+            Other acronym enum
+            </summary>
+        </member>
+        <member name="F:QuickType.OtherAcronym.Eaeu">
+            <summary>
+            Eurasian Economic Union
+            </summary>
+        </member>
+        <member name="F:QuickType.OtherAcronym.Sica">
+            <summary>
+            Unknown acronym.
+            </summary>
+        </member>
+        <member name="F:QuickType.OtherAcronym.Unasul">
+            <summary>
+            Union of South American Nations
+            </summary>
+        </member>
+        <member name="F:QuickType.OtherAcronym.Unasur">
+            <summary>
+            Union of South American Nations
+            </summary>
+        </member>
+        <member name="F:QuickType.OtherAcronym.Uzan">
+            <summary>
+            Unknown acronym.
+            </summary>
+        </member>
+        <member name="T:QuickType.OtherName">
+            <summary>
+            Othername enum
+            </summary>
+        </member>
+        <member name="F:QuickType.OtherName.AccordDeLibreÉchangeNordAméricain">
+            <summary>
+            AccordDeLibreÉchangeNordAméricain
+            </summary>
+        </member>
+        <member name="F:QuickType.OtherName.AlianzaDelPacífico">
+            <summary>
+            AlianzaDelPacífico
+            </summary>
+        </member>
+        <member name="F:QuickType.OtherName.CaribischeGemeenschap">
+            <summary>
+            CaribischeGemeenschap
+            </summary>
+        </member>
+        <member name="F:QuickType.OtherName.CommunautéCaribéenne">
+            <summary>
+            CommunautéCaribéenne
+            </summary>
+        </member>
+        <member name="F:QuickType.OtherName.ComunidadDelCaribe">
+            <summary>
+            ComunidadDelCaribe
+            </summary>
+        </member>
+        <member name="F:QuickType.OtherName.JāmiAtAdDuwalAlArabīyah">
+            <summary>
+            JāmiAtAdDuwalAlArabīyah
+            </summary>
+        </member>
+        <member name="F:QuickType.OtherName.LeagueOfArabStates">
+            <summary>
+            LeagueOfArabStates
+            </summary>
+        </member>
+        <member name="F:QuickType.OtherName.SistemaDeLaIntegraciónCentroamericana">
+            <summary>
+            SistemaDeLaIntegraciónCentroamericana
+            </summary>
+        </member>
+        <member name="F:QuickType.OtherName.SouthAmericanUnion">
+            <summary>
+            SouthAmericanUnion
+            </summary>
+        </member>
+        <member name="F:QuickType.OtherName.TratadoDeLibreComercioDeAméricaDelNorte">
+            <summary>
+            TratadoDeLibreComercioDeAméricaDelNorte
+            </summary>
+        </member>
+        <member name="F:QuickType.OtherName.UmojaWaAfrika">
+            <summary>
+            UmojaWaAfrika
+            </summary>
+        </member>
+        <member name="F:QuickType.OtherName.UnieVanZuidAmerikaanseNaties">
+            <summary>
+            UnieVanZuidAmerikaanseNaties
+            </summary>
+        </member>
+        <member name="F:QuickType.OtherName.UnionAfricaine">
+            <summary>
+            UnionAfricaine
+            </summary>
+        </member>
+        <member name="F:QuickType.OtherName.UniãoAfricana">
+            <summary>
+            UniãoAfricana
+            </summary>
+        </member>
+        <member name="F:QuickType.OtherName.UniãoDeNaçõesSulAmericanas">
+            <summary>
+            UniãoDeNaçõesSulAmericanas
+            </summary>
+        </member>
+        <member name="F:QuickType.OtherName.UniónAfricana">
+            <summary>
+            UniónAfricana
+            </summary>
+        </member>
+        <member name="F:QuickType.OtherName.UniónDeNacionesSuramericanas">
+            <summary>
+            UniónDeNacionesSuramericanas
+            </summary>
+        </member>
+        <member name="F:QuickType.OtherName.الاتحادالأفريقي">
+            <summary>
+            الاتحادالأفريقي
+            </summary>
+        </member>
+        <member name="F:QuickType.OtherName.جامعةالدولالعربية">
+            <summary>
+            جامعةالدولالعربية
+            </summary>
+        </member>
+        <member name="T:QuickType.Serialize">
+            <summary>
+            Class serialze
+            </summary>
+        </member>
+        <member name="M:QuickType.Serialize.ToJson(QuickType.HRCountry[])">
+            <summary>
+            
+            </summary>
+            <param name="self"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
