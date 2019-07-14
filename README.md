@@ -1,22 +1,25 @@
 # HRCoreCountriesServices
-.net Core access to countries data and boundaries
 
-The Rest service is fully documented via Swagger at the following link :
-https://fullcoreservices-1-dev-as.azurewebsites.net/swagger/
+Projects
 
-All services are async.
-This project is integrated in Azure Dev ops for Continuous integration and Release.
+Project nameHR Core Services
+Apr 2019 – Present
 
-Deployment is done in Azure too :
-https://fullcoreservices-1-dev-as.azurewebsites.net/
+Project description.net Core access to countries data and boundaries
+
+The Rest service is fully documented via Swagger at the following link : 
+For Continuous Integration : https://fullcoreservices-ci.azurewebsites.net/swagger/index.html
+For Candiate Release : https://fullcoreservices-release.azurewebsites.net/swagger/index.html
+
+
+This project is integrated in Azure Dev ops for Continuous integration and Release and for continuous delivery.
 
 All projects are in .net Standard 2.0 but the WebApiProject depends on Windows Platform in this candidate Release.
 
 Cloud Databases use for Azure are the following
-- http://db.qgiscloud.com for PostGis (PostGres + Geospatial option) necessary to store HRBorders Geometries.
-- https://cloud.mongodb.com for mongoDB necessary to store HRCountry objects.
 
-
+http://db.qgiscloud.com for PostGis (PostGres + Geospatial option) necessary to store HRBorders Geometries.
+https://cloud.mongodb.com for mongoDB necessary to store HRCountry objects.
 Credentials for ConnectionString are stored :
 - secrets.json locally
 - Azure Settings for CI and Release.
