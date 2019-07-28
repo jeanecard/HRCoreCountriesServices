@@ -118,6 +118,11 @@ namespace HRCoreCountriesWebAPI2.Controllers
                     }
                     else
                     {
+                        if (_logger != null)
+                        {
+                            _logger.LogError("Ca marche po");
+                        }
+
                         return StatusCode(result.Result.Item1);
                     }
                 }
