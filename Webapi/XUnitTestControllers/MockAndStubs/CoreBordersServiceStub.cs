@@ -77,6 +77,16 @@ namespace XUnitTestControllers
             return IsPaginable;
         }
 
+        public Task<IEnumerable<string>> GetContinentsAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<string> GetContinentByIDAsync(string id)
+        {
+            throw new NotImplementedException();
+        }
+
         public CoreBordersServiceStub(List<String> bordersID)
         {
             if (bordersID != null)

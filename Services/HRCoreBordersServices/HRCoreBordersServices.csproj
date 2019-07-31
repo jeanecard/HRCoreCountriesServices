@@ -12,6 +12,7 @@
     <ProjectReference Include="..\..\DAL\HRCoreBordersRepository\HRCoreBordersRepository.csproj" />
     <ProjectReference Include="..\..\Models\HRCommonModels\HRCommonModels.csproj" />
     <ProjectReference Include="..\..\Models\HRCoreBordersModel\HRCoreBordersModel.csproj" />
+    <ProjectReference Include="..\..\Models\HRCoreCountriesModel\HRCoreCountriesModel.csproj" />
     <ProjectReference Include="..\..\Tools\HRCommonTools\HRCommonTools.csproj" />
   </ItemGroup>
 

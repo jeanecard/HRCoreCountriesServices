@@ -1,7 +1,6 @@
 ﻿using HRBordersAndCountriesWebAPI2.Utils;
 using HRCommonModel;
 using HRCommonModels;
-using HRCommonTools;
 using HRCoreBordersModel;
 using HRCoreBordersServices;
 using Microsoft.AspNetCore.Http;
@@ -152,7 +151,7 @@ namespace HRCoreCountriesWebAPI2.Controllers
         /// <param name="value">-</param>
         /// <returns></returns>
         [HttpPost]
-        //[ProducesResponseType(StatusCodes.Status501NotImplemented)]
+        [ProducesResponseType(StatusCodes.Status501NotImplemented)]
         public IActionResult Post([FromBody] string value)
         {
             return StatusCode(StatusCodes.Status501NotImplemented);
