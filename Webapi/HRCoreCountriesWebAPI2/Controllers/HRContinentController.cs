@@ -7,6 +7,9 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
+using QuickType;
+using HRCoreCountriesServices;
+using HRBordersAndCountriesWebAPI2.Utils.Interface;
 
 namespace HRBordersAndCountriesWebAPI2.Controllers
 {
@@ -20,18 +23,23 @@ namespace HRBordersAndCountriesWebAPI2.Controllers
     public class HRContinentController : ControllerBase
     {
         private readonly ILogger<HRContinentController> _logger = null;
-        private readonly ICoreBordersService _continentService = null;
+        private readonly ICoreCountriesService _continentService = null;
+        private readonly IHRContinentControllerForker _util = null;
 
         /// <summary>
         /// Constructor for DI
         /// </summary>
-        /// <param name="borderService">a borderservice (not null)</param>
+        /// <param name="continentService">a continentservice (null not null)</param>
         /// <param name="logger">a logger (null allowed)</param>
-        public HRContinentController( ICoreBordersService borderService,
-        ILogger<HRContinentController> logger)
+        /// <param name="util">a IHRContinentControllerForker (null not allowed)</param>
+        public HRContinentController(
+            ICoreCountriesService continentService,
+            ILogger<HRContinentController> logger,
+            IHRContinentControllerForker util)
         {
-            _continentService = borderService;
+            _continentService = continentService;
             _logger = logger;
+            _util = util;
         }
         /// <summary>
         /// Private default constructor.
@@ -48,23 +56,24 @@ namespace HRBordersAndCountriesWebAPI2.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<string>>> Get()
+        public ActionResult<IEnumerable<String>> Get()
         {
-            if(_continentService != null)
+            if (_util == null || _continentService == null)
             {
-                using (Task<IEnumerable<string>> serviceTask = _continentService.GetContinentsAsync())
+                if (_logger != null)
                 {
-                    await serviceTask;
-                    return  serviceTask.Result.ToList();
+                    _logger.LogError("No continent service or UtilForker available");
                 }
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+            (int, IEnumerable<String>) result = _util.Get(_continentService);
+            if(result.Item1 == StatusCodes.Status200OK)
+            {
+                return result.Item2.ToList();
             }
             else
             {
-                if(_logger != null)
-                {
-                    _logger.LogError("No continent service available");
-                }
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return StatusCode(result.Item1);
             }
         }
 
@@ -78,30 +87,25 @@ namespace HRBordersAndCountriesWebAPI2.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<string>> Get(String id)
+        public ActionResult<String> Get(String id)
         {
-            if (_continentService != null)
-            {
-                using (Task<string> serviceTask = _continentService.GetContinentByIDAsync(id))
-                {
-                    await serviceTask;
-                    if(!String.IsNullOrEmpty(serviceTask.Result))
-                    {
-                        return serviceTask.Result;
-                    }
-                    else
-                    {
-                        return StatusCode(StatusCodes.Status404NotFound);
-                    }
-                }
-            }
-            else
+
+            if (_util == null || _continentService == null)
             {
                 if (_logger != null)
                 {
-                    _logger.LogError("No continent service available");
+                    _logger.LogError("No continent service or UtilForker available");
                 }
                 return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+            (int, String) result = _util.Get(id, _continentService);
+            if (result.Item1 == StatusCodes.Status200OK)
+            {
+                return result.Item2;
+            }
+            else
+            {
+                return StatusCode(result.Item1);
             }
         }
     }

@@ -6,6 +6,7 @@ using HRCommonTools;
 using HRCoreCountriesServices;
 using QuickType;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
@@ -138,5 +139,38 @@ namespace XUnitTestServices
                 Assert.True(i == 3);
             }
         }
+
+        /// <summary>
+        /// Test that GetContinentByID return null with an unknown ID
+        /// </summary>
+        [Fact]
+        public void CountriesServiceOnGetContinentByIDWithUnknownIDReturnNull()
+        {
+            IServiceWorkflowOnHRCoreRepository<HRCountry> workflow = new HRServiceWorkflowPaginationOnly<HRCountry>(null, null);
+            CoreCountriesService service = new CoreCountriesService(null, workflow, null);
+            Assert.True(String.IsNullOrEmpty(service.GetContinentByID("HR")));
+        }
+        /// <summary>
+        /// Test that GetContinentByID return Africa with Africa ID (case insensitive)
+        /// </summary>
+        [Fact]
+        public void CountriesServiceOnGetContinentByIDWithAfricaIDNoMatchingCaseReturnAfrica()
+        {
+            IServiceWorkflowOnHRCoreRepository<HRCountry> workflow = new HRServiceWorkflowPaginationOnly<HRCountry>(null, null);
+            CoreCountriesService service = new CoreCountriesService(null, workflow, null);
+            Assert.Equal(Region.Africa.ToString(), service.GetContinentByID("AFrICa"));
+        }
+
+        /// <summary>
+        /// Test that GetContinents return All Continents (Checksum)
+        /// </summary>
+        [Fact]
+        public void CountriesServiceOnGetContinentsReturn7Items()
+        {
+            IServiceWorkflowOnHRCoreRepository<HRCountry> workflow = new HRServiceWorkflowPaginationOnly<HRCountry>(null, null);
+            CoreCountriesService service = new CoreCountriesService(null, workflow, null);
+            Assert.Equal(7, service.GetContinents().ToList().Count);
+        }
+
     }
 }

@@ -11,6 +11,7 @@ namespace XUnitTestControllers
     internal class CoreCountriesServiceStub : ICoreCountriesService
     {
         private readonly List<HRCountry> _list = new List<HRCountry>();
+        private readonly List<String> _originalList = null;
         public bool ThrowException = false;
         private Exception _exceptionToThrow = null;
 
@@ -105,15 +106,41 @@ namespace XUnitTestControllers
             return true;
         }
 
+        public IEnumerable<String> GetContinents()
+        {
+            List<String> retour = new List<string>();
+            foreach(String iterator in _originalList)
+            {
+                retour.Add(iterator);
+            }
+            return retour;
+        }
+
+        public String GetContinentByID(string id)
+        {
+            foreach (String iterator in _originalList)
+            {
+                if (iterator == id)
+                    return id;
+            }
+            return null;
+        }
+
+        public Task<IEnumerable<Language>> GetHRLangagesByContinentAsync(string region)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Construct a list of HRCountry from ID String list.
         /// </summary>
         /// <param name="countriesID"></param>
         public CoreCountriesServiceStub(List<String> countriesID)
         {
+            _originalList = countriesID;
             if (countriesID != null)
             {
-                foreach (String iterator in countriesID)
+                foreach (String iterator in _originalList)
                 {
                     HRCountry countryi = new HRCountry() { Alpha2Code = iterator, Alpha3Code = iterator };
                     _list.Add(countryi);

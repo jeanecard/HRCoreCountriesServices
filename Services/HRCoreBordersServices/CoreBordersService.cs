@@ -4,7 +4,6 @@ using HRCommonModels;
 using HRCoreBordersModel;
 using HRCoreRepository.Interface;
 using Microsoft.Extensions.Logging;
-using QuickType;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -121,66 +120,6 @@ namespace HRCoreBordersServices
         public bool IsPaginable()
         {
             return true;
-        }
-        /// <summary>
-        /// Get all enum of Region plus the "All" continent and but the Empty one.
-        /// 1- Add all Enum but Empty
-        /// 2- Add ALL_CONTINENT_ID
-        /// 3- Return List.
-        /// TODO : async overkill here
-        /// </summary>
-        /// <returns>All continent.</returns>
-        public async Task<IEnumerable<string>> GetContinentsAsync()
-        {
-            List<String> retour = new List<string>();
-            //1-
-            await Task.Run(() =>
-            {
-                Array regionValues = Enum.GetValues(typeof(Region));
-                String nameOfi = String.Empty;
-
-                foreach (Region iterator in regionValues)
-                {
-                    if (iterator != Region.Empty)
-                    {
-                        retour.Add(iterator.ToString());
-                    }
-                }
-                //2-
-                retour.Add(ALL_CONTINENT_ID);
-            }
-            );
-            //3-
-            return retour;
-        }
-        /// <summary>
-        /// Get a Continent by name (case sensitive). Empty can not be retrieve.
-        /// 1- Return the simplest case : Check id == ALL_CONTINENT_ID
-        /// 2- Check if id corresponds to an Region Enum
-        /// 3- Return corresponding or String.empty
-        /// TODO : async overkill here
-        /// </summary>
-        /// <param name="id">The continent name (case sensitive)</param>
-        /// <returns></returns>
-        public async Task<string> GetContinentByIDAsync(String id)
-        {
-            String retour = String.Empty;
-            //1-
-            if(id == ALL_CONTINENT_ID)
-            {
-                return id;
-            }
-            await Task.Run(() =>
-            {
-                //2-
-                if (!String.IsNullOrEmpty(id)
-                    && (Enum.TryParse(id, out Region regionIDEnumValue) && regionIDEnumValue != Region.Empty))
-                {
-                    retour = id;
-                }
-            });
-            //3-
-            return retour;
         }
     }
 }

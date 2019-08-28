@@ -5,6 +5,7 @@ using HRCoreRepository.Interface;
 using Microsoft.Extensions.Logging;
 using QuickType;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace HRCoreCountriesServices
@@ -120,6 +121,50 @@ namespace HRCoreCountriesServices
                 retour = retourTask.Result;
             }
             return retour;
+        }
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<String> GetContinents()
+        {
+            List<String> retour = new List<String>();
+            var values = Enum.GetValues(typeof(Region));
+            foreach (Region iter in values)
+            {
+                retour.Add(iter.ToString());
+            }
+            return retour;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public String GetContinentByID(string id)
+        {
+            String idUppered = id.ToUpper();
+            var values = Enum.GetValues(typeof(Region));
+            foreach(Region iter in values)
+            {
+                if(iter.ToString().ToUpper() == idUppered)
+                {
+                    return iter.ToString();
+                }
+            }
+            return String.Empty;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="region"></param>
+        /// <returns></returns>
+        public Task<IEnumerable<Language>> GetHRLangagesByContinentAsync(string region)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using HRBordersAndCountriesWebAPI2.Utils;
+using HRBordersAndCountriesWebAPI2.Utils.Interface;
 using HRCommon;
 using HRCommon.Interface;
 using HRCommonTools;
@@ -49,6 +50,7 @@ namespace HRCoreCountriesWebAPI2
             services.AddTransient<IHRCommonForkerUtils, HRCommonForkerUtils>();
             services.AddTransient<IHRBordersControllersForker, HRBordersControllersForker>();
             services.AddTransient<IHRCountriesControllersForker, HRCountriesControllersForker>();
+            services.AddTransient<IHRContinentControllerForker, HRContinentControllerForker>();
             services.AddSingleton(Configuration);
 
             services.AddTransient<IHRPaginer<HRBorder>, HRPaginer<HRBorder>>();

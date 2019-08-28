@@ -12,7 +12,6 @@ namespace HRCoreBordersServices
     {
         Task<HRBorder> GetBorderAsync(String borderID);
         Task<PagingParameterOutModel<HRBorder>> GetBordersAsync(PagingParameterInModel pageModel, HRSortingParamModel orderBy);
-        Task<IEnumerable<string>> GetContinentsAsync();
-        Task<string> GetContinentByIDAsync(String id);
+
     }
 }
