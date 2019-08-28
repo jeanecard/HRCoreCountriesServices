@@ -29,18 +29,6 @@ namespace XUnitTestControllers
             Assert.Null(result.Item2);
         }
         [Fact]
-        public void HRContinentController_On_Get_In_Consistant_Context_Return_HTTP200()
-        {
-            HRContinentControllerForker forfker = new HRContinentControllerForker();
-            CoreCountriesServiceStub service = new CoreCountriesServiceStub(new List<String>() { "100", "200"});
-            service.ThrowException = false;
-            (int, IEnumerable<String>) result = forfker.Get(service);
-            Assert.Equal(result.Item1, StatusCodes.Status200OK);
-            Assert.Contains("100", result.Item2);
-            Assert.Contains("200", result.Item2);
-        }
-
-        [Fact]
         public void HRContinentController_On_GetID_With_Null_Service_Return_HTTP500()
         {
             HRContinentControllerForker forfker = new HRContinentControllerForker();
@@ -57,16 +45,6 @@ namespace XUnitTestControllers
             (int, String) result = forfker.Get(String.Empty, service);
             Assert.Equal(result.Item1, StatusCodes.Status500InternalServerError);
             Assert.Null(result.Item2);
-        }
-        [Fact]
-        public void HRContinentController_On_GetID_With_Existing_ID_Return_HTTP200()
-        {
-            HRContinentControllerForker forfker = new HRContinentControllerForker();
-            CoreCountriesServiceStub service = new CoreCountriesServiceStub(new List<string>() { "200"});
-            service.ThrowException = false;
-            (int, String) result = forfker.Get("200", service);
-            Assert.Equal(result.Item1, StatusCodes.Status200OK);
-            Assert.Equal("200", result.Item2);
         }
         [Fact]
         public void HRContinentController_On_GetID_With_UnExisting_ID_Return_HTTP404()
