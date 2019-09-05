@@ -2,6 +2,7 @@
 using HRCommonModels;
 using HRCoreBordersModel;
 using HRCoreRepository.Interface;
+using QuickType;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -130,6 +131,11 @@ namespace XUnitTestServices.MocksAndStubs
         }
 
         public Task<PagingParameterOutModel<HRBorder>> GetPaginatedsAsync(PagingParameterInModel pageModel)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<Language>> GetHRLangagesByContinentAsync(Region region)
         {
             throw new NotImplementedException();
         }

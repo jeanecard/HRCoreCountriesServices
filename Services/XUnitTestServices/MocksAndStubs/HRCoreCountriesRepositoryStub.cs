@@ -63,6 +63,11 @@ namespace XUnitTestServices.MocksAndStubs
             throw new NotImplementedException();
         }
 
+        public Task<IEnumerable<Language>> GetHRLangagesByContinentAsync(Region region)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<PagingParameterOutModel<HRCountry>> GetOrderedAndPaginatedCountriesAsync(PagingParameterInModel pageModel, HRSortingParamModel orderBy)
         {
             throw new NotImplementedException();

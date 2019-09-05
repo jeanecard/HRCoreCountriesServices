@@ -9,6 +9,7 @@ using HRCoreRepository.Interface;
 using log4net;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
+using QuickType;
 using System;
 using System.Collections.Generic;
 using System.Linq;

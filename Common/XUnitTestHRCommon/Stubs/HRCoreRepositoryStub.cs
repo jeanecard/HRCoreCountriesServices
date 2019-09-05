@@ -1,6 +1,7 @@
 ﻿using HRCommonModel;
 using HRCommonModels;
 using HRCoreRepository.Interface;
+using QuickType;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -23,6 +24,11 @@ namespace XUnitTestHRCommon.Stubs
         {
             await Task.Delay(1);
             return new List<int>() { 45 };
+        }
+
+        public Task<IEnumerable<Language>> GetHRLangagesByContinentAsync(Region region)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<PagingParameterOutModel<int>> GetOrderedAndPaginatedsAsync(PagingParameterInModel pageModel, HRSortingParamModel orderBy)

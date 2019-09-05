@@ -8,6 +8,7 @@ using HRCoreBordersModel;
 using HRCoreBordersRepository;
 using HRCoreBordersServices;
 using HRCoreCountriesRepository;
+using HRCoreCountriesRepository.Interface;
 using HRCoreCountriesServices;
 using HRCoreRepository.Interface;
 using Microsoft.AspNetCore.Builder;
@@ -51,6 +52,7 @@ namespace HRCoreCountriesWebAPI2
             services.AddTransient<IHRBordersControllersForker, HRBordersControllersForker>();
             services.AddTransient<IHRCountriesControllersForker, HRCountriesControllersForker>();
             services.AddTransient<IHRContinentControllerForker, HRContinentControllerForker>();
+            services.AddTransient<IHRLangagesByContinentControllerForker, HRLangagesByContinentControllerForker>();
             services.AddSingleton(Configuration);
 
             services.AddTransient<IHRPaginer<HRBorder>, HRPaginer<HRBorder>>();
@@ -58,6 +60,7 @@ namespace HRCoreCountriesWebAPI2
 
             services.AddTransient<IServiceWorkflowOnHRCoreRepository<HRCountry>, HRServiceWorkflowPaginationOnly<HRCountry>>();
             services.AddTransient<IServiceWorkflowOnHRCoreRepository<HRBorder>, HRServiceWorkflowPaginationOnly<HRBorder>>();
+            services.AddTransient<ILanguageRepository, MongoDBLanguageRepository>();
 
             services.AddSingleton<IHRCoreRepository<HRBorder>, PostGISCoreBordersRepository>();
             services.AddSingleton<IHRCoreRepository<HRCountry>, MongoDBCountriesRepository>();

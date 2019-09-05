@@ -126,10 +126,21 @@ namespace XUnitTestControllers
             return null;
         }
 
-        public Task<IEnumerable<Language>> GetHRLangagesByContinentAsync(string region)
+        /// <summary>
+        /// TODO
+        /// </summary>
+        /// <param name="region"></param>
+        /// <returns></returns>
+        public async Task<(int, IEnumerable<Language>)> GetHRLangagesByContinentAsync(Region region)
         {
             throw new NotImplementedException();
         }
+
+        Task<IEnumerable<Language>> ICoreCountriesService.GetHRLangagesByContinentAsync(Region region)
+        {
+            throw new NotImplementedException();
+        }
+
 
         /// <summary>
         /// Construct a list of HRCountry from ID String list.

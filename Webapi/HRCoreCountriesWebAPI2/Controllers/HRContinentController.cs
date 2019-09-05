@@ -81,7 +81,7 @@ namespace HRBordersAndCountriesWebAPI2.Controllers
         /// <summary>
         /// Get a continent by its name (case sensitive)
         /// </summary>
-        /// <param name="id">a continent name (case sensitive)</param>
+        /// <param name="id">a continent name</param>
         /// <returns>The name of continent if exists else 404 HTTP status</returns>
         [HttpGet("{id}", Name = "Get")]
         [ProducesResponseType(StatusCodes.Status200OK)]

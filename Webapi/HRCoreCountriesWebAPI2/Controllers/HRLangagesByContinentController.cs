@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HRBordersAndCountriesWebAPI2.Utils.Interface;
 using HRCoreCountriesServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using QuickType;
 
 namespace HRBordersAndCountriesWebAPI2.Controllers
@@ -17,6 +19,8 @@ namespace HRBordersAndCountriesWebAPI2.Controllers
     public class HRLangagesByContinentController : ControllerBase
     {
         private readonly ICoreCountriesService _service = null;
+        private readonly IHRLangagesByContinentControllerForker _util = null;
+        private readonly ILogger<HRContinentController> _logger = null;
         private HRLangagesByContinentController()
         {
             //Dummy for DI
@@ -24,33 +28,82 @@ namespace HRBordersAndCountriesWebAPI2.Controllers
         /// <summary>
         /// HRLangagesByContinentController constructor available for DI.
         /// </summary>
-        /// <param name="countriesService"></param>
-        public HRLangagesByContinentController(ICoreCountriesService countriesService )
+        /// <param name="countriesService">a Country service.</param>
+        /// <param name="logger">a Logger.</param>
+        /// <param name="util"> util forker.</param>
+        public HRLangagesByContinentController(
+            ICoreCountriesService countriesService,
+            ILogger<HRContinentController> logger,
+            IHRLangagesByContinentControllerForker util)
         {
             _service = countriesService;
+            _util = util;
+            _logger = logger;
         }
         // GET: api/HRLangagesByContinent/Africa
         /// <summary>
-        /// Get all Langages for a continent. Use Continent = Empty to Get All Langages for all world.
+        /// Get all Langages for a continent.
         /// </summary>
-        /// <param name="id">Continent ID (name not case sensitive)</param>
+        /// <param name="id">a Continent id : Africa, Americas, Asia, Empty, Europe, Oceania, Polar</param>
         /// <returns>Langage if exists.</returns>
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-
-        public async Task<IEnumerable<Language>> GetHRLangagesByIDasync(String id)
+        public async Task<ActionResult<IEnumerable<Language>>> GetHRLangagesByIDasync(String id)
         {
-            if (_service != null)
+            if (_util == null || _service == null)
             {
-                using (Task<IEnumerable<Language>> result = _service.GetHRLangagesByContinentAsync(id))
+                if (_logger != null)
                 {
-                    await result;
-                    return result.Result;
+                    _logger.LogError("No continent service or UtilForker available");
+                }
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+            using (Task<(int, IEnumerable<Language>)> task = _util.GetLangagesByContinentAsync(_service, id))
+            {
+                await task;
+                if (task.Result.Item1 == StatusCodes.Status200OK)
+                {
+                    return task.Result.Item2.ToList();
+                }
+                else
+                {
+                    return StatusCode(task.Result.Item1);
                 }
             }
-            return null;
         }
+        // GET: api/HRLangagesByContinent
+        /// <summary>
+        /// Get all Langages distincts for all continents.
+        /// </summary>
+        /// <returns>Langage if exists.</returns>
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<Language>>> GetHRLangagesAsync()
+        {
+            if (_util == null || _service == null)
+            {
+                if (_logger != null)
+                {
+                    _logger.LogError("No continent service or UtilForker available");
+                }
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+            using (Task<(int, IEnumerable<Language>)> task = _util.GetLangagesByContinentAsync(_service, Region.Empty.ToString()))
+            {
+                await task;
+                if (task.Result.Item1 == StatusCodes.Status200OK)
+                {
+                    return task.Result.Item2.ToList();
+                }
+                else
+                {
+                    return StatusCode(task.Result.Item1);
+                }
+            }
+        }
+
     }
 }
