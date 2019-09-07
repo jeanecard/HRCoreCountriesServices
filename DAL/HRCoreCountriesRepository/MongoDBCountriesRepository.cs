@@ -1,6 +1,7 @@
 using HRCommon.Interface;
 using HRCommonModel;
 using HRCommonModels;
+using HRCoreCountriesRepository.Util;
 using HRCoreRepository.Interface;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -17,14 +18,8 @@ namespace HRCoreCountriesRepository
     /// </summary>
     public class MongoDBCountriesRepository : IHRCoreRepository<HRCountry>, IPaginable, ISortable
     {
-        private readonly ILogger<MongoDBCountriesRepository> _looger = null;
+        private readonly ILogger<MongoDBCountriesRepository> _logger = null;
         private readonly IConfiguration _config = null;
-        private static readonly String _MONGO_CX_STRING_KEY = "CountriesConnection";
-        private static readonly String _MONGO_CLUSTER = "MongoDBDataBaseName:ClusterName";
-        private static readonly String _MONGO_COUNTRIES_COLLECTION_KEY = "MongoDBDataBaseName:CountriesCollection";
-        private static readonly String _MONGO_USERNAME = "MongoDBDataBaseName:Username";
-        private static readonly String _MONGO_PASSWORD = "MongoDBDataBaseName:Password";
-
 
         //Default Constructor
         private MongoDBCountriesRepository()
@@ -34,7 +29,7 @@ namespace HRCoreCountriesRepository
         public MongoDBCountriesRepository(IConfiguration injectedMongoConfig, ILogger<MongoDBCountriesRepository> logger)
         {
             _config = injectedMongoConfig;
-            _looger = logger;
+            _logger = logger;
         }
         /// <summary>
         /// 1- Get collection of Countries from Mongo
@@ -58,7 +53,8 @@ namespace HRCoreCountriesRepository
             //1-
             try
             {
-                IMongoCollection<HRCountry> collection = GetCountriesCollection();
+                MondoDBConnexionParam conParam = MondoDBConnexionParamFactory.CreateMondoDBConnexionParam(_config);
+                IMongoCollection<HRCountry> collection = MongoDBCollectionGetter<HRCountry>.GetCollection(conParam);
                 //1.1-
                 if (collection != null)
                 {
@@ -79,72 +75,36 @@ namespace HRCoreCountriesRepository
                 else
                 {
                     String ErrorMessage = "Collection not found in MongoDBCountriesRepository GetCountriesAsync";
-                    if (_looger != null)
+                    if (_logger != null)
                     {
-                        _looger.LogError(ErrorMessage);
+                        _logger.LogError(ErrorMessage);
                     }
                     throw new InvalidOperationException(ErrorMessage);
                 }
             }
             catch (Exception ex)
             {
-                if (_looger != null)
+                if (_logger != null)
                 {
-                    _looger.LogError(ex.Message);
+                    _logger.LogError(ex.Message);
                 }
                 throw;
             }
             finally
             {
-                retourTask.Dispose();
+                if (retourTask != null)
+                {
+                    if(retourTask.Result != null)
+                    {
+                        retourTask.Result.Dispose();
+                    }
+                    retourTask.Dispose();
+                }
             }
             //2-
             return retour;
         }
-        /// <summary>
-        /// 1- Test Context validity
-        /// 2- Get DatabaseName and CollectionName from IConfiguration
-        /// 3- Instanciate MongoDB Database and client
-        /// 4- Return the collection (synch method)
-        /// </summary>
-        /// <returns>The MongoDB Collection for Countries. Can throw MemberAccessException.
-        /// Does not catch any Exception.
-        /// </returns>
-        private IMongoCollection<HRCountry> GetCountriesCollection()
-        {
-            if (_config == null)
-            {
-                String ErrorMessage = "No config available in MongoDBCountriesRepository GetCountriesCollection";
-                if (_looger != null)
-                {
-                    _looger.LogError(ErrorMessage);
-                }
-
-                throw new MemberAccessException(ErrorMessage);
-            }
-            IMongoCollection<HRCountry> retour = null;
-            //1-
-            if (_config != null)
-            {
-                //2-
-                String connectionString = _config.GetConnectionString(_MONGO_CX_STRING_KEY);
-                connectionString = String.Format(connectionString, _config[_MONGO_USERNAME], _config[_MONGO_PASSWORD]);
-                String clusterName = _config[_MONGO_CLUSTER];
-                if (!String.IsNullOrEmpty(connectionString) && !String.IsNullOrEmpty(clusterName))
-                {
-                    //3-
-                    MongoClient client = new MongoClient(connectionString);
-                    IMongoDatabase database = client.GetDatabase(clusterName);
-                    if (database != null)
-                    {
-                        //4-
-                        String collectionName = _config[_MONGO_COUNTRIES_COLLECTION_KEY];
-                        retour = database.GetCollection<HRCountry>(collectionName);
-                    }
-                }
-            }
-            return retour;
-        }
+     
         /// <summary>
         /// Pick a country in collection by his ID (ALPHA 2 or 3 Code).
         /// </summary>
@@ -161,7 +121,8 @@ namespace HRCoreCountriesRepository
             try
             {
                 String idToSearch = id.ToUpper();
-                IMongoCollection<HRCountry> collection = GetCountriesCollection();
+                MondoDBConnexionParam conParam = MondoDBConnexionParamFactory.CreateMondoDBConnexionParam(_config);
+                IMongoCollection<HRCountry> collection = MongoDBCollectionGetter<HRCountry>.GetCollection(conParam);
                 if (collection != null)
                 {
                     FilterDefinitionBuilder<HRCountry> bld = new FilterDefinitionBuilder<HRCountry>();
@@ -182,15 +143,22 @@ namespace HRCoreCountriesRepository
                     }
                     finally
                     {
-                        retourTask.Dispose();
+                        if (retourTask != null)
+                        {
+                            if (retourTask.Result != null)
+                            {
+                                retourTask.Result.Dispose();
+                            }
+                            retourTask.Dispose();
+                        }
                     }
                 }
             }
             catch (Exception ex)
             {
-                if(_looger != null)
+                if(_logger != null)
                 {
-                    _looger.LogError(ex.Message);
+                    _logger.LogError(ex.Message);
                 }
                 throw;
             }
@@ -217,48 +185,56 @@ namespace HRCoreCountriesRepository
             //1-
             try
             {
-                IMongoCollection<HRCountry> collection = GetCountriesCollection();
+                MondoDBConnexionParam conParam = MondoDBConnexionParamFactory.CreateMondoDBConnexionParam(_config);
+                IMongoCollection<HRCountry> collection = MongoDBCollectionGetter<HRCountry>.GetCollection(conParam);
                 //1.1-
                 if (collection != null)
                 {
                     //1.1.2-
                     FilterDefinitionBuilder<HRCountry> bld = new FilterDefinitionBuilder<HRCountry>();
-                    using (Task<IAsyncCursor<HRCountry>> retourTask = collection.FindAsync(bld.Empty))
+                    Task<IAsyncCursor<HRCountry>> retourTask = null;
+                    try
                     {
+                        retourTask = collection.FindAsync(bld.Empty);
+                    
 
                         FilterDefinitionBuilder<HRCountry> builder = new FilterDefinitionBuilder<HRCountry>();
-                        builder.Eq<Region>((HRCountry x) => x.Region, Region.Africa); 
-                    //filterDefinitionBuilder.Eq<string>((Student x) => x.Id, $"Students/{i}"),
-                    //updateDefinitionBuilder.Inc<int>((Student x) => x.Age, 1));
-
-
-
-                        //db.testData.find( { x : 7 } )
+                        builder.Eq<Region>((HRCountry x) => x.Region, Region.Africa);
                         //1.1.3-
                         await retourTask;
-                        //Message IDE0067 Disposable object created by 'await retourTask' is never disposed whereas using dispose exists ?
                         if (retourTask.Result != null)
                         {
                             //Force to list to avoid return asyn enum that can be enumerate only once.
                             retour = retourTask.Result.ToList();
                         }
                     }
+                    finally
+                    {
+                        if(retourTask != null)
+                        {
+                            if(retourTask.Result != null)
+                            {
+                                retourTask.Result.Dispose();
+                            }
+                            retourTask.Dispose();
+                        }
+                    }
                 }
                 else
                 {
                     String ErrorMessage = "No Collection found in MongoDBCountriesRepository GetFullsAsync";
-                    if (_looger != null)
+                    if (_logger != null)
                     {
-                        _looger.LogError(ErrorMessage);
+                        _logger.LogError(ErrorMessage);
                     }
                     throw new InvalidOperationException(ErrorMessage);
                 }
             }
             catch (Exception ex)
             {
-                if (_looger != null)
+                if (_logger != null)
                 {
-                    _looger.LogError(ex.Message);
+                    _logger.LogError(ex.Message);
                 }
                 throw;
             }
