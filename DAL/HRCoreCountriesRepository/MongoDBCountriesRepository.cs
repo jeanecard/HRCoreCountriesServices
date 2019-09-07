@@ -225,6 +225,15 @@ namespace HRCoreCountriesRepository
                     FilterDefinitionBuilder<HRCountry> bld = new FilterDefinitionBuilder<HRCountry>();
                     using (Task<IAsyncCursor<HRCountry>> retourTask = collection.FindAsync(bld.Empty))
                     {
+
+                        FilterDefinitionBuilder<HRCountry> builder = new FilterDefinitionBuilder<HRCountry>();
+                        builder.Eq<Region>((HRCountry x) => x.Region, Region.Africa); 
+                    //filterDefinitionBuilder.Eq<string>((Student x) => x.Id, $"Students/{i}"),
+                    //updateDefinitionBuilder.Inc<int>((Student x) => x.Age, 1));
+
+
+
+                        //db.testData.find( { x : 7 } )
                         //1.1.3-
                         await retourTask;
                         //Message IDE0067 Disposable object created by 'await retourTask' is never disposed whereas using dispose exists ?
