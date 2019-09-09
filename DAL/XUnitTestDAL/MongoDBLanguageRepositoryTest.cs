@@ -21,6 +21,8 @@ namespace XUnitTestDAL
         [Fact]
         public void FillUpDictionnary_With_Two_Differents_Languages_Expect_Two_Different_Languages()
         {
+            _cursor.Clear();
+            _dictionnary.Clear();
             _country.Languages = new Language[2];
             _country.Languages[0] = new Language() { Iso6391 = "AA"};
             _country.Languages[1] = new Language() { Iso6391 = "BB" };
@@ -38,6 +40,8 @@ namespace XUnitTestDAL
         [Fact]
         public void FillUpDictionnary_With_Two_Differents_Languages_On_Case_Sensitive_Expect_Two_Languages()
         {
+            _cursor.Clear();
+            _dictionnary.Clear();
             _country.Languages = new Language[2];
             _country.Languages[0] = new Language() { Iso6391 = "AA" };
             _country.Languages[1] = new Language() { Iso6391 = "aa" };
@@ -54,11 +58,39 @@ namespace XUnitTestDAL
         [Fact]
         public void FillUpDictionnary_With_No_Language_Expect_No_Language()
         {
+            _cursor.Clear();
+            _dictionnary.Clear();
             _country.Languages = null;
             _cursor.Add(_country);
             _repo.FillUpDictionnary(_dictionnary, _cursor);
             Assert.NotNull(_dictionnary.Values);
             Assert.True(_dictionnary.Values.Count == 0);
         }
+        /// <summary>
+        /// Test that empty entries does not affect process.
+        /// </summary>
+        [Fact]
+        public void FillUpDictionnary_With_Empty_Cursor_Expect_Empty_Dictionnary()
+        {
+            _cursor.Clear();
+            _dictionnary.Clear();
+            _repo.FillUpDictionnary(_dictionnary, _cursor);
+            Assert.NotNull(_dictionnary.Values);
+            Assert.True(_dictionnary.Values.Count == 0);
+        }
+        /// <summary>
+        /// Test that empty entries does not affect process.
+        /// </summary>
+        [Fact]
+        public void FillUpDictionnary_With_Cursor__Containing_Null_Country_Expect_Empty_Dictionnary()
+        {
+            _cursor.Clear();
+            _cursor.Add(null);
+            _dictionnary.Clear();
+            _repo.FillUpDictionnary(_dictionnary, _cursor);
+            Assert.NotNull(_dictionnary.Values);
+            Assert.True(_dictionnary.Values.Count == 0);
+        }
+
     }
 }

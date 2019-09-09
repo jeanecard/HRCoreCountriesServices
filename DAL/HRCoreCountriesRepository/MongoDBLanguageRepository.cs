@@ -114,7 +114,7 @@ namespace HRCoreCountriesRepository
             //1-
             foreach (HRCountry iter in cursor)
             {
-                if (iter.Languages != null)
+                if (iter != null && iter.Languages != null)
                 {
                     //1.1-
                     languagesCounti = iter.Languages.Length;
