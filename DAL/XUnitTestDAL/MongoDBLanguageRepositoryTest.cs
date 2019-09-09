@@ -49,7 +49,7 @@ namespace XUnitTestDAL
             Assert.True(_dictionnary.Values.ToList<Language>()[1].Iso6391 == "aa");
         }
         /// <summary>
-        /// TODO
+        /// Test that empty entries does not affect process.
         /// </summary>
         [Fact]
         public void FillUpDictionnary_With_No_Language_Expect_No_Language()
