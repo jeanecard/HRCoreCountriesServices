@@ -10,14 +10,18 @@ using System.Threading.Tasks;
 
 namespace HRCoreCountriesRepository
 {
+    /// <summary>
+    /// Class to access HRCountries in MongoDB.
+    /// All methods used there are mainly async as they rely on I/O and network request. 
+    /// </summary>
     public class MongoDBLanguageRepository : ILanguageRepository
     {
-        private readonly ILogger<MongoDBCountriesRepository> _looger = null;
+        private readonly ILogger<MongoDBCountriesRepository> _logger = null;
         private readonly IConfiguration _config = null;
         public MongoDBLanguageRepository(IConfiguration injectedMongoConfig, ILogger<MongoDBCountriesRepository> logger)
         {
             _config = injectedMongoConfig;
-            _looger = logger;
+            _logger = logger;
         }
         /// <summary>
         /// TODO
@@ -37,58 +41,99 @@ namespace HRCoreCountriesRepository
                     Task<IAsyncCursor<HRCountry>> retourTask = null;
                     try
                     {
-                        FieldDefinition<HRCountry, int> field = "Region";
-                        //var distinctItems = collection.Distinct(new StringFieldDefinition<HRCountry, string>("Attributes.Name"), FilterDefinition<HRCountry>.Empty).ToList();
-
                         retourTask = collection.FindAsync(bld.Where(country => country.Region == region));
-                        //1.1.3-
                         await retourTask;
                         //Message IDE0067 Disposable object created by 'await retourTask' is never disposed whereas finally dispose exists ?
                         if (retourTask.Result != null)
                         {
-                            Language langi = null;
-                            while(await retourTask.Result.MoveNextAsync())
+                            Task<bool> cursorMovingTask = null;
+                            try
                             {
-                                foreach (HRCountry iter in retourTask.Result.Current)
+                                cursorMovingTask = retourTask.Result.MoveNextAsync();
+                                await cursorMovingTask;
+                                while (cursorMovingTask.Result)
                                 {
-                                    int languagesCount = iter.Languages.Length;
-                                    for (int i = 0; i < languagesCount; i++)
-                                    {
-                                        langi = iter.Languages[i];
-                                        if (langi != null && !String.IsNullOrEmpty(langi.Iso6391))
-                                        {
-                                            if (!partialResult.ContainsKey(langi.Iso6391))
-                                            {
-                                                partialResult.Add(langi.Iso6391, langi);
-                                            }
-                                        }
-                                    }
+                                    FillUpDictionnary(partialResult, retourTask.Result.Current);
+                                    cursorMovingTask.Dispose();
+                                    cursorMovingTask = retourTask.Result.MoveNextAsync();
+                                    await cursorMovingTask;
+                                }
+                            }
+                            finally
+                            {
+                                if (cursorMovingTask != null)
+                                {
+                                    cursorMovingTask.Dispose();
                                 }
                             }
                         }
                     }
                     finally
                     {
-                        if (retourTask != null)
-                        {
-                            if (retourTask.Result != null)
-                            {
-                                retourTask.Result.Dispose();
-                            }
-                            retourTask.Dispose();
-                        }
+                        DisposeMongoDBTask(retourTask);
                     }
                 }
             }
             catch (Exception ex)
             {
-                if (_looger != null)
+                if (_logger != null)
                 {
-                    _looger.LogError(ex.Message);
+                    _logger.LogError(ex.Message);
                 }
                 throw;
             }
             return partialResult.Values;
         }
+        /// <summary>
+        /// Dispose all Disposable Objects used by MongoDB connection.
+        /// </summary>
+        /// <param name="retourTask"></param>
+        private static void DisposeMongoDBTask(Task<IAsyncCursor<HRCountry>> retourTask)
+        {
+            if (retourTask != null)
+            {
+                if (retourTask.Result != null)
+                {
+                    retourTask.Result.Dispose();
+                }
+                retourTask.Dispose();
+            }
+        }
+        /// <summary>
+        /// Update Dictionnary with all unexisting Language in cursor.
+        /// 1- Iterate through enumerable
+        /// 1.1- For all Languages in iterator 
+        /// 1.2- Search iso6391 code (case sensitive) in Dictionnary and Add it if not found
+        /// </summary>
+        /// <param name="dictionnary">a dictionnary</param>
+        /// <param name="cursor">a HRCountry enumerable</param>
+        public void FillUpDictionnary(IDictionary<String, Language> dictionnary, IEnumerable<HRCountry> cursor)
+        {
+            int languagesCounti = 0;
+            Language langi = null;
+            //1-
+            foreach (HRCountry iter in cursor)
+            {
+                if (iter.Languages != null)
+                {
+                    //1.1-
+                    languagesCounti = iter.Languages.Length;
+                    for (int i = 0; i < languagesCounti; i++)
+                    {
+                        langi = iter.Languages[i];
+                        if (langi != null && !String.IsNullOrEmpty(langi.Iso6391))
+                        {
+                            //1.2-
+                            if (!dictionnary.ContainsKey(langi.Iso6391))
+                            {
+                                dictionnary.Add(langi.Iso6391, langi);
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
+//FieldDefinition<HRCountry, int> field = "Region";
+//var distinctItems = collection.Distinct(new StringFieldDefinition<HRCountry, string>("Attributes.Name"), FilterDefinition<HRCountry>.Empty).ToList();
