@@ -7,9 +7,10 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace XUnitTestControllers
+namespace TemporaryStubsToMoveInXUnitStubs
 {
-    internal class CoreBordersServiceStub : ICoreBordersService
+    
+    public class CoreBordersServiceStub : ICoreBordersService
     {
         private readonly List<HRBorder> _list = new List<HRBorder>();
         public bool ThrowException = false;
@@ -25,7 +26,7 @@ namespace XUnitTestControllers
                 }
                 return _exception;
             }
-            internal set
+            set
             {
                 _exception = value;
             } }

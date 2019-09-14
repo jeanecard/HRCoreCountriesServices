@@ -1,12 +1,9 @@
 ﻿using HRCommon.Interface;
 using HRCommonModels;
 using HRCommonTools;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using HRControllersForker.Interface;
 
-namespace HRBordersAndCountriesWebAPI2.Utils
+namespace HRControllersForker
 {
     /// <summary>
     /// Utils for Forkers

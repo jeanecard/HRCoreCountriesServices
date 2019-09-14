@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using HRBordersAndCountriesWebAPI2.Utils.Interface;
+using HRControllersForker.Interface;
 using HRCoreCountriesServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -45,7 +45,7 @@ namespace HRBordersAndCountriesWebAPI2.Controllers
         /// Get all Langages for a continent.
         /// </summary>
         /// <param name="id">a Continent id : Africa, Americas, Asia, Empty, Europe, Oceania, Polar</param>
-        /// <returns>Langage if exists.</returns>
+        /// <returns>Langages if exist.</returns>
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

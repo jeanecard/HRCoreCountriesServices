@@ -1,27 +1,26 @@
-﻿using HRBordersAndCountriesWebAPI2.Utils.Interface;
+﻿using HRControllersForker.Interface;
 using HRCoreCountriesServices;
 using Microsoft.AspNetCore.Http;
 using QuickType;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
-namespace HRBordersAndCountriesWebAPI2.Utils
+namespace HRControllersForker
 {
     /// <summary>
-    /// TO DO
+    /// TODO
     /// </summary>
-    public class HRLangagesByContinentControllerForker : IHRLangagesByContinentControllerForker
+    public class HRCountriesByContinentControllerForker : IHRCountriesByContinentControllerForker
     {
         /// <summary>
         /// 1- Check input consitency.
         /// 2- Convert String to enum and call CoreCountriesService
         /// </summary>
-        /// <param name="service"></param>
-        /// <param name="continent"></param>
-        /// <returns></returns>
-        public async Task<(int, IEnumerable<Language>)> GetLangagesByContinentAsync(ICoreCountriesService service, string continent)
+        /// <param name="service">a Countryservice</param>
+        /// <param name="continentId">a contientID (e.g : Africa)</param>
+        /// <returns>Countries. Does not throw any exception. </returns>
+        public async Task<(int, IEnumerable<HRCountry>)> GetHRCountriesByContinentAsync(ICoreCountriesService service, String continentId)
         {
             //1-
             Region region;
@@ -30,7 +29,7 @@ namespace HRBordersAndCountriesWebAPI2.Utils
                 return (StatusCodes.Status500InternalServerError, null);
             }
             //2-
-            if(!Enum.TryParse(continent, out region))
+            if (!Enum.TryParse(continentId, out region))
             {
                 return (StatusCodes.Status400BadRequest, null);
             }
@@ -38,13 +37,13 @@ namespace HRBordersAndCountriesWebAPI2.Utils
             {
                 try
                 {
-                    using (Task<IEnumerable<Language>> task = service.GetHRLangagesByContinentAsync(region))
+                    using (Task<IEnumerable<HRCountry>> task = service.GetHRCountriesByContinentAsync(region))
                     {
                         await task;
                         return (StatusCodes.Status200OK, task.Result);
                     }
                 }
-                catch(Exception)
+                catch (Exception)
                 {
                     return (StatusCodes.Status500InternalServerError, null);
                 }
@@ -52,3 +51,4 @@ namespace HRBordersAndCountriesWebAPI2.Utils
         }
     }
 }
+

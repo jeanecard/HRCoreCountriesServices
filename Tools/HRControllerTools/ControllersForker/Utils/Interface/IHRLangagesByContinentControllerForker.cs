@@ -2,10 +2,9 @@
 using QuickType;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
-namespace HRBordersAndCountriesWebAPI2.Utils.Interface
+namespace HRControllersForker.Interface
 {
     /// <summary>
     /// IHRLangagesByContinentControllerForker util interface

@@ -1,12 +1,10 @@
-﻿using HRBordersAndCountriesWebAPI2.Utils.Interface;
+﻿using HRControllersForker.Interface;
 using HRCoreCountriesServices;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace HRBordersAndCountriesWebAPI2.Utils
+namespace HRControllersForker
 {
     /// <summary>
     /// Controller's util with HTTP status avaialble for UT.

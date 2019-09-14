@@ -104,7 +104,7 @@ namespace XUnitTestServices
         /// Verify that Service do not do any extra processing on repository results.
         /// </summary>
         [Fact]
-        public async void CountriesServiceOnGetBCountriesAsyncWithoutCountryIDReturnRepositoryResultWithoutExtraProcessingwExpectTrue()
+        public async void CountriesService_On_GetBCountriesAsync_Without_Country_ID_Return_Repository_Result_Without_Extra_Processing_Expect_True()
         {
             HRCoreCountriesRepositoryStub repository = new HRCoreCountriesRepositoryStub(new List<string>() { "aa", "bb", "cc" }, "aa");
             CoreCountriesService service = new CoreCountriesService(

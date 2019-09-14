@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Tools\HRCommonTools\HRCommonTools.csproj" />
+    <ProjectReference Include="..\..\Tools\TemporaryStubsToMoveInXUnitStubs\TemporaryStubsToMoveInXUnitStubs.csproj" />
     <ProjectReference Include="..\HRCoreCountriesWebAPI2\HRBordersAndCountriesWebAPI2.csproj" />
   </ItemGroup>
 

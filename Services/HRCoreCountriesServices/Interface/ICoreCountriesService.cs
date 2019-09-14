@@ -17,5 +17,7 @@ namespace HRCoreCountriesServices
         String GetContinentByID(String id);
 
         Task<IEnumerable<Language>> GetHRLangagesByContinentAsync(Region region);
+
+        Task<IEnumerable<HRCountry>> GetHRCountriesByContinentAsync(Region region);
     }
 }

@@ -7,10 +7,17 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HRBordersAndCountriesWebAPI2.Controllers
 {
+    /// <summary>
+    /// TODO
+    /// </summary>
     [Route("api/v1.0/[controller]")]
     [ApiController]
     public class HRCountriesByContinentByLangageController : ControllerBase
     {
+        /// <summary>
+        /// TODO
+        /// </summary>
+        /// <returns></returns>
         // GET: api/HRCountriesByContientByLangage
         [HttpGet]
         public IEnumerable<string> GetHRCountriesByContinentByLangage()
@@ -19,28 +26,15 @@ namespace HRBordersAndCountriesWebAPI2.Controllers
         }
 
         // GET: api/HRCountriesByContientByLangage/5
+        /// <summary>
+        /// Not implemented.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         public string GetHRCountriesByContinentByLangageID(int id)
         {
             return "value";
-        }
-
-        // POST: api/HRCountriesByContientByLangage
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT: api/HRCountriesByContientByLangage/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
         }
     }
 }

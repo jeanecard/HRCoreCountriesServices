@@ -1,10 +1,9 @@
-﻿using HRBordersAndCountriesWebAPI2.Utils;
+﻿using HRControllersForker;
 using Microsoft.AspNetCore.Http;
 using QuickType;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
+using TemporaryStubsToMoveInXUnitStubs;
 using Xunit;
 
 namespace XUnitTestControllers
@@ -41,5 +40,20 @@ namespace XUnitTestControllers
                 Assert.True(task.Result.Item1 == StatusCodes.Status400BadRequest);
             }
         }
+        /// <summary>
+        /// Test that GetLangagesByContinentAsync with convertible Region return Status 200
+        /// </summary>
+        [Fact]
+        public async void GetLangagesByContinentAsync_With_Convertible_Region_Return_Status_200()
+        {
+            HRLangagesByContinentControllerForker forker = new HRLangagesByContinentControllerForker();
+            CoreCountriesServiceStub serviceStub = new CoreCountriesServiceStub(null);
+            using (Task<(int, IEnumerable<Language>)> task = forker.GetLangagesByContinentAsync(serviceStub, "Africa"))
+            {
+                await task;
+                Assert.True(task.Result.Item1 == StatusCodes.Status200OK);
+            }
+        }
+
     }
 }

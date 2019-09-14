@@ -186,5 +186,10 @@ namespace HRCoreCountriesServices
                 }
             }
         }
+
+        public Task<IEnumerable<HRCountry>> GetHRCountriesByContinentAsync(Region region)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

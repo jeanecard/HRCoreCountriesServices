@@ -17,7 +17,7 @@ namespace XUnitTestServices
         /// Test that MemberAccessException is thrown on GetBordersAsync with a null repository.
         /// </summary>
         [Fact]
-        public async void BorderServiceOnGetBordersAsyncThrowMemberAccessExceptionIfRepositoryIsNull()
+        public async void BorderService_On_GetBordersAsync_Throw_MemberAccessException_If_Repository_Is_Null()
         {
             HRCoreBordersService service = new HRCoreBordersService(
                 null,
@@ -30,7 +30,7 @@ namespace XUnitTestServices
         /// Test that MemberAccessException is thrown on GetBorderAsync with a null repository.
         /// </summary>
         [Fact]
-        public async void BorderServiceOnGetBorderAsyncThrowMemberAccessExceptionIfRepositoryIsNull()
+        public async void BorderService_On_GetBorderAsync_Throw_MemberAccessException_If_Repository_Is_Null()
         {
             HRCoreBordersService service = new HRCoreBordersService(
                 null,
@@ -43,7 +43,7 @@ namespace XUnitTestServices
         /// Test that MemberAccessException is thrown on GetBordersAsync with a null Paginer.
         /// </summary>
         [Fact]
-        public async void BorderServiceOnGetBordersAsyncThrowMemberAccessExceptionIfPaginerIsNull()
+        public async void BorderService_On_GetBordersAsync_Throw_MemberAccessException_If_Paginer_Is_Null()
         {
             HRCoreBordersService service = new HRCoreBordersService(
                 new HRCoreBordersRepositoryStub(null, ""),
@@ -55,7 +55,7 @@ namespace XUnitTestServices
         /// Test that ArgumentNullException is thrown if pageModel is null.
         /// </summary>
         [Fact]
-        public async void BorderServiceOnGetBordersAsyncThrowArgumentNullExceptionIfPageModelIsNull()
+        public async void BorderService_On_GetBordersAsync_Throw_ArgumentNullException_If_PageModel_Is_Null()
         {
             HRCoreBordersService service = new HRCoreBordersService(
                 new HRCoreBordersRepositoryStub(null, ""),

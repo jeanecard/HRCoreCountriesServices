@@ -53,7 +53,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{681B1D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HRCommon", "Common\HRCommon\HRCommon.csproj", "{EB96D043-E4C0-4BCC-983C-7BE645527D10}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XUnitTestHRCommon", "Common\XUnitTestHRCommon\XUnitTestHRCommon.csproj", "{D36C01AE-D99E-44A1-8C66-D358428019DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XUnitTestHRCommon", "Common\XUnitTestHRCommon\XUnitTestHRCommon.csproj", "{D36C01AE-D99E-44A1-8C66-D358428019DD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControllersForkerTools", "Tools\HRControllerTools\ControllersForker\ControllersForkerTools.csproj", "{CA9D1A05-CD10-46D2-8E7A-1BC029C0A45E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TemporaryStubsToMoveInXUnitStubs", "Tools\TemporaryStubsToMoveInXUnitStubs\TemporaryStubsToMoveInXUnitStubs.csproj", "{5B78259B-45A8-4C04-B188-863D6C0E2E61}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -129,6 +133,14 @@ Global
 		{D36C01AE-D99E-44A1-8C66-D358428019DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D36C01AE-D99E-44A1-8C66-D358428019DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D36C01AE-D99E-44A1-8C66-D358428019DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA9D1A05-CD10-46D2-8E7A-1BC029C0A45E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA9D1A05-CD10-46D2-8E7A-1BC029C0A45E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA9D1A05-CD10-46D2-8E7A-1BC029C0A45E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA9D1A05-CD10-46D2-8E7A-1BC029C0A45E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B78259B-45A8-4C04-B188-863D6C0E2E61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B78259B-45A8-4C04-B188-863D6C0E2E61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B78259B-45A8-4C04-B188-863D6C0E2E61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B78259B-45A8-4C04-B188-863D6C0E2E61}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -151,6 +163,8 @@ Global
 		{83967F16-CF52-457E-9988-53F44F41D83A} = {A0CC9A39-1219-4A8F-A586-FF4BC62CD2B3}
 		{EB96D043-E4C0-4BCC-983C-7BE645527D10} = {681B1DCD-D92B-4AEB-93D9-52D8EFBDFB7E}
 		{D36C01AE-D99E-44A1-8C66-D358428019DD} = {681B1DCD-D92B-4AEB-93D9-52D8EFBDFB7E}
+		{CA9D1A05-CD10-46D2-8E7A-1BC029C0A45E} = {78377C75-3654-4E61-A49A-029FAB5F483C}
+		{5B78259B-45A8-4C04-B188-863D6C0E2E61} = {78377C75-3654-4E61-A49A-029FAB5F483C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {957C32EA-3969-49BE-B6E6-621527318496}

@@ -6,14 +6,16 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace XUnitTestControllers
+namespace TemporaryStubsToMoveInXUnitStubs
 {
-    internal class CoreCountriesServiceStub : ICoreCountriesService
+
+    public class CoreCountriesServiceStub : ICoreCountriesService
     {
         private readonly List<HRCountry> _list = new List<HRCountry>();
         private readonly List<String> _originalList = null;
         public bool ThrowException = false;
         private Exception _exceptionToThrow = null;
+        private List<Language> _languages = new List<Language>();
 
         public Exception ExceptionToThrow { get
             {
@@ -23,11 +25,13 @@ namespace XUnitTestControllers
                 }
                 return _exceptionToThrow;
             }
-            internal set
+            set
             {
                 _exceptionToThrow = value;
             }
         }
+
+        public List<Language> Languages { get => _languages; set => _languages = value; }
 
         /// <summary>
         /// Return list or raise exception.
@@ -126,19 +130,21 @@ namespace XUnitTestControllers
             return null;
         }
 
-        /// <summary>
-        /// TODO
-        /// </summary>
-        /// <param name="region"></param>
-        /// <returns></returns>
-        public async Task<(int, IEnumerable<Language>)> GetHRLangagesByContinentAsync(Region region)
+
+        public async Task<IEnumerable<Language>> GetHRLangagesByContinentAsync(Region region)
         {
-            throw new NotImplementedException();
+            await Task.Delay(1);
+            if (Languages != null)
+            {
+                return Languages;
+            }
+            return null;
         }
 
-        Task<IEnumerable<Language>> ICoreCountriesService.GetHRLangagesByContinentAsync(Region region)
+        public async Task<IEnumerable<HRCountry>> GetHRCountriesByContinentAsync(Region region)
         {
-            throw new NotImplementedException();
+            await Task.Delay(1);
+            return _list;
         }
 
 

@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\HRCommon\HRCommon.csproj" />
+    <ProjectReference Include="..\..\Models\HRCommonModels\HRCommonModels.csproj" />
+    <ProjectReference Include="..\..\Models\HRCoreBordersModel\HRCoreBordersModel.csproj" />
+    <ProjectReference Include="..\..\Models\HRCoreCountriesModel\HRCoreCountriesModel.csproj" />
+    <ProjectReference Include="..\..\Services\HRCoreBordersServices\HRCoreBordersServices.csproj" />
+    <ProjectReference Include="..\..\Services\HRCoreCountriesServices\HRCoreCountriesServices.csproj" />
+    <ProjectReference Include="..\HRControllerTools\ControllersForker\ControllersForkerTools.csproj" />
+  </ItemGroup>
+
+</Project>
