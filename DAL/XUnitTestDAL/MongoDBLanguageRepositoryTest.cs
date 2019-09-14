@@ -10,10 +10,10 @@ namespace XUnitTestDAL
 {
     public class MongoDBLanguageRepositoryTest
     {
-        private Dictionary<String, Language> _dictionnary = new Dictionary<String, Language>();
-        private List<HRCountry> _cursor = new List<HRCountry>();
-        private MongoDBLanguageRepository _repo = new MongoDBLanguageRepository(null, null);
-        private HRCountry _country = new HRCountry();
+        private readonly Dictionary<String, Language> _dictionnary = new Dictionary<String, Language>();
+        private readonly List<HRCountry> _cursor = new List<HRCountry>();
+        private readonly MongoDBLanguageRepository _repo = new MongoDBLanguageRepository(null, null);
+        private readonly HRCountry _country = new HRCountry();
 
         /// <summary>
         /// Test normal case.

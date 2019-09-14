@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -7,7 +7,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\Models\HRCommonModels\HRCommonModels.csproj" />
     <ProjectReference Include="..\..\..\Models\HRCoreBordersModel\HRCoreBordersModel.csproj" />
-    <ProjectReference Include="..\..\..\Models\HRCoreCountriesModel\HRCoreCountriesModel.csproj" />
     <ProjectReference Include="..\..\..\Services\HRCoreBordersServices\HRCoreBordersServices.csproj" />
     <ProjectReference Include="..\..\..\Services\HRCoreCountriesServices\HRCoreCountriesServices.csproj" />
     <ProjectReference Include="..\..\HRCommonTools\HRCommonTools.csproj" />

@@ -101,8 +101,12 @@ namespace ConsoleTools
                     while (reading.Result)
                     {
                         Geometry geo = HRConverterPostGisToNetTopologySuite.ConvertFrom(readerFacade);
+                        reading.Dispose();
                         reading = reader.ReadAsync();
                     }
+                    reading.Dispose();
+                    reader.Close();
+                    readerTask.Dispose();
                 }
             }
             Console.ReadKey();

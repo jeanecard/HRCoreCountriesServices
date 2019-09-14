@@ -130,7 +130,7 @@ namespace XUnitTestControllers
             {
                 list.Add(i.ToString());
             }
-            CoreBordersServiceStub service = new CoreBordersServiceStub(list);
+            //CoreBordersServiceStub service = new CoreBordersServiceStub(list);
             PagingParameterInModel validModel = new PagingParameterInModel() { PageNumber = 1, PageSize = 50 };
             HRCommonForkerUtilsStub forkerUtil = new HRCommonForkerUtilsStub() { CanOrderReturn = true };
             HRBordersControllersForker forker = new HRBordersControllersForker(forkerUtil);

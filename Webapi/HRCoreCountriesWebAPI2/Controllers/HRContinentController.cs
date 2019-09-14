@@ -19,8 +19,9 @@ namespace HRBordersAndCountriesWebAPI2.Controllers
     public class HRContinentController : ControllerBase
     {
         private readonly ILogger<HRContinentController> _logger = null;
-        private readonly ICoreCountriesService _continentService = null;
         private readonly IHRContinentControllerForker _util = null;
+        private readonly ICoreCountriesService _continentService = null;
+
 
         /// <summary>
         /// Constructor for DI
