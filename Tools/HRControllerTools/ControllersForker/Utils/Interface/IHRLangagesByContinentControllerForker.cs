@@ -16,5 +16,7 @@ namespace HRControllersForker.Interface
         /// </summary>
         /// <returns></returns>
         Task<(int, IEnumerable<Language>)> GetLangagesByContinentAsync(ICoreCountriesService service, String continent);
+        Task<(int, IEnumerable<Language>)> GetAllLangagesAsync(ICoreCountriesService service);
+
     }
 }

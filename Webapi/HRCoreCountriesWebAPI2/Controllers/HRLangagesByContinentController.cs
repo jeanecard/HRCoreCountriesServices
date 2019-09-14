@@ -91,7 +91,7 @@ namespace HRBordersAndCountriesWebAPI2.Controllers
                 }
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
-            using (Task<(int, IEnumerable<Language>)> task = _util.GetLangagesByContinentAsync(_service, Region.Empty.ToString()))
+            using (Task<(int, IEnumerable<Language>)> task = _util.GetAllLangagesAsync(_service))
             {
                 await task;
                 if (task.Result.Item1 == StatusCodes.Status200OK)

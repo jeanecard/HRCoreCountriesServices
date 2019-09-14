@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using TemporaryStubsToMoveInXUnitStubs;
 using Xunit;
 
+using System.Linq;
+using System;
+
 namespace XUnitTestControllers
 {
     /// <summary>
@@ -55,5 +58,54 @@ namespace XUnitTestControllers
             }
         }
 
+        /// <summary>
+        /// Test that GetAllLangagesAsync return service results without updating.
+        /// </summary>
+        [Fact]
+        public async void GetAllLangagesAsync_With_Service_OK_Return_Languages_Without_Update()
+        {
+            HRLangagesByContinentControllerForker forker = new HRLangagesByContinentControllerForker();
+            CoreCountriesServiceStub serviceStub = new CoreCountriesServiceStub(null);
+            serviceStub.Languages = new List<Language>() { new Language() { Iso6391 = "1" }, new Language() { Iso6391 = "2" } };
+            using (Task<(int, IEnumerable<Language>)> task = forker.GetAllLangagesAsync(serviceStub))
+            {
+                await task;
+                Assert.True(task.Result.Item1 == StatusCodes.Status200OK);
+                Assert.NotNull(task.Result.Item2);
+                Assert.True(task.Result.Item2.ToList().Count == 2);
+                Assert.True(task.Result.Item2.ToList()[0].Iso6391 == "1");
+                Assert.True(task.Result.Item2.ToList()[1].Iso6391 == "2");
+            }
+        }
+
+        /// <summary>
+        /// Test that GetAllLangagesAsync with null service return code 500
+        /// </summary>
+        [Fact]
+        public async void GetAllLangagesAsync_With_Null_Service_Return_Error500()
+        {
+            HRLangagesByContinentControllerForker forker = new HRLangagesByContinentControllerForker();
+            using (Task<(int, IEnumerable<Language>)> task = forker.GetAllLangagesAsync(null))
+            {
+                await task;
+                Assert.True(task.Result.Item1 == StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        /// <summary>
+        /// Test that GetAllLangagesAsync with service throwing exception return code 500
+        /// </summary>
+        [Fact]
+        public async void GetAllLangagesAsync_With_Service_Throwing_Exception_Return_Error500()
+        {
+            HRLangagesByContinentControllerForker forker = new HRLangagesByContinentControllerForker();
+            CoreCountriesServiceStub serviceStub = new CoreCountriesServiceStub(null);
+            serviceStub.ExceptionToThrow = new Exception("A");
+            using (Task<(int, IEnumerable<Language>)> task = forker.GetAllLangagesAsync(null))
+            {
+                await task;
+                Assert.True(task.Result.Item1 == StatusCodes.Status500InternalServerError);
+            }
+        }
     }
 }

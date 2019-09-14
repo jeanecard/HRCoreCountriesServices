@@ -173,7 +173,7 @@ namespace HRCoreCountriesServices
             {
                 if (_logger != null)
                 {
-                    _logger.LogError("_repository is null in CoreCountriesService:GetCountryAsync");
+                    _logger.LogError("_repository is null in CoreCountriesService:GetHRLangagesByContinentAsync");
                 }
                 throw new MemberAccessException("CoreCountriesService initialization failed..");
             }
@@ -187,9 +187,32 @@ namespace HRCoreCountriesServices
             }
         }
 
-        public Task<IEnumerable<HRCountry>> GetHRCountriesByContinentAsync(Region region)
+        public async Task<IEnumerable<HRCountry>> GetHRCountriesByContinentAsync(Region region)
         {
             throw new NotImplementedException();
+        }
+        /// <summary>
+        /// TODO
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IEnumerable<Language>> GetAllLangagesAsync()
+        {
+            if (_langRepository == null)
+            {
+                if (_logger != null)
+                {
+                    _logger.LogError("_repository is null in CoreCountriesService:GetAllLangagesAsync");
+                }
+                throw new MemberAccessException("CoreCountriesService initialization failed..");
+            }
+            else
+            {
+                using (Task<IEnumerable<Language>> task = _langRepository.GetHRAllLangagesAsync())
+                {
+                    await task;
+                    return task.Result;
+                }
+            }
         }
     }
 }

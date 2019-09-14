@@ -112,6 +112,10 @@ namespace TemporaryStubsToMoveInXUnitStubs
 
         public IEnumerable<String> GetContinents()
         {
+            if (ThrowException)
+            {
+                throw ExceptionToThrow;
+            }
             List<String> retour = new List<string>();
             foreach(String iterator in _originalList)
             {
@@ -122,6 +126,10 @@ namespace TemporaryStubsToMoveInXUnitStubs
 
         public String GetContinentByID(string id)
         {
+            if (ThrowException)
+            {
+                throw ExceptionToThrow;
+            }
             foreach (String iterator in _originalList)
             {
                 if (iterator == id)
@@ -133,6 +141,10 @@ namespace TemporaryStubsToMoveInXUnitStubs
 
         public async Task<IEnumerable<Language>> GetHRLangagesByContinentAsync(Region region)
         {
+            if (ThrowException)
+            {
+                throw ExceptionToThrow;
+            }
             await Task.Delay(1);
             if (Languages != null)
             {
@@ -143,8 +155,22 @@ namespace TemporaryStubsToMoveInXUnitStubs
 
         public async Task<IEnumerable<HRCountry>> GetHRCountriesByContinentAsync(Region region)
         {
+            if (ThrowException)
+            {
+                throw ExceptionToThrow;
+            }
             await Task.Delay(1);
             return _list;
+        }
+
+        public async Task<IEnumerable<Language>> GetAllLangagesAsync()
+        {
+            if (ThrowException)
+            {
+                throw ExceptionToThrow;
+            }
+            await Task.Delay(1);
+            return _languages;
         }
 
 

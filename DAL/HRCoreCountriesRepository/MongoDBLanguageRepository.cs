@@ -30,59 +30,12 @@ namespace HRCoreCountriesRepository
         /// <returns></returns>
         public async Task<IEnumerable<Language>> GetHRLangagesByContinentAsync(Region region)
         {
-            Dictionary<String, Language> partialResult = new Dictionary<string, Language>();
-            try
+            FilterDefinitionBuilder<HRCountry> bld = new FilterDefinitionBuilder<HRCountry>();
+            using (Task<IEnumerable<Language>> task = GetHRLangages(bld.Where(country => country.Region == region)))
             {
-                MondoDBConnexionParam conParam = MondoDBConnexionParamFactory.CreateMondoDBConnexionParam(_config);
-                IMongoCollection<HRCountry> collection = MongoDBCollectionGetter<HRCountry>.GetCollection(conParam);
-                if (collection != null)
-                {
-                    FilterDefinitionBuilder<HRCountry> bld = new FilterDefinitionBuilder<HRCountry>();
-                    Task<IAsyncCursor<HRCountry>> retourTask = null;
-                    try
-                    {
-                        retourTask = collection.FindAsync(bld.Where(country => country.Region == region));
-                        await retourTask;
-                        //Message IDE0067 Disposable object created by 'await retourTask' is never disposed whereas finally dispose exists ?
-                        if (retourTask.Result != null)
-                        {
-                            Task<bool> cursorMovingTask = null;
-                            try
-                            {
-                                cursorMovingTask = retourTask.Result.MoveNextAsync();
-                                await cursorMovingTask;
-                                while (cursorMovingTask.Result)
-                                {
-                                    FillUpDictionnary(partialResult, retourTask.Result.Current);
-                                    cursorMovingTask.Dispose();
-                                    cursorMovingTask = retourTask.Result.MoveNextAsync();
-                                    await cursorMovingTask;
-                                }
-                            }
-                            finally
-                            {
-                                if (cursorMovingTask != null)
-                                {
-                                    cursorMovingTask.Dispose();
-                                }
-                            }
-                        }
-                    }
-                    finally
-                    {
-                        DisposeMongoDBTask(retourTask);
-                    }
-                }
+                await task;
+                return task.Result;
             }
-            catch (Exception ex)
-            {
-                if (_logger != null)
-                {
-                    _logger.LogError(ex.Message);
-                }
-                throw;
-            }
-            return partialResult.Values;
         }
         /// <summary>
         /// Dispose all Disposable Objects used by MongoDB connection.
@@ -132,6 +85,80 @@ namespace HRCoreCountriesRepository
                     }
                 }
             }
+        }
+        /// <summary>
+        /// TODO
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IEnumerable<Language>> GetHRAllLangagesAsync()
+        {
+            FilterDefinitionBuilder<HRCountry> bld = new FilterDefinitionBuilder<HRCountry>();
+            //retourTask = collection.FindAsync(filterfilter.Where(country => country.Region == region));
+            using (Task<IEnumerable<Language>> task = GetHRLangages(bld.Empty))
+            {
+                await task;
+                return task.Result;
+            }
+        }
+        /// <summary>
+        /// TODO
+        /// </summary>
+        /// <param name="filterDefinition"></param>
+        /// <returns></returns>
+        private async Task<IEnumerable<Language>> GetHRLangages(FilterDefinition<HRCountry> filterDefinition)
+        {
+            Dictionary<String, Language> partialResult = new Dictionary<string, Language>();
+            try
+            {
+                MondoDBConnexionParam conParam = MondoDBConnexionParamFactory.CreateMondoDBConnexionParam(_config);
+                IMongoCollection<HRCountry> collection = MongoDBCollectionGetter<HRCountry>.GetCollection(conParam);
+                if (collection != null)
+                {
+                    Task<IAsyncCursor<HRCountry>> retourTask = null;
+                    try
+                    {
+                        retourTask = collection.FindAsync(filterDefinition);
+                        await retourTask;
+                        //Message IDE0067 Disposable object created by 'await retourTask' is never disposed whereas finally dispose exists ?
+                        if (retourTask.Result != null)
+                        {
+                            Task<bool> cursorMovingTask = null;
+                            try
+                            {
+                                cursorMovingTask = retourTask.Result.MoveNextAsync();
+                                await cursorMovingTask;
+                                while (cursorMovingTask.Result)
+                                {
+                                    FillUpDictionnary(partialResult, retourTask.Result.Current);
+                                    cursorMovingTask.Dispose();
+                                    cursorMovingTask = retourTask.Result.MoveNextAsync();
+                                    await cursorMovingTask;
+                                }
+                            }
+                            finally
+                            {
+                                if (cursorMovingTask != null)
+                                {
+                                    cursorMovingTask.Dispose();
+                                }
+                            }
+                        }
+                    }
+                    finally
+                    {
+                        DisposeMongoDBTask(retourTask);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (_logger != null)
+                {
+                    _logger.LogError(ex.Message);
+                }
+                throw;
+            }
+            return partialResult.Values;
         }
     }
 }

@@ -29,7 +29,7 @@ namespace HRControllersForker
                 return (StatusCodes.Status500InternalServerError, null);
             }
             //2-
-            if(!Enum.TryParse(continent, out region))
+            if (!Enum.TryParse(continent, out region))
             {
                 return (StatusCodes.Status400BadRequest, null);
             }
@@ -43,10 +43,38 @@ namespace HRControllersForker
                         return (StatusCodes.Status200OK, task.Result);
                     }
                 }
-                catch(Exception)
+                catch (Exception)
                 {
                     return (StatusCodes.Status500InternalServerError, null);
                 }
+            }
+        }
+
+        /// <summary>
+        /// 1- Check input consitency.
+        /// 2- call CoreCountriesService
+        /// </summary>
+        /// <param name="service"></param>
+        /// <returns></returns>
+        public async Task<(int, IEnumerable<Language>)> GetAllLangagesAsync(ICoreCountriesService service)
+        {
+            //1-
+            if (service == null)
+            {
+                return (StatusCodes.Status500InternalServerError, null);
+            }
+            //2-
+            try
+            {
+                using (Task<IEnumerable<Language>> task = service.GetAllLangagesAsync())
+                {
+                    await task;
+                    return (StatusCodes.Status200OK, task.Result);
+                }
+            }
+            catch (Exception)
+            {
+                return (StatusCodes.Status500InternalServerError, null);
             }
         }
     }

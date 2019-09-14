@@ -9,5 +9,6 @@ namespace HRCoreCountriesRepository.Interface
     public interface ILanguageRepository
     {
         Task<IEnumerable<Language>> GetHRLangagesByContinentAsync(Region region);
+        Task<IEnumerable<Language>> GetHRAllLangagesAsync();
     }
 }

@@ -16,6 +16,12 @@ namespace XUnitTestServices.MocksAndStubs
 
         public List<Language> Langs { get => _langs; }
 
+        public async Task<IEnumerable<Language>> GetHRAllLangagesAsync()
+        {
+            await Task.Delay(1);
+            return _langs;
+        }
+
         public async Task<IEnumerable<Language>> GetHRLangagesByContinentAsync(Region region)
         {
             await Task.Delay(1);
