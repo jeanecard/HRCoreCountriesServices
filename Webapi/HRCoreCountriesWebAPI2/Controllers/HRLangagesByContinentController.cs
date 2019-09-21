@@ -20,7 +20,7 @@ namespace HRBordersAndCountriesWebAPI2.Controllers
     {
         private readonly ICoreCountriesService _service = null;
         private readonly IHRLangagesByContinentControllerForker _util = null;
-        private readonly ILogger<HRContinentController> _logger = null;
+        private readonly ILogger<HRLangagesByContinentController> _logger = null;
         private HRLangagesByContinentController()
         {
             //Dummy for DI
@@ -33,7 +33,7 @@ namespace HRBordersAndCountriesWebAPI2.Controllers
         /// <param name="util"> util forker.</param>
         public HRLangagesByContinentController(
             ICoreCountriesService countriesService,
-            ILogger<HRContinentController> logger,
+            ILogger<HRLangagesByContinentController> logger,
             IHRLangagesByContinentControllerForker util)
         {
             _service = countriesService;

@@ -9,10 +9,10 @@ namespace HRControllersForker.Interface
     /// <summary>
     /// TODO
     /// </summary>
-    public interface IHRCountriesByContinentControllerForker
+    public interface IHRCountriesByContinentByLangageControllerForker
     {
         //TODO
-        Task<(int, IEnumerable<HRCountry>)> GetHRCountriesByContinentAsync(ICoreCountriesService service, String continentId);
+        Task<(int, IEnumerable<HRCountry>)> GetHRCountriesByContinentByLanguageAsync(ICoreCountriesService service, String continentId, String languageID);
 
     }
 }

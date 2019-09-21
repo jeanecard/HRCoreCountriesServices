@@ -12,13 +12,11 @@ namespace HRCoreCountriesServices
     {
         Task<HRCountry> GetCountryAsync(String id);
         Task<PagingParameterOutModel<HRCountry>> GetCountriesAsync(PagingParameterInModel pageModel, HRSortingParamModel orderBy);
-
         IEnumerable<String> GetContinents();
         String GetContinentByID(String id);
-
         Task<IEnumerable<Language>> GetHRLangagesByContinentAsync(Region region);
         Task<IEnumerable<Language>> GetAllLangagesAsync();
-
         Task<IEnumerable<HRCountry>> GetHRCountriesByContinentAsync(Region region);
+        Task<IEnumerable<HRCountry>> GetHRCountriesByContinentByLanguageAsync(Region region, string languageID);
     }
 }

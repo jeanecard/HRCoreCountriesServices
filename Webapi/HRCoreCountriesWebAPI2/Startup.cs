@@ -1,4 +1,5 @@
-﻿using HRCommon;
+﻿using ControllersForkerTools;
+using HRCommon;
 using HRCommon.Interface;
 using HRCommonTools;
 using HRCommonTools.Interface;
@@ -54,17 +55,21 @@ namespace HRCoreCountriesWebAPI2
             services.AddTransient<IHRContinentControllerForker, HRContinentControllerForker>();
             services.AddTransient<IHRLangagesByContinentControllerForker, HRLangagesByContinentControllerForker>();
             services.AddTransient<IHRCountriesByContinentControllerForker, HRCountriesByContinentControllerForker>();
+            services.AddTransient<IHRCountriesByContinentByLangageControllerForker, HRCountriesByContinentByLangageControllerForker>();
             services.AddSingleton(Configuration);
-
             services.AddTransient<IHRPaginer<HRBorder>, HRPaginer<HRBorder>>();
             services.AddTransient<IHRPaginer<HRCountry>, HRPaginer<HRCountry>>();
 
             services.AddTransient<IServiceWorkflowOnHRCoreRepository<HRCountry>, HRServiceWorkflowPaginationOnly<HRCountry>>();
             services.AddTransient<IServiceWorkflowOnHRCoreRepository<HRBorder>, HRServiceWorkflowPaginationOnly<HRBorder>>();
             services.AddTransient<ILanguageRepository, MongoDBLanguageRepository>();
+            services.AddTransient<IHRCountryByContinentRepository, MongoDBCountryByContinentRepository>();
 
             services.AddSingleton<IHRCoreRepository<HRBorder>, PostGISCoreBordersRepository>();
             services.AddSingleton<IHRCoreRepository<HRCountry>, MongoDBCountriesRepository>();
+            services.AddSingleton<IHRCountryByContinentByLanguageRepository, MongoDBCountryByContinentByLanguageRepository>();
+
+
 
             services.AddTransient<ICoreCountriesService, CoreCountriesService>();
             services.AddTransient<ICoreBordersService, HRCoreBordersService>();
@@ -98,6 +103,7 @@ namespace HRCoreCountriesWebAPI2
 
             app.UseHttpsRedirection();
             app.UseMvc();
+
         }
     }
 }

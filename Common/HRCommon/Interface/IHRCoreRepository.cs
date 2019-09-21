@@ -20,5 +20,6 @@ namespace HRCoreRepository.Interface
 
         Task<PagingParameterOutModel<T>> GetOrderedAndPaginatedsAsync(PagingParameterInModel pageModel, HRSortingParamModel orderBy);
         Task<PagingParameterOutModel<T>> GetPaginatedsAsync(PagingParameterInModel pageModel);
+
     }
 }

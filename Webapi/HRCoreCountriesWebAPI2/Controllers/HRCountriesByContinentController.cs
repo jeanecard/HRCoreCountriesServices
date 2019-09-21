@@ -20,7 +20,7 @@ namespace HRBordersAndCountriesWebAPI2.Controllers
     {
         private readonly ICoreCountriesService _service = null;
         private readonly IHRCountriesByContinentControllerForker _util = null;
-        private readonly ILogger<HRContinentController> _logger = null;
+        private readonly ILogger<HRCountriesByContinentController> _logger = null;
 
 
         private HRCountriesByContinentController()
@@ -35,49 +35,18 @@ namespace HRBordersAndCountriesWebAPI2.Controllers
         /// <param name="util"> util forker.</param>
         public HRCountriesByContinentController(
             ICoreCountriesService countriesService,
-            ILogger<HRContinentController> logger,
+            ILogger<HRCountriesByContinentController> logger,
             IHRCountriesByContinentControllerForker util)
         {
             _service = countriesService;
             _util = util;
             _logger = logger;
         }
-        // GET: api/HRCountriesByContient
-        /// <summary>
-        /// Get All distinct countries whatevever their continent.
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<HRCountry>>> GetHRCountriesByContinentAsync()
-        {
-            if (_util == null || _service == null)
-            {
-                if (_logger != null)
-                {
-                    _logger.LogError("No continent service or UtilForker available");
-                }
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
-            using (Task<(int, IEnumerable<HRCountry>)> task = _util.GetHRCountriesByContinentAsync(_service, Region.Empty.ToString()))
-            {
-                await task;
-                if (task.Result.Item1 == StatusCodes.Status200OK)
-                {
-                    return task.Result.Item2.ToList();
-                }
-                else
-                {
-                    return StatusCode(task.Result.Item1);
-                }
-            }
-        }
-
+ 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="id">a Continent id : Africa, Americas, Asia, Empty, Europe, Oceania, Polar</param>
+        /// <param name="id">a Continent id : All, Africa, Americas, Asia, Empty, Europe, Oceania, Polar</param>
         /// <returns>Countries of continent id</returns>
         // GET: api/HRCountriesByContient/5
         [HttpGet("{id}")]

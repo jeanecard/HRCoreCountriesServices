@@ -173,6 +173,11 @@ namespace TemporaryStubsToMoveInXUnitStubs
             return _languages;
         }
 
+        public Task<IEnumerable<HRCountry>> GetHRCountriesByContinentByLanguageAsync(Region region, string languageID)
+        {
+            throw new NotImplementedException();
+        }
+
 
         /// <summary>
         /// Construct a list of HRCountry from ID String list.

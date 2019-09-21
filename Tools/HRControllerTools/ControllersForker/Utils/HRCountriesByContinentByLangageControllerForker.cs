@@ -4,33 +4,34 @@ using Microsoft.AspNetCore.Http;
 using QuickType;
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 
-namespace HRControllersForker
+namespace ControllersForkerTools
 {
     /// <summary>
     /// TODO
     /// </summary>
-    public class HRCountriesByContinentControllerForker : IHRCountriesByContinentControllerForker
+    public class HRCountriesByContinentByLangageControllerForker : IHRCountriesByContinentByLangageControllerForker
     {
-
         /// <summary>
-        /// 1- Check input consitency.
-        /// 2- Convert String to enum and call CoreCountriesService
+        /// TODO
         /// </summary>
-        /// <param name="service">a Countryservice</param>
-        /// <param name="continentId">a contientID (e.g : Africa)</param>
-        /// <returns>Countries. Does not throw any exception. </returns>
-        public async Task<(int, IEnumerable<HRCountry>)> GetHRCountriesByContinentAsync(ICoreCountriesService service, String continentId)
+        /// <param name="service"></param>
+        /// <param name="continentId"></param>
+        /// <param name="languageID"></param>
+        /// <returns></returns>
+        public async Task<(int, IEnumerable<HRCountry>)> GetHRCountriesByContinentByLanguageAsync(
+            ICoreCountriesService service, 
+            string continentId, 
+            string languageID)
         {
-            //1-
             Region region;
             if (service == null)
             {
                 return (StatusCodes.Status500InternalServerError, null);
             }
-            //2-
-            if (!Enum.TryParse(continentId, out region))
+            if (!Enum.TryParse(continentId, out region) || String.IsNullOrEmpty(languageID))
             {
                 return (StatusCodes.Status400BadRequest, null);
             }
@@ -38,7 +39,7 @@ namespace HRControllersForker
             {
                 try
                 {
-                    using (Task<IEnumerable<HRCountry>> task = service.GetHRCountriesByContinentAsync(region))
+                    using (Task<IEnumerable<HRCountry>> task = service.GetHRCountriesByContinentByLanguageAsync(region, languageID))
                     {
                         await task;
                         return (StatusCodes.Status200OK, task.Result);
@@ -52,4 +53,3 @@ namespace HRControllersForker
         }
     }
 }
-
