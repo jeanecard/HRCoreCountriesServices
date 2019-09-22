@@ -181,7 +181,7 @@ namespace XUnitTestServices
         {
             IServiceWorkflowOnHRCoreRepository<HRCountry> workflow = new HRServiceWorkflowPaginationOnly<HRCountry>(null, null);
             CoreCountriesService service = new CoreCountriesService(null, new LanguageRepositoryStub(), workflow, null, null, null);
-            Assert.Equal(7, service.GetContinents().ToList().Count);
+            Assert.Equal(8, service.GetContinents().ToList().Count);
         }
         /// <summary>
         /// TODO
