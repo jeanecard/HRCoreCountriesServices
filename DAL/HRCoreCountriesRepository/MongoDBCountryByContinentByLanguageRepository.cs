@@ -12,10 +12,10 @@ namespace HRCoreCountriesRepository
         private readonly ILogger<MongoDBCountriesRepository> _logger = null;
         private readonly IHRCountryByContinentRepository _repo = null;
         /// <summary>
-        /// TODO
+        /// Constructor for DI
         /// </summary>
-        /// <param name="injectedMongoConfig"></param>
-        /// <param name="logger"></param>
+        /// <param name="injectedMongoConfig">Config mongoDB connexion (Mandatory)</param>
+        /// <param name="logger">Logger (optionnal)</param>
         public MongoDBCountryByContinentByLanguageRepository(
             ILogger<MongoDBCountriesRepository> logger,
             IHRCountryByContinentRepository countryByContinentRepository
@@ -29,20 +29,27 @@ namespace HRCoreCountriesRepository
             // Dummy
         }
         /// <summary>
-        /// 
+        /// 1- Check entries
+        /// 2- Process as following :
+        ///     2.1- Get All Countries for region
+        ///     2.2- Foreach Coutries, if language iso6391_Or_Iso6392_Language exists, add it to result
+        /// 3- Return result.
         /// </summary>
-        /// <param name="region"></param>
-        /// <param name="Iso6391_Or_Iso6392_Language"></param>
-        /// <returns></returns>
+        /// <param name="region">a region (Mandatory) </param>
+        /// <param name="Iso6391_Or_Iso6392_Language">a iso language code (Mandatory)</param>
+        /// <returns>a enumerable collection of HRCountry with iso6391_Or_Iso6392_Language language spoken. Throw ArgumentNullException and Exeption from DB.</returns>
         public async Task<IEnumerable<HRCountry>> GetHRCountriesByContinentByLanguageAsync(Region region, string iso6391_Or_Iso6392_Language)
         {
             List<HRCountry> retour = new List<HRCountry>();
+            //1-
             if (_repo == null || String.IsNullOrEmpty(iso6391_Or_Iso6392_Language) )
             {
-                throw new ArgumentNullException("No CountriesByContinentRepository supplied.");
+                throw new ArgumentNullException("No CountriesByContinentRepository or valid iso6391_Or_Iso6392_Language supplied.");
             }
+            //2-
             else
             {
+                //2.1-
                 String upperedIso = iso6391_Or_Iso6392_Language.ToUpper();
                 using (Task<IEnumerable<HRCountry>> repoTask = _repo.GetHRCountriesByContinentAsync(region))
                 {
@@ -53,27 +60,13 @@ namespace HRCoreCountriesRepository
                         {
                             IEnumerator<HRCountry> enumerator = repoTask.Result.GetEnumerator();
                             HRCountry iteratori = null;
-                            Language languagei = null;
+                            //2.2-
                             while (enumerator.MoveNext())
                             {
                                 iteratori = enumerator.Current;
-                                if (iteratori != null && iteratori.Languages != null)
+                                if (IsLanguageExistInCountry(iteratori, upperedIso))
                                 {
-                                    int languagesCount = iteratori.Languages.Length;
-                                    for (int i = 0; i < languagesCount; i++)
-                                    {
-                                        languagei = iteratori.Languages[i];
-                                        if (languagei != null
-                                            && (
-                                            (languagei.Iso6391 != null && upperedIso == languagei.Iso6391.ToUpper())
-                                            ||
-                                            (languagei.Iso6392 != null && upperedIso == languagei.Iso6392.ToUpper()))
-                                            )
-                                        {
-                                            retour.Add(iteratori);
-                                            break;
-                                        }
-                                    }
+                                    retour.Add(iteratori);
                                 }
                             }
                         }
@@ -88,7 +81,44 @@ namespace HRCoreCountriesRepository
                     }
                 }
             }
+            //3-
             return retour;
+        }
+        /// <summary>
+        /// 1- Check entries.
+        /// 2- Iterate through Languages.
+        ///     2.1- return true as soos as isocode is retrieved.
+        /// 3- Return false as no isocode has been found.
+        /// </summary>
+        /// <param name="iteratori">the country to look for language.(Mandatory)</param>
+        /// <param name="languagei">the language code to look for.(Mandatory)</param>
+        /// <returns>true if language code is found in country Language, false otherwise.</returns>
+        private bool IsLanguageExistInCountry(HRCountry iteratori, String upperedIsoCode)
+        {
+            //1-
+            if(iteratori == null || iteratori.Languages == null || String.IsNullOrEmpty(upperedIsoCode) )
+            {
+                return false;
+            }
+            //2-
+            int languagesCount = iteratori.Languages.Length;
+            Language languagei = null;
+            for (int i = 0; i < languagesCount; i++)
+            {
+                languagei = iteratori.Languages[i];
+                if (languagei != null
+                    && (
+                    (languagei.Iso6391 != null && upperedIsoCode == languagei.Iso6391.ToUpper())
+                    ||
+                    (languagei.Iso6392 != null && upperedIsoCode == languagei.Iso6392.ToUpper()))
+                    )
+                {
+                    //2.1-
+                    return true;                  
+                }
+            }
+            //3-
+            return false;
         }
     }
 }
