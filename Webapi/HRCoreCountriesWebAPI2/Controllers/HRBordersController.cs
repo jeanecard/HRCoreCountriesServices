@@ -112,7 +112,6 @@ namespace HRCoreCountriesWebAPI2.Controllers
         {
             if (_util != null)
             {
-                //1-
                 if (pageModel == null)
                 {
                     pageModel = GetDefaultPagingInParameter();

@@ -17,11 +17,40 @@ namespace XUnitTestDAL
         public MongoDBCountryByContinentByLanguageRepositoryTest()
         {
             _countriesWithFr = new List<HRCountry>() {
-                new HRCountry() { Alpha2Code = "HRCountry",  Languages = new Language[] { new Language() { Iso6391 = "Fr" }, new Language() { Iso6391 = "en" } } },
-                new HRCountry() { Alpha2Code = "HR", Languages = new Language[] { new Language() { Iso6391 = "Es" }, new Language() { Iso6391 = "en" } } } };
+                new HRCountry()
+                { Alpha2Code = "HRCountry",
+                    Languages = new Language[] 
+                    {
+                        new Language() { Iso6391 = "Fr" },
+                        new Language() { Iso6391 = "en" }
+                    }
+                },
+                new HRCountry()
+                { Alpha2Code = "HR",
+                    Languages = new Language[] 
+                    {
+                        new Language() { Iso6391 = "Es" },
+                        new Language() { Iso6391 = "en" }
+                    }
+                }
+            };
             _countriesWithoutFr = new List<HRCountry>() {
-                new HRCountry() { Alpha2Code = "ZZ",  Languages = new Language[] { new Language() { Iso6391 = "De" }, new Language() { Iso6391 = "en" } } },
-                new HRCountry() { Alpha2Code = "AA", Languages = new Language[] { new Language() { Iso6391 = "Es" }, new Language() { Iso6391 = "Po" } } } };
+                new HRCountry()
+                { Alpha2Code = "ZZ",
+                    Languages = new Language[] 
+                    {
+                        new Language() { Iso6391 = "De" },
+                        new Language() { Iso6391 = "en" }
+                    }
+                },
+                new HRCountry() { Alpha2Code = "AA",
+                    Languages = new Language[] 
+                    {
+                        new Language() { Iso6391 = "Es" },
+                        new Language() { Iso6391 = "Po" }
+                    }
+                }
+            };
         }
         /// <summary>
         /// Check that GetHRCountriesByContinentByLanguageAsync throw  ArgumentNullException if no repository is supplied.
@@ -30,7 +59,15 @@ namespace XUnitTestDAL
         public async void MongoDBCountryByContinentByLanguageRepository_GetHRCountriesByContinentByLanguageAsync_With_Null_Repository_Throw_ArgumentNullException()
         {
             MongoDBCountryByContinentByLanguageRepository _repoWithNullParams = new MongoDBCountryByContinentByLanguageRepository(null, null);
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await _repoWithNullParams.GetHRCountriesByContinentByLanguageAsync(Region.Africa, "Fr"));
+            await Assert.ThrowsAsync<ArgumentNullException>(
+                async () => 
+                {
+                    using(Task<IEnumerable<HRCountry>> testTask = _repoWithNullParams.GetHRCountriesByContinentByLanguageAsync(Region.Africa, "Fr"))
+                    {
+                        await testTask;
+                    }
+                }
+            );
         }
         /// <summary>
         /// Check that GetHRCountriesByContinentByLanguageAsync throw  ArgumentNullException if no iso6391 is supplied (null or String Empty).
@@ -42,7 +79,15 @@ namespace XUnitTestDAL
         {
             IHRCountryByContinentRepository _repo = Substitute.For<IHRCountryByContinentRepository>();
             MongoDBCountryByContinentByLanguageRepository _repoWithNullParams = new MongoDBCountryByContinentByLanguageRepository(null, _repo);
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await _repoWithNullParams.GetHRCountriesByContinentByLanguageAsync(Region.Africa, isoCode));
+            await Assert.ThrowsAsync<ArgumentNullException>(
+                async () =>
+                {
+                    using (Task<IEnumerable<HRCountry>> testTask = _repoWithNullParams.GetHRCountriesByContinentByLanguageAsync(Region.Africa, isoCode))
+                    {
+                        await testTask;
+                    }
+                }
+            );
         }
         /// <summary>
         /// Check that GetHRCountriesByContinentByLanguageAsync Get Fr Countries with Fr Language on _countriesWithFr return HRCountry
@@ -56,6 +101,7 @@ namespace XUnitTestDAL
             using(Task<IEnumerable<HRCountry>> taskResult = _mongoRepo.GetHRCountriesByContinentByLanguageAsync(Region.Europe, "Fr"))
             {
                 await taskResult;
+                Assert.NotNull(taskResult.Result);
                 List<HRCountry> resultList = taskResult.Result.ToList();
                 Assert.NotEmpty(resultList);
                 Assert.True(resultList.Count == 1);
@@ -74,6 +120,7 @@ namespace XUnitTestDAL
             using (Task<IEnumerable<HRCountry>> taskResult = _mongoRepo.GetHRCountriesByContinentByLanguageAsync(Region.Europe, "Fr"))
             {
                 await taskResult;
+                Assert.NotNull(taskResult.Result);
                 List<HRCountry> resultList = taskResult.Result.ToList();
                 Assert.Empty(resultList);
             }
