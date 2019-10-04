@@ -87,7 +87,7 @@ namespace HRCoreCountriesRepository
         /// <summary>
         /// 1- Check entries.
         /// 2- Iterate through Languages.
-        ///     2.1- return true as soos as isocode is retrieved.
+        ///     2.1- return true as soon as isocode is retrieved.
         /// 3- Return false as no isocode has been found.
         /// </summary>
         /// <param name="iteratori">the country to look for language.(Mandatory)</param>
