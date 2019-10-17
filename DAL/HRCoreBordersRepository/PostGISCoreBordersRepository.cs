@@ -134,7 +134,14 @@ namespace HRCoreBordersRepository
                     using (Task<IEnumerable<HRBorder>> retourTask = conn.QueryAsync<HRBorder>(GetSQLQuery(true, borderID, null)))
                     {
                         await retourTask;
-                        retour = retourTask.Result;
+                        if (retourTask.IsCompleted)
+                        {
+                            retour = retourTask.Result;
+                        }
+                        else
+                        {
+                            throw new Exception("ReadBordersWithDapperAsync : Can not complete Task.");
+                        }
                     }
                 }
                 catch (Exception ex)

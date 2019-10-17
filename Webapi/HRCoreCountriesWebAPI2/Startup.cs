@@ -29,6 +29,7 @@ namespace HRCoreCountriesWebAPI2
     {
         private static readonly String _VERSION_FOR_SWAGGER_DISLPAY = "Version 1 Release candidate";
         private static readonly String _NAME_FOR_SWAGGER_DISLPAY = "HR Core Services";
+        private readonly string _ALLOW_SPECIFIC_ORIGIN = "_myAllowSpecificOrigins";
 
         /// <summary>
         /// 
@@ -79,6 +80,16 @@ namespace HRCoreCountriesWebAPI2
                 swagger.Title = _NAME_FOR_SWAGGER_DISLPAY;
                 swagger.GenerateEnumMappingDescription = true;
             }) ;
+
+            //Allow CORS
+            services.AddCors(options =>
+            {
+                options.AddPolicy(_ALLOW_SPECIFIC_ORIGIN,
+                builder =>
+                {
+                    builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+                });
+            });
         }
         /// <summary>
         /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline. 
@@ -102,6 +113,7 @@ namespace HRCoreCountriesWebAPI2
 
             app.UseHttpsRedirection();
             app.UseMvc();
+            app.UseCors(_ALLOW_SPECIFIC_ORIGIN);
 
         }
     }
