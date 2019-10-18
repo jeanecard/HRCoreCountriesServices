@@ -112,8 +112,9 @@ namespace HRCoreCountriesWebAPI2
             app.UseSwaggerUi3();
 
             app.UseHttpsRedirection();
-            app.UseMvc();
             app.UseCors(_ALLOW_SPECIFIC_ORIGIN);
+            app.UseMvc();
+
 
         }
     }
