@@ -147,6 +147,7 @@ namespace HRCoreCountriesServices
             {
                 retour.Add(iter.ToString());
             }
+            retour.Sort();
             return retour;
         }
         /// <summary>

@@ -7,6 +7,7 @@ using QuickType;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace HRCoreCountriesRepository
 {
@@ -34,7 +35,8 @@ namespace HRCoreCountriesRepository
             using (Task<IEnumerable<Language>> task = GetHRLangages(bld.Where(country => country.Region == region)))
             {
                 await task;
-                return task.Result;
+                //!TODO use MongoDB instead.
+                return task.Result.OrderBy(x => x.Name);
             }
         }
         /// <summary>
@@ -97,7 +99,7 @@ namespace HRCoreCountriesRepository
             using (Task<IEnumerable<Language>> task = GetHRLangages(bld.Empty))
             {
                 await task;
-                return task.Result;
+                return task.Result.OrderBy(x => x.Name); 
             }
         }
         /// <summary>
