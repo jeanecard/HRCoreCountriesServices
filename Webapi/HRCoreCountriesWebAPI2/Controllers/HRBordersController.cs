@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace HRCoreCountriesWebAPI2.Controllers
 {
     /// <summary>
-    /// Controller  for HRBorder
+    /// Controller  for HRBorder. Test
     /// </summary>
     [Produces("application/json")]
     [Route("api/v1.0/[controller]")]
