@@ -40,6 +40,11 @@ namespace XUnitTestServices.MocksAndStubs
             return null;
         }
 
+        public Task<IEnumerable<HRCountry>> GetAsync(IEnumerable<string> iDs)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<HRCountry> GetCountryAsync(string id)
         {
             await Task.Delay(1);

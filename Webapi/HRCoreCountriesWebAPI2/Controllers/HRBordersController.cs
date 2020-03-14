@@ -52,9 +52,9 @@ namespace HRCoreCountriesWebAPI2.Controllers
         }
 
         /// <summary>
-        /// Method to get a specific HRBorder by its FIPS
+        /// Method to get a specific HRBorder by its ISO2 code
         /// </summary>
-        /// <param name="id">Border id (FIPS)</param>
+        /// <param name="id">Border id (ISO2)</param>
         /// <returns>the corresponding HRBorder</returns>
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -64,10 +64,6 @@ namespace HRCoreCountriesWebAPI2.Controllers
 
         public async Task<ActionResult<HRBorder>> Get([FromRoute] String id)
         {
-            if(_logger != null)
-            {
-                _logger.LogError("HR test in HRBordersController:GET");
-            }
             if (_util != null)
             {
                 using (Task<(int, HRBorder)> result = _util.GetFromIDAsync(id, _borderService))
@@ -144,43 +140,7 @@ namespace HRCoreCountriesWebAPI2.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
-
-        /// <summary>
-        /// No Post implemented.
-        /// </summary>
-        /// <param name="value">-</param>
-        /// <returns></returns>
-        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status501NotImplemented)]
-        public IActionResult Post([FromBody] string value)
-        {
-            return StatusCode(StatusCodes.Status501NotImplemented);
-        }
-
-        /// <summary>
-        /// No Put implemented.
-        /// </summary>
-        /// <param name="id">-</param>
-        /// <param name="value">-</param>
-        /// <returns></returns>
-        [HttpPut("{id}")]
-        [ProducesResponseType(StatusCodes.Status501NotImplemented)]
-        public IActionResult Put(int id, [FromBody] string value)
-        {
-            return StatusCode(StatusCodes.Status501NotImplemented);
-        }
-
-        /// <summary>
-        /// No Delete Implemented.
-        /// </summary>
-        /// <param name="id">-</param>
-        /// <returns></returns>
-        [HttpDelete("{id}")]
-        [ProducesResponseType(StatusCodes.Status501NotImplemented)]
-        public IActionResult Delete(int id)
-        {
-            return StatusCode(StatusCodes.Status501NotImplemented);
-        }
+      
         /// <summary>
         /// Set and return the Default PagingParameter for all the class. Does not throw any Exception.
         /// </summary>

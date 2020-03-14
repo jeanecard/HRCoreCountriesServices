@@ -14,15 +14,37 @@ namespace HRBordersAndCountriesWebAPI2.Controllers
     /// <summary>
     /// Class to manage HRBorders via Region.
     /// </summary>
-    [Route("api/[controller]")]
+    [Route("api/v1.0/[controller]")]
     [ApiController]
     public class HRBordersByContinentController : ControllerBase
     {
         private readonly IHRBordersByContinentControllerForker _util = null;
         private readonly ICoreBordersService _service = null;
         private readonly ILogger<HRBordersByContinentController> _logger = null;
+
+        private HRBordersByContinentController()
+        {
+            //Dummy for DI.
+        }
         /// <summary>
         /// 
+        /// </summary>
+        /// <param name="util"></param>
+        /// <param name="service"></param>
+        /// <param name="logger"></param>
+        public HRBordersByContinentController(
+            IHRBordersByContinentControllerForker util,
+            ICoreBordersService service,
+            ILogger<HRBordersByContinentController> logger
+            )
+        {
+            _util = util;
+            _service = service;
+            _logger = logger;
+        }
+
+        /// <summary>
+        /// Get HRBorder for the given region
         /// </summary>
         /// <param name="id">a Continent id : All, Africa, Americas, Asia, Empty, Europe, Oceania, Polar</param>
         /// <returns>HRBorder with continent id</returns>

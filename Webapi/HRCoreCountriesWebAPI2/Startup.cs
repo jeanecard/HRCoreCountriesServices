@@ -60,6 +60,7 @@ namespace HRCoreCountriesWebAPI2
             services.AddTransient<IHRCountriesByContinentControllerForker, HRCountriesByContinentControllerForker>();
             services.AddTransient<IHRCountriesByContinentByLangageControllerForker, HRCountriesByContinentByLangageControllerForker>();
             services.AddTransient<IHRBordersByContinentByLangageControllerForker, HRBordersByContinentByLangageControllerForker>();
+            services.AddTransient<IHRBordersByContinentControllerForker, HRBordersByContinentControllerForker>();
             services.AddTransient<IHRPaginer<HRBorder>, HRPaginer<HRBorder>>();
             services.AddTransient<IHRPaginer<HRCountry>, HRPaginer<HRCountry>>();
 

@@ -20,6 +20,11 @@ namespace XUnitTestHRCommon.Stubs
             throw new NotImplementedException();
         }
 
+        public Task<IEnumerable<int>> GetAsync(IEnumerable<string> iDs)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<IEnumerable<int>> GetFullsAsync()
         {
             await Task.Delay(1);

@@ -139,6 +139,11 @@ namespace XUnitTestServices.MocksAndStubs
         {
             throw new NotImplementedException();
         }
+
+        public Task<IEnumerable<HRBorder>> GetAsync(IEnumerable<string> iDs)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
 

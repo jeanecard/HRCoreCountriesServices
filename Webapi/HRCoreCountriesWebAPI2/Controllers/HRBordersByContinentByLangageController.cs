@@ -15,14 +15,36 @@ namespace HRBordersAndCountriesWebAPI2.Controllers
     /// <summary>
     /// Controller to Get HRBorder by Continent and language.
     /// </summary>
-    [Route("api/[controller]")]
+    [Route("api/v1.0/[controller]")]
     [ApiController]
     public class HRBordersByContinentByLangageController : ControllerBase
     {
         private readonly IHRBordersByContinentByLangageControllerForker _util = null;
         private readonly ICoreBordersService _service = null;
         private readonly ILogger<HRBordersByContinentByLangageController> _logger = null;
-        // GET: api/HRCountriesByContientByLangage/{continentID}/{LanguageID}
+
+
+        private HRBordersByContinentByLangageController()
+        {
+            //Dummy for DI.
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="util"></param>
+        /// <param name="service"></param>
+        /// <param name="logger"></param>
+        public HRBordersByContinentByLangageController(IHRBordersByContinentByLangageControllerForker util,
+            ICoreBordersService service,
+            ILogger<HRBordersByContinentByLangageController> logger
+            )
+        {
+            _util = util;
+            _service = service;
+            _logger = logger;
+        }
+
+
         /// <summary>
         /// Get All Borders of a specific Region for a specific Language
         /// </summary>

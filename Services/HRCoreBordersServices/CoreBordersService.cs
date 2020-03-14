@@ -128,15 +128,15 @@ namespace HRCoreBordersServices
         }
         /// <summary>
         /// Version 1 : Get HRCountry then HRBorder one by one.
-        /// 1- Get Corresponding HRCountries
-        /// 2- Foreach HRCountry get single HRBorders and push it in retrun Enumerable
+        /// 1- Get Corresponding HRCountries to build list of ISO2 codes.
+        /// 2- Get HRBorders for list of ISO2
         /// </summary>
         /// <param name="continentId"></param>
         /// <param name="langageId"></param>
         /// <returns></returns>
         public async Task<IEnumerable<HRBorder>> GetHRBorderByContinentByLanguageAsync(Region region, string langageId)
         {
-            if(_hrCountriesService == null ||_bordersRepository  == null)
+            if (_hrCountriesService == null || _bordersRepository == null)
             {
                 if (_logger != null)
                 {
@@ -148,30 +148,31 @@ namespace HRCoreBordersServices
             using (Task<IEnumerable<HRCountry>> countriesTask = _hrCountriesService.GetHRCountriesByContinentByLanguageAsync(region, langageId))
             {
                 await countriesTask;
-                if(countriesTask.Status == TaskStatus.RanToCompletion)
+                if (countriesTask.IsCompleted)
                 {
                     List<HRBorder> retour = new List<HRBorder>();
+                    List<string> ids = new List<string>();
                     //2-
-                    foreach(HRCountry iter in countriesTask.Result)
+                    foreach (HRCountry iter in countriesTask.Result)
                     {
-                        using (Task<HRBorder> bordersTask = _bordersRepository.GetAsync(iter.Alpha3Code))
+                        ids.Add(iter.Alpha2Code);
+                    }
+                    using (Task<IEnumerable<HRBorder>> bordersTask = _bordersRepository.GetAsync(ids))
+                    {
+                        await bordersTask;
+                        if (bordersTask.IsCompleted)
                         {
-                            await bordersTask;
-                            if(bordersTask.Status == TaskStatus.RanToCompletion)
-                            {
-                                retour.Add(bordersTask.Result);
-                            }
-                            else
-                            {
-                                throw new Exception("GetAsync (HRBorders) fail.");
-                            }
+                            return bordersTask.Result;
+                        }
+                        else
+                        {
+                            throw new Exception("GetAsync (HRBorders) fail.");
                         }
                     }
-                    return retour;
                 }
                 else
                 {
-                    throw new Exception("GetHRCountriesByContinentByLanguageAsync fail.");
+                    throw new Exception("GetHRBorderByContinentByLanguageAsync fail");
                 }
             }
         }
@@ -196,26 +197,27 @@ namespace HRCoreBordersServices
             using (Task<IEnumerable<HRCountry>> countriesTask = _hrCountriesService.GetHRCountriesByContinentAsync(region))
             {
                 await countriesTask;
-                if (countriesTask.Status == TaskStatus.RanToCompletion)
+                if (countriesTask.IsCompleted)
                 {
                     List<HRBorder> retour = new List<HRBorder>();
+                    List<string> ids = new List<string>();
                     //2-
                     foreach (HRCountry iter in countriesTask.Result)
                     {
-                        using (Task<HRBorder> bordersTask = _bordersRepository.GetAsync(iter.Alpha3Code))
+                        ids.Add(iter.Alpha2Code);
+                    }
+                    using (Task<IEnumerable<HRBorder>> bordersTask = _bordersRepository.GetAsync(ids))
+                    {
+                        await bordersTask;
+                        if (bordersTask.IsCompleted)
                         {
-                            await bordersTask;
-                            if (bordersTask.Status == TaskStatus.RanToCompletion)
-                            {
-                                retour.Add(bordersTask.Result);
-                            }
-                            else
-                            {
-                                throw new Exception("GetAsync (HRBorders) fail.");
-                            }
+                            return bordersTask.Result;
+                        }
+                        else
+                        {
+                            throw new Exception("GetAsync (HRBorders) fail.");
                         }
                     }
-                    return retour;
                 }
                 else
                 {

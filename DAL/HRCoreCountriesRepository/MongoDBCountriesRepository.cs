@@ -280,5 +280,14 @@ namespace HRCoreCountriesRepository
         {
             return false;
         }
+        /// <summary>
+        /// Dummy.
+        /// </summary>
+        /// <param name="iDs"></param>
+        /// <returns></returns>
+        public Task<IEnumerable<HRCountry>> GetAsync(IEnumerable<string> iDs)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

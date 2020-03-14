@@ -15,6 +15,7 @@ namespace HRCoreRepository.Interface
     public interface IHRCoreRepository<T> : ISortable, IPaginable
     {
         Task<T> GetAsync(String id);
+        Task<IEnumerable<T>> GetAsync(IEnumerable<string> iDs);
         Task<IEnumerable<T>> GetOrderedsAsync(HRSortingParamModel orderBy);
         Task<IEnumerable<T>> GetFullsAsync();
 
