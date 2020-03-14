@@ -33,7 +33,7 @@ namespace XUnitTestDAL
         {
             String sql = _repo.GetSQLQuery(true, "XX");
             Assert.NotNull(sql);
-            Assert.Equal(sql, PostGISCoreBordersRepository.SQLQUERYFORDAPPER + "WHERE FIPS = 'XX'");
+            Assert.Equal(sql, PostGISCoreBordersRepository.SQLQUERYFORDAPPER + "WHERE ISO2 = 'XX'");
         }
         /// <summary>
         /// Check that SQL query is used as provided more the order by clause.
@@ -56,7 +56,7 @@ namespace XUnitTestDAL
                 null,
                 new PagingParameterInModel() { PageNumber = 0, PageSize = 20 });
             Assert.NotNull(sql);
-            Assert.Equal(sql, PostGISCoreBordersRepository.SQLQUERYFORDAPPER + " ORDER BY FIPS ASC  LIMIT 20 OFFSET 0 ");
+            Assert.Equal(sql, PostGISCoreBordersRepository.SQLQUERYFORDAPPER + " ORDER BY ISO2 ASC  LIMIT 20 OFFSET 0 ");
         }
         /// <summary>
         /// Check that SQL query is used as provided more the Pagination clause and the given order by 
