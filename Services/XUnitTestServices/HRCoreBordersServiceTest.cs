@@ -22,6 +22,7 @@ namespace XUnitTestServices
             HRCoreBordersService service = new HRCoreBordersService(
                 null,
                 new HRServiceWorkflowPaginationOnly<HRBorder>(null, null),
+                null,
                 null);
             await Assert.ThrowsAsync<MemberAccessException>(async () => await service.GetBordersAsync(new PagingParameterInModel(), null));
 
@@ -35,6 +36,7 @@ namespace XUnitTestServices
             HRCoreBordersService service = new HRCoreBordersService(
                 null,
                 new HRServiceWorkflowPaginationOnly<HRBorder>(null, null),
+                null,
                 null);
             await Assert.ThrowsAsync<MemberAccessException>(async () => await service.GetBorderAsync("xx"));
 
@@ -48,6 +50,7 @@ namespace XUnitTestServices
             HRCoreBordersService service = new HRCoreBordersService(
                 new HRCoreBordersRepositoryStub(null, ""),
                 new HRServiceWorkflowPaginationOnly<HRBorder>(null, null),
+                null,
                 null);
             await Assert.ThrowsAsync<MemberAccessException>(async () => await service.GetBordersAsync(new PagingParameterInModel(), null));
         }
@@ -60,6 +63,7 @@ namespace XUnitTestServices
             HRCoreBordersService service = new HRCoreBordersService(
                 new HRCoreBordersRepositoryStub(null, ""),
                 new HRServiceWorkflowPaginationOnly<HRBorder>(null, null),
+                null,
                 null);
             await Assert.ThrowsAsync<ArgumentNullException>(async () => await service.GetBordersAsync(null, null));
         }

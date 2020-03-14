@@ -2,8 +2,10 @@
 using HRCommonModel;
 using HRCommonModels;
 using HRCoreBordersModel;
+using HRCoreCountriesServices;
 using HRCoreRepository.Interface;
 using Microsoft.Extensions.Logging;
+using QuickType;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -14,12 +16,14 @@ namespace HRCoreBordersServices
     {
         private readonly IServiceWorkflowOnHRCoreRepository<HRBorder> _workflow = null;
         private readonly IHRCoreRepository<HRBorder> _bordersRepository = null;
+        private readonly ICoreCountriesService _hrCountriesService = null;
         private readonly static ushort _maxPageSize = 50;
         private readonly ILogger<HRCoreBordersService> _logger = null;
         public static readonly String ALL_CONTINENT_ID = "All";
         public HRCoreBordersService(IHRCoreRepository<HRBorder> repo,
             IServiceWorkflowOnHRCoreRepository<HRBorder> workflow,
-            ILogger<HRCoreBordersService> logger)
+            ILogger<HRCoreBordersService> logger,
+            ICoreCountriesService hrCountriesService)
         {
             _bordersRepository = repo;
             _workflow = workflow;
@@ -28,6 +32,7 @@ namespace HRCoreBordersServices
                 _workflow.MaxPageSize = _maxPageSize;
             }
             _logger = logger;
+            _hrCountriesService = hrCountriesService;
         }
 
         public bool IsSortable()
@@ -120,6 +125,104 @@ namespace HRCoreBordersServices
         public bool IsPaginable()
         {
             return true;
+        }
+        /// <summary>
+        /// Version 1 : Get HRCountry then HRBorder one by one.
+        /// 1- Get Corresponding HRCountries
+        /// 2- Foreach HRCountry get single HRBorders and push it in retrun Enumerable
+        /// </summary>
+        /// <param name="continentId"></param>
+        /// <param name="langageId"></param>
+        /// <returns></returns>
+        public async Task<IEnumerable<HRBorder>> GetHRBorderByContinentByLanguageAsync(Region region, string langageId)
+        {
+            if(_hrCountriesService == null ||_bordersRepository  == null)
+            {
+                if (_logger != null)
+                {
+                    _logger.LogError("_hrCountriesService or _bordersRepository is null in HRCoreBordersServices");
+                }
+                throw new MemberAccessException();
+            }
+            //1-
+            using (Task<IEnumerable<HRCountry>> countriesTask = _hrCountriesService.GetHRCountriesByContinentByLanguageAsync(region, langageId))
+            {
+                await countriesTask;
+                if(countriesTask.Status == TaskStatus.RanToCompletion)
+                {
+                    List<HRBorder> retour = new List<HRBorder>();
+                    //2-
+                    foreach(HRCountry iter in countriesTask.Result)
+                    {
+                        using (Task<HRBorder> bordersTask = _bordersRepository.GetAsync(iter.Alpha3Code))
+                        {
+                            await bordersTask;
+                            if(bordersTask.Status == TaskStatus.RanToCompletion)
+                            {
+                                retour.Add(bordersTask.Result);
+                            }
+                            else
+                            {
+                                throw new Exception("GetAsync (HRBorders) fail.");
+                            }
+                        }
+                    }
+                    return retour;
+                }
+                else
+                {
+                    throw new Exception("GetHRCountriesByContinentByLanguageAsync fail.");
+                }
+            }
+        }
+        /// <summary>
+        /// Version 1 : Get HRCountry then HRBorder one by one.
+        /// 1- Get Corresponding HRCountries
+        /// 2- Foreach HRCountry get single HRBorders and push it in retrun Enumerable
+        /// </summary>
+        /// <param name="region"></param>
+        /// <returns></returns>
+        public async Task<IEnumerable<HRBorder>> GetHRBordersByContinentAsync(Region region)
+        {
+            if (_hrCountriesService == null || _bordersRepository == null)
+            {
+                if (_logger != null)
+                {
+                    _logger.LogError("_hrCountriesService or _bordersRepository is null in HRCoreBordersServices");
+                }
+                throw new MemberAccessException();
+            }
+            //1-
+            using (Task<IEnumerable<HRCountry>> countriesTask = _hrCountriesService.GetHRCountriesByContinentAsync(region))
+            {
+                await countriesTask;
+                if (countriesTask.Status == TaskStatus.RanToCompletion)
+                {
+                    List<HRBorder> retour = new List<HRBorder>();
+                    //2-
+                    foreach (HRCountry iter in countriesTask.Result)
+                    {
+                        using (Task<HRBorder> bordersTask = _bordersRepository.GetAsync(iter.Alpha3Code))
+                        {
+                            await bordersTask;
+                            if (bordersTask.Status == TaskStatus.RanToCompletion)
+                            {
+                                retour.Add(bordersTask.Result);
+                            }
+                            else
+                            {
+                                throw new Exception("GetAsync (HRBorders) fail.");
+                            }
+                        }
+                    }
+                    return retour;
+                }
+                else
+                {
+                    throw new Exception("GetHRCountriesByContinentAsync fail.");
+                }
+            }
+
         }
     }
 }

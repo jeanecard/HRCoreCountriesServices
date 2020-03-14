@@ -3,6 +3,7 @@ using HRCommonModel;
 using HRCommonModels;
 using HRCoreBordersModel;
 using HRCoreBordersServices;
+using QuickType;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -84,6 +85,16 @@ namespace TemporaryStubsToMoveInXUnitStubs
         }
 
         public Task<string> GetContinentByIDAsync(string id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<HRBorder>> GetHRBorderByContinentByLanguageAsync(Region region, string langageId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<HRBorder>> GetHRBordersByContinentAsync(Region region)
         {
             throw new NotImplementedException();
         }
