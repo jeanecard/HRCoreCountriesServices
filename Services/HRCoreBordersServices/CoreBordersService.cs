@@ -151,18 +151,24 @@ namespace HRCoreBordersServices
                 if (countriesTask.IsCompleted)
                 {
                     List<HRBorder> retour = new List<HRBorder>();
-                    List<string> ids = new List<string>();
+                    //!TODO add robustness and UT
+                    Dictionary<String, Region> idsAndRegions = new Dictionary<string, Region>();
                     //2-
                     foreach (HRCountry iter in countriesTask.Result)
                     {
-                        ids.Add(iter.Alpha2Code);
+                        idsAndRegions.Add(iter.Alpha2Code, iter.Region);
                     }
-                    using (Task<IEnumerable<HRBorder>> bordersTask = _bordersRepository.GetAsync(ids))
+                    using (Task<IEnumerable<HRBorder>> bordersTask = _bordersRepository.GetAsync(idsAndRegions.Keys))
                     {
                         await bordersTask;
                         if (bordersTask.IsCompleted)
                         {
-                            return bordersTask.Result;
+                            foreach (HRBorder borderIter in bordersTask.Result)
+                            {
+                                borderIter.BorderRegion = idsAndRegions[borderIter.ISO2].ToString();
+                                retour.Add(borderIter);
+                            }
+                            return retour;
                         }
                         else
                         {
@@ -199,19 +205,25 @@ namespace HRCoreBordersServices
                 await countriesTask;
                 if (countriesTask.IsCompleted)
                 {
+                    //!TODO add robustness and UT
                     List<HRBorder> retour = new List<HRBorder>();
-                    List<string> ids = new List<string>();
+                    Dictionary<String, Region> idsAndRegions = new Dictionary<string, Region>();
                     //2-
                     foreach (HRCountry iter in countriesTask.Result)
                     {
-                        ids.Add(iter.Alpha2Code);
+                        idsAndRegions.Add(iter.Alpha2Code, iter.Region);
                     }
-                    using (Task<IEnumerable<HRBorder>> bordersTask = _bordersRepository.GetAsync(ids))
+                    using (Task<IEnumerable<HRBorder>> bordersTask = _bordersRepository.GetAsync(idsAndRegions.Keys))
                     {
                         await bordersTask;
                         if (bordersTask.IsCompleted)
                         {
-                            return bordersTask.Result;
+                            foreach(HRBorder borderIter in bordersTask.Result)
+                            {
+                                borderIter.BorderRegion = idsAndRegions[borderIter.ISO2].ToString();
+                                retour.Add(borderIter);
+                            }
+                            return retour;
                         }
                         else
                         {

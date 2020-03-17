@@ -14,8 +14,12 @@
     <DocumentationFile>C:\Users\a647998\Source\Repos\HRCoreCountriesServices\Models\HRCoreBordersModel\HRCoreBordersModel.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="GeoJSON.Net" Version="1.2.15" />
     <PackageReference Include="NetTopologySuite" Version="1.15.2" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HRCoreCountriesModel\HRCoreCountriesModel.csproj" />
   </ItemGroup>
 
 </Project>
