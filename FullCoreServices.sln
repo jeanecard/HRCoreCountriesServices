@@ -55,9 +55,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HRCommon", "Common\HRCommon
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XUnitTestHRCommon", "Common\XUnitTestHRCommon\XUnitTestHRCommon.csproj", "{D36C01AE-D99E-44A1-8C66-D358428019DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControllersForkerTools", "Tools\HRControllerTools\ControllersForker\ControllersForkerTools.csproj", "{CA9D1A05-CD10-46D2-8E7A-1BC029C0A45E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ControllersForkerTools", "Tools\HRControllerTools\ControllersForker\ControllersForkerTools.csproj", "{CA9D1A05-CD10-46D2-8E7A-1BC029C0A45E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TemporaryStubsToMoveInXUnitStubs", "Tools\TemporaryStubsToMoveInXUnitStubs\TemporaryStubsToMoveInXUnitStubs.csproj", "{5B78259B-45A8-4C04-B188-863D6C0E2E61}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TemporaryStubsToMoveInXUnitStubs", "Tools\TemporaryStubsToMoveInXUnitStubs\TemporaryStubsToMoveInXUnitStubs.csproj", "{5B78259B-45A8-4C04-B188-863D6C0E2E61}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HRGeonameModel", "Models\HRGeonameModel\HRGeonameModel.csproj", "{A0502F54-94E3-455D-B4BF-E888DC12EDFE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeonameServices", "Services\GeonameSrvices\GeonameServices.csproj", "{174332CB-99B8-45E7-9B10-D18AB658A255}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -141,6 +145,14 @@ Global
 		{5B78259B-45A8-4C04-B188-863D6C0E2E61}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5B78259B-45A8-4C04-B188-863D6C0E2E61}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5B78259B-45A8-4C04-B188-863D6C0E2E61}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0502F54-94E3-455D-B4BF-E888DC12EDFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0502F54-94E3-455D-B4BF-E888DC12EDFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0502F54-94E3-455D-B4BF-E888DC12EDFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0502F54-94E3-455D-B4BF-E888DC12EDFE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{174332CB-99B8-45E7-9B10-D18AB658A255}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{174332CB-99B8-45E7-9B10-D18AB658A255}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{174332CB-99B8-45E7-9B10-D18AB658A255}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{174332CB-99B8-45E7-9B10-D18AB658A255}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -165,6 +177,8 @@ Global
 		{D36C01AE-D99E-44A1-8C66-D358428019DD} = {681B1DCD-D92B-4AEB-93D9-52D8EFBDFB7E}
 		{CA9D1A05-CD10-46D2-8E7A-1BC029C0A45E} = {78377C75-3654-4E61-A49A-029FAB5F483C}
 		{5B78259B-45A8-4C04-B188-863D6C0E2E61} = {78377C75-3654-4E61-A49A-029FAB5F483C}
+		{A0502F54-94E3-455D-B4BF-E888DC12EDFE} = {B9391B5D-4187-4DEB-84FA-EF34BDEF9BFF}
+		{174332CB-99B8-45E7-9B10-D18AB658A255} = {C97717B5-AE4F-4643-B4FE-404B76830560}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {957C32EA-3969-49BE-B6E6-621527318496}

@@ -1,6 +1,8 @@
 ﻿using ControllersForkerTools;
 using ControllersForkerTools.Utils;
 using ControllersForkerTools.Utils.Interface;
+using GeonameServices.Interface;
+using GeonameSrvices;
 using HRCommon;
 using HRCommon.Interface;
 using HRCommonTools;
@@ -19,6 +21,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using QuickType;
 using System;
 
@@ -77,7 +80,8 @@ namespace HRCoreCountriesWebAPI2
 
             services.AddTransient<ICoreCountriesService, CoreCountriesService>();
             services.AddTransient<ICoreBordersService, HRCoreBordersService>();
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddTransient<IHRGeonameService, HRGeonameService>();
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
             // Register the Swagger services
             services.AddSwaggerDocument(swagger => {
                 swagger.Version = _VERSION_FOR_SWAGGER_DISLPAY;
@@ -100,8 +104,9 @@ namespace HRCoreCountriesWebAPI2
         /// </summary>
         /// <param name="app"></param>
         /// <param name="env"></param>
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -117,9 +122,11 @@ namespace HRCoreCountriesWebAPI2
 
             app.UseHttpsRedirection();
             app.UseCors(_ALLOW_SPECIFIC_ORIGIN);
-            app.UseMvc();
-
-
+            app.UseRouting();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
         }
     }
 }

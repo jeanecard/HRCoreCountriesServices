@@ -62,7 +62,7 @@ namespace ControllersForkerTools.Utils
                         return (StatusCodes.Status200OK, task.Result);
                     }
                 }
-                catch (Exception ex)
+                catch 
                 {
                     return (StatusCodes.Status500InternalServerError, null);
                 }
