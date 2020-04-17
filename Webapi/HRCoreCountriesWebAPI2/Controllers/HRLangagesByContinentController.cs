@@ -18,7 +18,7 @@ namespace HRBordersAndCountriesWebAPI2.Controllers
     [ApiController]
     public class HRLangagesByContinentController : ControllerBase
     {
-        private readonly ICoreCountriesService _service = null;
+        private readonly ICoreCountriesService _service = null; 
         private readonly IHRLangagesByContinentControllerForker _util = null;
         private readonly ILogger<HRLangagesByContinentController> _logger = null;
         private HRLangagesByContinentController()
