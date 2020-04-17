@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <UserSecretsId>0f62e65c-a7f8-44db-9e06-d1405c4c9827</UserSecretsId>
     <Description>A HR Description</Description>
@@ -20,17 +20,15 @@
     <ProjectReference Include="..\..\DAL\HRCoreCountriesRepository\HRCoreCountriesRepository.csproj" />
     <ProjectReference Include="..\..\Models\HRCommonModels\HRCommonModels.csproj" />
     <ProjectReference Include="..\..\Models\HRCoreBordersModel\HRCoreBordersModel.csproj" />
-    <ProjectReference Include="..\..\Models\HRGeonameModel\HRGeonameModel.csproj" />
-    <ProjectReference Include="..\..\Services\GeonameSrvices\GeonameServices.csproj" />
     <ProjectReference Include="..\..\Services\HRCoreBordersServices\HRCoreBordersServices.csproj" />
     <ProjectReference Include="..\..\Services\HRCoreCountriesServices\HRCoreCountriesServices.csproj" />
     <ProjectReference Include="..\..\Models\HRCoreCountriesModel\HRCoreCountriesModel.csproj" />
     <ProjectReference Include="..\..\Tools\HRCommonTools\HRCommonTools.csproj" />
     <ProjectReference Include="..\..\Tools\HRControllerTools\ControllersForker\ControllersForkerTools.csproj" />
-    <!--<PackageReference Include="Microsoft.AspNetCore.App" />-->
-    <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="3.1.3" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.2" />
-    <PackageReference Include="NSwag.AspNetCore" Version="13.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="2.2.5" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.4" />
+    <PackageReference Include="NSwag.AspNetCore" Version="13.0.3" />
   </ItemGroup>
 
 </Project>
