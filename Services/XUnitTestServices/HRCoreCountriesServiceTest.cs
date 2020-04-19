@@ -6,6 +6,7 @@ using HRCommonTools;
 using HRCoreCountriesServices;
 using QuickType;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
@@ -15,21 +16,25 @@ namespace XUnitTestServices
 {
     public class HRCoreCountriesServiceTest
     {
+        IServiceWorkflowOnHRCoreRepository<HRCountry> _workflowWithNullParameters = null;
+        CoreCountriesService _serviceWithNullParameters = null;
+        public HRCoreCountriesServiceTest()
+        {
+            _workflowWithNullParameters = new HRServiceWorkflowPaginationOnly<HRCountry>(null, null);
+            _serviceWithNullParameters = new CoreCountriesService(null, new LanguageRepositoryStub(), _workflowWithNullParameters, null, null, null);
+        }
+
         /// <summary>
         /// Test that MemberAccessException is thrown on GetCountriessAsync with a null repoistory. Not really a UT for HRCoreCountriesService but for Workflow.
         /// Keep it there while no rework is needed.
         /// </summary>
         [Fact]
-        public async void CountriesServiceOnGetCountriesAsyncThrowMemberAccessExceptionIfRepositoryIsNullExpectTrue()
+        public async void CountriesService_On_GetCountriesAsync_Throw_MemberAccessException_If_CountryRepository_Is_Null_ExpectTrue()
         {
-            IServiceWorkflowOnHRCoreRepository<HRCountry> workflow = new HRServiceWorkflowPaginationOnly<HRCountry>(null, null);
-            CoreCountriesService service = new CoreCountriesService(null, workflow, null);
             bool exceptionThrown = false;
             try
             {
-                PagingParameterInModel pageModel = new PagingParameterInModel();
-                HRSortingParamModel orderBy = new HRSortingParamModel();
-                using (Task<PagingParameterOutModel<HRCountry>> retour = service.GetCountriesAsync(pageModel, orderBy))
+                using (Task<PagingParameterOutModel<HRCountry>> retour = _serviceWithNullParameters.GetCountriesAsync(new PagingParameterInModel(), new HRSortingParamModel()))
                 {
                     await retour;
                 }
@@ -49,15 +54,19 @@ namespace XUnitTestServices
         /// Test that MemberAccessException is thrown on GetCountriessAsync with a null workflow. 
         /// </summary>
         [Fact]
-        public async void CountriesServiceOnGetCountriesAsyncThrowMemberAccessExceptionIfWorkflowIsNullExpectTrue()
+        public async void CountriesService_On_GetCountriesAsync_Throw_Member_Access_Exception_If_Workflow_Is_Null_Expect_True()
         {
-            CoreCountriesService service = new CoreCountriesService(new HRCoreCountriesRepositoryStub(null, null), null, null);
+            CoreCountriesService service = new CoreCountriesService(
+                new HRCoreCountriesRepositoryStub(null, null), 
+                new LanguageRepositoryStub(), 
+                null, 
+                null,
+                null, 
+                null);
             bool exceptionThrown = false;
             try
             {
-                PagingParameterInModel pageModel = new PagingParameterInModel();
-                HRSortingParamModel orderBy = new HRSortingParamModel();
-                using (Task<PagingParameterOutModel<HRCountry>> retour = service.GetCountriesAsync(pageModel, orderBy))
+                using (Task<PagingParameterOutModel<HRCountry>> retour = service.GetCountriesAsync(new PagingParameterInModel(), new HRSortingParamModel()))
                 {
                     await retour;
                 }
@@ -76,14 +85,17 @@ namespace XUnitTestServices
         /// Verify that Service do not do any extra processing on repository results.
         /// </summary>
         [Fact]
-        public async void CountriesServiceOnGetCountriesAsyncWithCountryIDReturnRepositoryResultWithoutExtraProcessingwExpectTrue()
+        public async void CountriesService_On_GetCountriesAsync_With_Country_ID_Return_Repository_Result_Without_ExtraProcessing_Expect_True()
         {
             HRCoreCountriesRepositoryStub repository = new HRCoreCountriesRepositoryStub(new List<string>() { "aa"}, "aa");
             CoreCountriesService service = new CoreCountriesService(
                 repository,
+                new LanguageRepositoryStub(),
                 new HRServiceWorkflowPaginationOnly<HRCountry>(
                     repository,
                     new HRPaginer<HRCountry>()),
+                null,
+                null,
                 null
                 );
             using (Task<HRCountry> repoResult = service.GetCountryAsync("aa"))
@@ -98,14 +110,17 @@ namespace XUnitTestServices
         /// Verify that Service do not do any extra processing on repository results.
         /// </summary>
         [Fact]
-        public async void CountriesServiceOnGetBCountriesAsyncWithoutCountryIDReturnRepositoryResultWithoutExtraProcessingwExpectTrue()
+        public async void CountriesService_On_GetBCountriesAsync_Without_Country_ID_Return_Repository_Result_Without_Extra_Processing_Expect_True()
         {
             HRCoreCountriesRepositoryStub repository = new HRCoreCountriesRepositoryStub(new List<string>() { "aa", "bb", "cc" }, "aa");
             CoreCountriesService service = new CoreCountriesService(
                 repository,
+                new LanguageRepositoryStub(),
                 new HRServiceWorkflowPaginationOnly<HRCountry>(
                     repository,
                     new HRPaginer<HRCountry>()),
+                null,
+                null,
                 null
                 );
             PagingParameterInModel pageModel = new PagingParameterInModel() { PageNumber = 0, PageSize = 10 };
@@ -138,5 +153,66 @@ namespace XUnitTestServices
                 Assert.True(i == 3);
             }
         }
+
+        /// <summary>
+        /// Test that GetContinentByID return null with an unknown ID
+        /// </summary>
+        [Fact]
+        public void CountriesService_On_Get_Continent_By_ID_With_Unknown_ID_Return_Null()
+        {
+            Assert.True(String.IsNullOrEmpty(_serviceWithNullParameters.GetContinentByID("HR")));
+        }
+        /// <summary>
+        /// Test that GetContinentByID return Africa with Africa ID (case insensitive)
+        /// </summary>
+        [Fact]
+        public void CountriesService_On_GetContinentByID_With_AfricaID_No_Matching_Case_Return_Africa()
+        {
+            Assert.Equal(Region.Africa.ToString(), _serviceWithNullParameters.GetContinentByID("AFrICa"));
+        }
+
+        /// <summary>
+        /// Test that GetContinents return All Continents (Checksum)
+        /// </summary>
+        [Fact]
+        public void CountriesService_On_GetContinents_Return_8_Items()
+        {
+            Assert.Equal(8, _serviceWithNullParameters.GetContinents().ToList().Count);
+        }
+        /// <summary>
+        /// TODO
+        /// </summary>
+        [Fact]
+        public async void CountriesService_On_GetHRLangagesByContinentAsync_With_Null_Langage_Repository_Throw_MemberAccessException()
+        {
+            HRCoreCountriesRepositoryStub repository = new HRCoreCountriesRepositoryStub(new List<string>() { "aa" }, "aa");
+            CoreCountriesService coreService = new CoreCountriesService(repository, null, null, null, null, null);
+            Region region = Region.Africa;
+            await Assert.ThrowsAsync<MemberAccessException>(async () => await coreService.GetHRLangagesByContinentAsync(region));
+        }
+
+        /// <summary>
+        /// TODO
+        /// </summary>
+        [Fact]
+        public async void CountriesService_On_GetHRLangagesByContinentAsync_With_Stub_Langage_Repository_Return_Langage_Without_Alteration()
+        {
+            LanguageRepositoryStub langRepo = new LanguageRepositoryStub();
+            langRepo.Langs.Add(new Language() { Name = "1"});
+            langRepo.Langs.Add(new Language() { Name = "2" });
+            langRepo.Langs.Add(new Language() { Name = "1" });
+            CoreCountriesService coreService = new CoreCountriesService(null, langRepo, null, null, null, null);
+            Region region = Region.Africa;
+            using(Task<IEnumerable<Language>> task = coreService.GetHRLangagesByContinentAsync(region))
+            {
+                await task;
+                Assert.NotNull(task.Result);
+                Assert.Equal(3, task.Result.ToList().Count);
+                Assert.Equal("1", task.Result.ToList()[0].Name);
+                Assert.Equal("2", task.Result.ToList()[1].Name);
+                Assert.Equal("1", task.Result.ToList()[2].Name);
+            }
+        }
+
     }
 }

@@ -273,33 +273,38 @@ namespace QuickType
     /// </summary>
     public enum Region {
         /// <summary>
-        /// 
+        /// Africa
         /// </summary>
         Africa,
         /// <summary>
-        /// 
+        /// South, central and north america
         /// </summary>
         Americas,
         /// <summary>
-        /// 
+        /// Asia
         /// </summary>
         Asia,
         /// <summary>
-        /// 
+        /// Empty (does not mean All)
         /// </summary>
         Empty,
         /// <summary>
-        /// 
+        /// Europe
         /// </summary>
         Europe,
         /// <summary>
-        /// 
+        /// Oceania
         /// </summary>
         Oceania,
         /// <summary>
-        /// 
+        /// Polar
         /// </summary>
-        Polar };
+        Polar,
+        /// <summary>
+        /// All regions including Empty.
+        /// </summary>
+        All
+    };
     /// <summary>
     /// Acronym enum
     /// </summary>

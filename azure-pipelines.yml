@@ -28,7 +28,20 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-- task: VSTest@2
+- task: DotNetCoreCLI@2  
+inputs:  
+command: test  
+projects: '**/*Test/*.csproj'  
+arguments: '--configuration $(buildConfiguration)'
+
+steps:
+# ...
+# do this after your tests have run
+- script: dotnet test <test-project> --logger trx
+- task: PublishTestResults@2
+  condition: succeededOrFailed()
   inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+    testRunner: VSTest
+    testResultsFiles: '**/*.trx'
+    
+  

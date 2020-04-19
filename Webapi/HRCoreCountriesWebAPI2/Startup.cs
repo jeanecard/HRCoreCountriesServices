@@ -1,12 +1,17 @@
-﻿using HRBordersAndCountriesWebAPI2.Utils;
+﻿using ControllersForkerTools;
+using ControllersForkerTools.Utils;
+using ControllersForkerTools.Utils.Interface;
 using HRCommon;
 using HRCommon.Interface;
 using HRCommonTools;
 using HRCommonTools.Interface;
+using HRControllersForker;
+using HRControllersForker.Interface;
 using HRCoreBordersModel;
 using HRCoreBordersRepository;
 using HRCoreBordersServices;
 using HRCoreCountriesRepository;
+using HRCoreCountriesRepository.Interface;
 using HRCoreCountriesServices;
 using HRCoreRepository.Interface;
 using Microsoft.AspNetCore.Builder;
@@ -26,6 +31,7 @@ namespace HRCoreCountriesWebAPI2
     {
         private static readonly String _VERSION_FOR_SWAGGER_DISLPAY = "Version 1 Release candidate";
         private static readonly String _NAME_FOR_SWAGGER_DISLPAY = "HR Core Services";
+        private readonly string _ALLOW_SPECIFIC_ORIGIN = "_myAllowSpecificOrigins";
 
         /// <summary>
         /// 
@@ -49,16 +55,25 @@ namespace HRCoreCountriesWebAPI2
             services.AddTransient<IHRCommonForkerUtils, HRCommonForkerUtils>();
             services.AddTransient<IHRBordersControllersForker, HRBordersControllersForker>();
             services.AddTransient<IHRCountriesControllersForker, HRCountriesControllersForker>();
-            services.AddSingleton(Configuration);
-
+            services.AddTransient<IHRContinentControllerForker, HRContinentControllerForker>();
+            services.AddTransient<IHRLangagesByContinentControllerForker, HRLangagesByContinentControllerForker>();
+            services.AddTransient<IHRCountriesByContinentControllerForker, HRCountriesByContinentControllerForker>();
+            services.AddTransient<IHRCountriesByContinentByLangageControllerForker, HRCountriesByContinentByLangageControllerForker>();
+            services.AddTransient<IHRBordersByContinentByLangageControllerForker, HRBordersByContinentByLangageControllerForker>();
+            services.AddTransient<IHRBordersByContinentControllerForker, HRBordersByContinentControllerForker>();
             services.AddTransient<IHRPaginer<HRBorder>, HRPaginer<HRBorder>>();
             services.AddTransient<IHRPaginer<HRCountry>, HRPaginer<HRCountry>>();
 
             services.AddTransient<IServiceWorkflowOnHRCoreRepository<HRCountry>, HRServiceWorkflowPaginationOnly<HRCountry>>();
             services.AddTransient<IServiceWorkflowOnHRCoreRepository<HRBorder>, HRServiceWorkflowPaginationOnly<HRBorder>>();
+            services.AddTransient<ILanguageRepository, MongoDBLanguageRepository>();
+            services.AddTransient<IHRCountryByContinentRepository, MongoDBCountryByContinentRepository>();
 
             services.AddSingleton<IHRCoreRepository<HRBorder>, PostGISCoreBordersRepository>();
             services.AddSingleton<IHRCoreRepository<HRCountry>, MongoDBCountriesRepository>();
+            services.AddSingleton<IHRCountryByContinentByLanguageRepository, MongoDBCountryByContinentByLanguageRepository>();
+
+
 
             services.AddTransient<ICoreCountriesService, CoreCountriesService>();
             services.AddTransient<ICoreBordersService, HRCoreBordersService>();
@@ -69,6 +84,16 @@ namespace HRCoreCountriesWebAPI2
                 swagger.Title = _NAME_FOR_SWAGGER_DISLPAY;
                 swagger.GenerateEnumMappingDescription = true;
             }) ;
+
+            //Allow CORS
+            services.AddCors(options =>
+            {
+                options.AddPolicy(_ALLOW_SPECIFIC_ORIGIN,
+                builder =>
+                {
+                    builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+                });
+            });
         }
         /// <summary>
         /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline. 
@@ -91,7 +116,10 @@ namespace HRCoreCountriesWebAPI2
             app.UseSwaggerUi3();
 
             app.UseHttpsRedirection();
+            app.UseCors(_ALLOW_SPECIFIC_ORIGIN);
             app.UseMvc();
+
+
         }
     }
 }

@@ -16,17 +16,18 @@
     <DocumentationFile>C:\Users\a647998\Source\Repos\HRCoreCountriesServices\Webapi\HRCoreCountriesWebAPI2\HRBordersAndCountriesWebAPI2.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-     <ProjectReference Include="..\..\DAL\HRCoreBordersRepository\HRCoreBordersRepository.csproj" />
-     <ProjectReference Include="..\..\DAL\HRCoreCountriesRepository\HRCoreCountriesRepository.csproj" />
-     <ProjectReference Include="..\..\Models\HRCommonModels\HRCommonModels.csproj" />
-     <ProjectReference Include="..\..\Models\HRCoreBordersModel\HRCoreBordersModel.csproj" />
-     <ProjectReference Include="..\..\Services\HRCoreBordersServices\HRCoreBordersServices.csproj" />
-     <ProjectReference Include="..\..\Services\HRCoreCountriesServices\HRCoreCountriesServices.csproj" />
-     <ProjectReference Include="..\..\Models\HRCoreCountriesModel\HRCoreCountriesModel.csproj" />
-     <ProjectReference Include="..\..\Tools\HRCommonTools\HRCommonTools.csproj" />
+    <ProjectReference Include="..\..\DAL\HRCoreBordersRepository\HRCoreBordersRepository.csproj" />
+    <ProjectReference Include="..\..\DAL\HRCoreCountriesRepository\HRCoreCountriesRepository.csproj" />
+    <ProjectReference Include="..\..\Models\HRCommonModels\HRCommonModels.csproj" />
+    <ProjectReference Include="..\..\Models\HRCoreBordersModel\HRCoreBordersModel.csproj" />
+    <ProjectReference Include="..\..\Services\HRCoreBordersServices\HRCoreBordersServices.csproj" />
+    <ProjectReference Include="..\..\Services\HRCoreCountriesServices\HRCoreCountriesServices.csproj" />
+    <ProjectReference Include="..\..\Models\HRCoreCountriesModel\HRCoreCountriesModel.csproj" />
+    <ProjectReference Include="..\..\Tools\HRCommonTools\HRCommonTools.csproj" />
+    <ProjectReference Include="..\..\Tools\HRControllerTools\ControllersForker\ControllersForkerTools.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="2.2.5" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.4" />
     <PackageReference Include="NSwag.AspNetCore" Version="13.0.3" />
   </ItemGroup>
 

@@ -4,7 +4,7 @@ using HRCoreCountriesServices;
 using QuickType;
 using System.Threading.Tasks;
 
-namespace HRBordersAndCountriesWebAPI2.Utils
+namespace HRControllersForker.Interface
 {
     /// <summary>
     /// HRCountriesControllersForker interface.

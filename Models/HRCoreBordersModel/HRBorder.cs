@@ -1,5 +1,7 @@
-﻿using NetTopologySuite.Geometries;
+﻿using GeoJSON.Net.Feature;
+using NetTopologySuite.Geometries;
 using Newtonsoft.Json;
+using QuickType;
 using System;
 
 namespace HRCoreBordersModel
@@ -87,5 +89,13 @@ namespace HRCoreBordersModel
         /// Lattitude of capital.
         /// </summary>
         public double LAT { get; set; }
+        /// <summary>
+        /// ISO Region (Europe, etc..)
+        /// </summary>
+        public String Continent { get; set;  }
+        /// <summary>
+        /// 
+        /// </summary>
+        public String BorderRegion { get; set; }
     }
 }

@@ -1,13 +1,12 @@
-using HRBordersAndCountriesWebAPI2.Utils;
 using HRCommonModel;
+using HRControllersForker;
 using HRCoreBordersModel;
-using HRCoreCountriesWebAPI2.Controllers;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using TemporaryStubsToMoveInXUnitStubs;
 using Xunit;
-using XUnitTestControllers.MockAndStubs;
 
 namespace XUnitTestControllers
 {
@@ -131,7 +130,7 @@ namespace XUnitTestControllers
             {
                 list.Add(i.ToString());
             }
-            CoreBordersServiceStub service = new CoreBordersServiceStub(list);
+            //CoreBordersServiceStub service = new CoreBordersServiceStub(list);
             PagingParameterInModel validModel = new PagingParameterInModel() { PageNumber = 1, PageSize = 50 };
             HRCommonForkerUtilsStub forkerUtil = new HRCommonForkerUtilsStub() { CanOrderReturn = true };
             HRBordersControllersForker forker = new HRBordersControllersForker(forkerUtil);
