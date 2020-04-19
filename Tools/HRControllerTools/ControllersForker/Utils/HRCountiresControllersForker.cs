@@ -1,15 +1,13 @@
 ﻿using HRCommonModel;
 using HRCommonModels;
-using HRCommonTools;
+using HRControllersForker.Interface;
 using HRCoreCountriesServices;
 using Microsoft.AspNetCore.Http;
 using QuickType;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
-namespace HRBordersAndCountriesWebAPI2.Utils
+namespace HRControllersForker
 {
     /// <summary>
     /// 

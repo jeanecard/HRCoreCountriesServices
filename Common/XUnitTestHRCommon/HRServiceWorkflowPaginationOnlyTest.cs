@@ -10,13 +10,23 @@ using XUnitTestHRCommon.Stubs;
 
 namespace XUnitTestHRCommon
 {
+    /// <summary>
+    /// TODO
+    /// </summary>
     public class HRServiceWorkflowPaginationOnlyTest
     {
+        private HRCoreRepositoryStub _repo = null;
+        private HRServiceWorkflowPaginationOnly<int> _stubbedPagination = null;
+        public HRServiceWorkflowPaginationOnlyTest()
+        {
+            _repo = new HRCoreRepositoryStub();
+            _stubbedPagination = new HRServiceWorkflowPaginationOnly<int>(_repo, new HRPaginer<int>());
+        }
         /// <summary>
         /// Test that GetQueryResultsAsync throw MemberAccessException if repo or paginer is null;
         /// </summary>
         [Fact]
-        public async void GetQueryResultsAsyncThrowMemberAccessExceptionOnMembersNull()
+        public async void HRServiceWorkflowPaginationOnly_GetQueryResultsAsync_Throw_MemberAccessException_On_Members_Null()
         {
             HRServiceWorkflowPaginationOnly<int> noRepo = new HRServiceWorkflowPaginationOnly<int>(null, new HRPaginer<int>());
             HRServiceWorkflowPaginationOnly<int> noPaginer = new HRServiceWorkflowPaginationOnly<int>(new HRCoreRepositoryStub(), null);
@@ -28,7 +38,7 @@ namespace XUnitTestHRCommon
         /// <summary>
         /// Test that GetQueryResultsAsync throw ArgumentNullException with a null pageModel 
         /// </summary>
-        public async void GetQueryResultsAsyncThrowArgumentNullExceptionWithNullPageModel()
+        public async void HRServiceWorkflowPaginationOnly_GetQueryResultsAsync_Throw_ArgumentNullException_With_Null_PageModel()
         {
             HRServiceWorkflowPaginationOnly<int> classic = new HRServiceWorkflowPaginationOnly<int>(new HRCoreRepositoryStub(), new HRPaginer<int>());
             await Assert.ThrowsAsync<ArgumentNullException>(async () => await classic.GetQueryResultsAsync(null, new HRSortingParamModel())); ;
@@ -38,24 +48,19 @@ namespace XUnitTestHRCommon
         /// <summary>
         /// Test that GetQueryResultsAsync throw NotSupportedException with a unsortable repository and a valid orderBy  
         /// </summary>
-        public async void GetQueryResultsAsyncThrowNotSupportedExceptionOnUnsortableRepository()
+        public async void HRServiceWorkflowPaginationOnly_GetQueryResultsAsync_Throw_NotSupportedException_On_Unsortable_Repository()
         {
-            HRCoreRepositoryStub repo = new HRCoreRepositoryStub();
-            repo._isSortable = false;
-            HRServiceWorkflowPaginationOnly<int> classic = new HRServiceWorkflowPaginationOnly<int>(repo, new HRPaginer<int>());
-
-            await Assert.ThrowsAsync<NotSupportedException>(async () => await classic.GetQueryResultsAsync(new PagingParameterInModel(), new HRSortingParamModel() { OrderBy = "name;asc" })); ;
+            _repo._isSortable = false;
+            await Assert.ThrowsAsync<NotSupportedException>(async () => await _stubbedPagination.GetQueryResultsAsync(new PagingParameterInModel(), new HRSortingParamModel() { OrderBy = "name;asc" })); ;
         }
         [Fact]
         /// <summary>
         /// Test that GetQueryResultsAsync Retrun SortableAndPaginable from repo with a valid orderBy  
         /// </summary>
-        public async void GetQueryResultsAsyncRetrunRepositoryGetOrderedAndPaginatedsAsync()
+        public async void HRServiceWorkflowPaginationOnly_GetQueryResultsAsync_Return_Repository_Get_Ordered_And_Paginated_Async()
         {
-            HRCoreRepositoryStub repo = new HRCoreRepositoryStub();
-            repo._isSortable = true;
-            HRServiceWorkflowPaginationOnly<int> classic = new HRServiceWorkflowPaginationOnly<int>(repo, new HRPaginer<int>());
-            Task<PagingParameterOutModel<int>> task = classic.GetQueryResultsAsync(
+            _repo._isSortable = true;
+            Task<PagingParameterOutModel<int>> task = _stubbedPagination.GetQueryResultsAsync(
                 new PagingParameterInModel(),
                 new HRSortingParamModel() { OrderBy = "name;asc" });
             await task;
@@ -67,13 +72,11 @@ namespace XUnitTestHRCommon
         /// <summary>
         /// Test that GetQueryResultsAsync Retrun GetOrderedsAsync from repo unable to paginate and with a valid orderBy  
         /// </summary>
-        public async void GetQueryResultsAsyncRetrunRepositoryGetOrderedsAsync()
+        public async void HRServiceWorkflowPaginationOnly_GetQueryResultsAsyncRetrunRepositoryGetOrderedsAsync()
         {
-            HRCoreRepositoryStub repo = new HRCoreRepositoryStub();
-            repo._isSortable = true;
-            repo._isPaginable = false;
-            HRServiceWorkflowPaginationOnly<int> classic = new HRServiceWorkflowPaginationOnly<int>(repo, new HRPaginer<int>());
-            Task<PagingParameterOutModel<int>> task = classic.GetQueryResultsAsync(
+            _repo._isSortable = true;
+            _repo._isPaginable = false;
+            Task<PagingParameterOutModel<int>> task = _stubbedPagination.GetQueryResultsAsync(
                 new PagingParameterInModel() { PageNumber = 0, PageSize = 10 },
                 new HRSortingParamModel() { OrderBy = "name;asc" });
             await task;
@@ -86,13 +89,11 @@ namespace XUnitTestHRCommon
         /// <summary>
         /// Test that GetQueryResultsAsync with invalid PageModel throw InvalidProgramException  
         /// </summary>
-        public async void GetQueryResultsAsyncWithInvalidPageModelThrowInvalidProgramException()
+        public async void HRServiceWorkflowPaginationOnly_GetQueryResultsAsyncWithInvalidPageModelThrowInvalidProgramException()
         {
-            HRCoreRepositoryStub repo = new HRCoreRepositoryStub();
-            repo._isSortable = true;
-            repo._isPaginable = false;
-            HRServiceWorkflowPaginationOnly<int> classic = new HRServiceWorkflowPaginationOnly<int>(repo, new HRPaginer<int>());
-            await Assert.ThrowsAsync<InvalidProgramException>(async () => await classic.GetQueryResultsAsync(
+            _repo._isSortable = true;
+            _repo._isPaginable = false;
+            await Assert.ThrowsAsync<InvalidProgramException>(async () => await _stubbedPagination.GetQueryResultsAsync(
                 new PagingParameterInModel() { PageNumber = 500, PageSize = 10 },
                 new HRSortingParamModel() { OrderBy = "name;asc" }));
         }
@@ -100,13 +101,11 @@ namespace XUnitTestHRCommon
         /// <summary>
         /// Test that GetQueryResultsAsync Retrun SortableAndPaginable from paginable repo. without orderBy  
         /// </summary>
-        public async void GetQueryResultsAsyncRetrunRepositoryGetPaginatedsAsync()
+        public async void HRServiceWorkflowPaginationOnly_GetQueryResultsAsyncRetrunRepositoryGetPaginatedsAsync()
         {
-            HRCoreRepositoryStub repo = new HRCoreRepositoryStub();
-            repo._isSortable = true;
-            repo._isPaginable = true;
-            HRServiceWorkflowPaginationOnly<int> classic = new HRServiceWorkflowPaginationOnly<int>(repo, new HRPaginer<int>());
-            Task<PagingParameterOutModel<int>> task = classic.GetQueryResultsAsync(
+            _repo._isSortable = true;
+            _repo._isPaginable = true;
+            Task<PagingParameterOutModel<int>> task = _stubbedPagination.GetQueryResultsAsync(
                 new PagingParameterInModel() { PageNumber = 0, PageSize = 20 },
                 new HRSortingParamModel() { OrderBy = "" });
             await task;
@@ -119,13 +118,11 @@ namespace XUnitTestHRCommon
         /// <summary>
         /// Test that GetQueryResultsAsync Retrun GetFullsAsync from unpaginable repo without ordering.
         /// /// </summary>
-        public async void GetQueryResultsAsyncRetrunRepositoryGetFullsAsync()
+        public async void HRServiceWorkflowPaginationOnly_GetQueryResultsAsyncRetrunRepositoryGetFullsAsync()
         {
-            HRCoreRepositoryStub repo = new HRCoreRepositoryStub();
-            repo._isSortable = true;
-            repo._isPaginable = false;
-            HRServiceWorkflowPaginationOnly<int> classic = new HRServiceWorkflowPaginationOnly<int>(repo, new HRPaginer<int>());
-            Task<PagingParameterOutModel<int>> task = classic.GetQueryResultsAsync(
+            _repo._isSortable = true;
+            _repo._isPaginable = false;
+            Task<PagingParameterOutModel<int>> task = _stubbedPagination.GetQueryResultsAsync(
                 new PagingParameterInModel() { PageNumber = 0, PageSize = 10 },
                 null);
             await task;

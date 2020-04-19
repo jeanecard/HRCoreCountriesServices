@@ -3,13 +3,15 @@ using HRCommonModel;
 using HRCommonModels;
 using HRCoreBordersModel;
 using HRCoreBordersServices;
+using QuickType;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace XUnitTestControllers
+namespace TemporaryStubsToMoveInXUnitStubs
 {
-    internal class CoreBordersServiceStub : ICoreBordersService
+    
+    public class CoreBordersServiceStub : ICoreBordersService
     {
         private readonly List<HRBorder> _list = new List<HRBorder>();
         public bool ThrowException = false;
@@ -25,7 +27,7 @@ namespace XUnitTestControllers
                 }
                 return _exception;
             }
-            internal set
+            set
             {
                 _exception = value;
             } }
@@ -75,6 +77,26 @@ namespace XUnitTestControllers
         bool IPaginable.IsPaginable()
         {
             return IsPaginable;
+        }
+
+        public Task<IEnumerable<string>> GetContinentsAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<string> GetContinentByIDAsync(string id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<HRBorder>> GetHRBorderByContinentByLanguageAsync(Region region, string langageId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<HRBorder>> GetHRBordersByContinentAsync(Region region)
+        {
+            throw new NotImplementedException();
         }
 
         public CoreBordersServiceStub(List<String> bordersID)

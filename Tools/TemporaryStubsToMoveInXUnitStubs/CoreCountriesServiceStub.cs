@@ -6,13 +6,16 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace XUnitTestControllers
+namespace TemporaryStubsToMoveInXUnitStubs
 {
-    internal class CoreCountriesServiceStub : ICoreCountriesService
+
+    public class CoreCountriesServiceStub : ICoreCountriesService
     {
         private readonly List<HRCountry> _list = new List<HRCountry>();
+        private readonly List<String> _originalList = null;
         public bool ThrowException = false;
         private Exception _exceptionToThrow = null;
+        private List<Language> _languages = new List<Language>();
 
         public Exception ExceptionToThrow { get
             {
@@ -22,11 +25,13 @@ namespace XUnitTestControllers
                 }
                 return _exceptionToThrow;
             }
-            internal set
+            set
             {
                 _exceptionToThrow = value;
             }
         }
+
+        public List<Language> Languages { get => _languages; set => _languages = value; }
 
         /// <summary>
         /// Return list or raise exception.
@@ -105,15 +110,85 @@ namespace XUnitTestControllers
             return true;
         }
 
+        public IEnumerable<String> GetContinents()
+        {
+            if (ThrowException)
+            {
+                throw ExceptionToThrow;
+            }
+            List<String> retour = new List<string>();
+            foreach(String iterator in _originalList)
+            {
+                retour.Add(iterator);
+            }
+            return retour;
+        }
+
+        public String GetContinentByID(string id)
+        {
+            if (ThrowException)
+            {
+                throw ExceptionToThrow;
+            }
+            foreach (String iterator in _originalList)
+            {
+                if (iterator == id)
+                    return id;
+            }
+            return null;
+        }
+
+
+        public async Task<IEnumerable<Language>> GetHRLangagesByContinentAsync(Region region)
+        {
+            if (ThrowException)
+            {
+                throw ExceptionToThrow;
+            }
+            await Task.Delay(1);
+            if (Languages != null)
+            {
+                return Languages;
+            }
+            return null;
+        }
+
+        public async Task<IEnumerable<HRCountry>> GetHRCountriesByContinentAsync(Region region)
+        {
+            if (ThrowException)
+            {
+                throw ExceptionToThrow;
+            }
+            await Task.Delay(1);
+            return _list;
+        }
+
+        public async Task<IEnumerable<Language>> GetAllLangagesAsync()
+        {
+            if (ThrowException)
+            {
+                throw ExceptionToThrow;
+            }
+            await Task.Delay(1);
+            return _languages;
+        }
+
+        public Task<IEnumerable<HRCountry>> GetHRCountriesByContinentByLanguageAsync(Region region, string languageID)
+        {
+            throw new NotImplementedException();
+        }
+
+
         /// <summary>
         /// Construct a list of HRCountry from ID String list.
         /// </summary>
         /// <param name="countriesID"></param>
         public CoreCountriesServiceStub(List<String> countriesID)
         {
+            _originalList = countriesID;
             if (countriesID != null)
             {
-                foreach (String iterator in countriesID)
+                foreach (String iterator in _originalList)
                 {
                     HRCountry countryi = new HRCountry() { Alpha2Code = iterator, Alpha3Code = iterator };
                     _list.Add(countryi);

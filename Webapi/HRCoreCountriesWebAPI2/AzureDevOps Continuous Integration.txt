@@ -1,0 +1,20 @@
+﻿Configuration d'Azure Pipelines. Cela peut prendre quelques minutes...
+
+Création du projet Azure DevOps HRCoreCountriesServices CI sur hrcorpindustries.................terminé
+
+Création des ressources Azure : 
+  Création du groupe de ressources FullCoreServices-CI_RessourceGroup...terminé
+  Création du plan App Service FullCoreServices-CI_PlanAppService........terminé
+  Création de l'App Service FullCoreServices-CI......................terminé
+
+Création d'Azure Pipelines.................................................terminé
+
+La configuration du pipeline de build pour le projet Azure DevOps HRCoreCountriesServices CI s'est effectuée correctement. Les builds sont désormais générées et déployées automatiquement sur App Service FullCoreServices-CI à chaque mise à jour du code.
+Détails :
+  Groupe de ressources Azure: https://ms.portal.azure.com/#resource/subscriptions/dcc22678-7a48-4e9b-b5b6-9aed01dc4b78/resourceGroups/FullCoreServices-CI_RessourceGroup/overview
+  Azure App Service: http://FullCoreServices-CI.azurewebsites.net
+  Projet Azure DevOps: HRCoreCountriesServices CI (https://hrcorpindustries.visualstudio.com/HRCoreCountriesServices CI)
+  Pipeline de build Azure DevOps: https://hrcorpindustries.visualstudio.com/10cd5803-c4f2-4b13-b02b-abe830c911c2/_build/definition?definitionId=5
+  Pipeline de mise en production Azure DevOps: https://hrcorpindustries.visualstudio.com/10cd5803-c4f2-4b13-b02b-abe830c911c2/_release?definitionId=1
+
+

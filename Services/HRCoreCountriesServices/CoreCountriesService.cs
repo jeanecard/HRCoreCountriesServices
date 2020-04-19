@@ -1,10 +1,12 @@
 ﻿using HRCommon.Interface;
 using HRCommonModel;
 using HRCommonModels;
+using HRCoreCountriesRepository.Interface;
 using HRCoreRepository.Interface;
 using Microsoft.Extensions.Logging;
 using QuickType;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace HRCoreCountriesServices
@@ -12,7 +14,10 @@ namespace HRCoreCountriesServices
     public class CoreCountriesService : ICoreCountriesService
     {
         private readonly ILogger<CoreCountriesService> _logger = null;
-        private readonly IHRCoreRepository<HRCountry> _repository = null;
+        private readonly IHRCoreRepository<HRCountry> _countryRepository = null;
+        private readonly IHRCountryByContinentRepository _countryByContinentRepo = null;
+        private readonly ILanguageRepository _langRepository = null;
+        private readonly IHRCountryByContinentByLanguageRepository _continentByLanguageRepo = null;
         private readonly IServiceWorkflowOnHRCoreRepository<HRCountry> _workflow = null;
         private readonly static ushort _maxPageSize = 50;
         //Hide default constructor as we must do DI with ICountriesRepository
@@ -21,18 +26,24 @@ namespace HRCoreCountriesServices
         }
         //1- Constructor injection of CountiresRepository
         public CoreCountriesService(
-            IHRCoreRepository<HRCountry> repo,
+            IHRCoreRepository<HRCountry> countryRepo,
+            ILanguageRepository langRepo,
             IServiceWorkflowOnHRCoreRepository<HRCountry> workflow,
-            ILogger<CoreCountriesService> logger)
+            ILogger<CoreCountriesService> logger,
+            IHRCountryByContinentRepository countryByContinentRepo,
+            IHRCountryByContinentByLanguageRepository continentByLanguageRepo)
         {
             //1-
-            _repository = repo;
+            _countryRepository = countryRepo;
+            _langRepository = langRepo;
+            _continentByLanguageRepo = continentByLanguageRepo;
             _workflow = workflow;
             if (_workflow != null)
             {
                 _workflow.MaxPageSize = _maxPageSize;
             }
             _logger = logger;
+            _countryByContinentRepo = countryByContinentRepo;
         }
 
         /// <summary>
@@ -48,10 +59,10 @@ namespace HRCoreCountriesServices
         {
             HRCountry retour = null;
             //1-
-            if (_repository != null)
+            if (_countryRepository != null)
             {
                 //1.1-
-                using (Task<HRCountry> countryTask = _repository.GetAsync(id))
+                using (Task<HRCountry> countryTask = _countryRepository.GetAsync(id))
                 {
                     //1.2-
                     await countryTask;
@@ -61,7 +72,7 @@ namespace HRCoreCountriesServices
             }
             else
             {
-                if(_logger != null)
+                if (_logger != null)
                 {
                     _logger.LogError("_repository is null in CoreCountriesService:GetCountryAsync");
                 }
@@ -77,7 +88,7 @@ namespace HRCoreCountriesServices
         /// <returns></returns>
         public bool IsSortable()
         {
-            return _repository.IsSortable();
+            return _countryRepository.IsSortable();
         }
         /// <summary>
         /// Not supported but with the Repository in version 1.
@@ -85,7 +96,7 @@ namespace HRCoreCountriesServices
         /// <returns></returns>
         public bool IsPaginable()
         {
-            return _repository.IsPaginable();
+            return _countryRepository.IsPaginable();
         }
         /// <summary>
         /// Return paginated items
@@ -105,7 +116,7 @@ namespace HRCoreCountriesServices
 
                 throw new MemberAccessException();
             }
-            if(pageModel == null)
+            if (pageModel == null)
             {
                 if (_logger != null)
                 {
@@ -120,6 +131,134 @@ namespace HRCoreCountriesServices
                 retour = retourTask.Result;
             }
             return retour;
+        }
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<String> GetContinents()
+        {
+            List<String> retour = new List<String>();
+            var values = Enum.GetValues(typeof(Region));
+            foreach (Region iter in values)
+            {
+                retour.Add(iter.ToString());
+            }
+            retour.Sort();
+            return retour;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public String GetContinentByID(string id)
+        {
+            String idUppered = id.ToUpper();
+            var values = Enum.GetValues(typeof(Region));
+            foreach (Region iter in values)
+            {
+                if (iter.ToString().ToUpper() == idUppered)
+                {
+                    return iter.ToString();
+                }
+            }
+            return String.Empty;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="region"></param>
+        /// <returns></returns>
+        public async Task<IEnumerable<Language>> GetHRLangagesByContinentAsync(Region region)
+        {
+            if (_langRepository == null)
+            {
+                if (_logger != null)
+                {
+                    _logger.LogError("_repository is null in CoreCountriesService:GetHRLangagesByContinentAsync");
+                }
+                throw new MemberAccessException("CoreCountriesService initialization failed..");
+            }
+            else
+            {
+                using (Task<IEnumerable<Language>> task = _langRepository.GetHRLangagesByContinentAsync(region))
+                {
+                    await task;
+                    return task.Result;
+                }
+            }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="region"></param>
+        /// <returns></returns>
+        public async Task<IEnumerable<HRCountry>> GetHRCountriesByContinentAsync(Region region)
+        {
+            if (_countryByContinentRepo == null)
+            {
+                if (_logger != null)
+                {
+                    _logger.LogError("_repository is null in CoreCountriesService:GetHRCountriesByContinentAsync");
+                }
+                throw new MemberAccessException("CoreCountriesService initialization failed..");
+            }
+            else
+            {
+                using (Task<IEnumerable<HRCountry>> task = _countryByContinentRepo.GetHRCountriesByContinentAsync(region))
+                {
+                    await task;
+                    return task.Result;
+                }
+            }
+        }
+        /// <summary>
+        /// TODO
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IEnumerable<Language>> GetAllLangagesAsync()
+        {
+            if (_langRepository == null)
+            {
+                if (_logger != null)
+                {
+                    _logger.LogError("_repository is null in CoreCountriesService:GetAllLangagesAsync");
+                }
+                throw new MemberAccessException("CoreCountriesService initialization failed..");
+            }
+            else
+            {
+                using (Task<IEnumerable<Language>> task = _langRepository.GetHRAllLangagesAsync())
+                {
+                    await task;
+                    return task.Result;
+                }
+            }
+        }
+
+        public async Task<IEnumerable<HRCountry>> GetHRCountriesByContinentByLanguageAsync(Region region, string languageID)
+        {
+            if (_continentByLanguageRepo == null)
+            {
+                if (_logger != null)
+                {
+                    _logger.LogError("_repository is null in CoreCountriesService:GetHRCountriesByContinentByLanguageAsync");
+                }
+                throw new MemberAccessException("CoreCountriesService initialization failed..");
+            }
+            else
+            {
+                using (Task<IEnumerable<HRCountry>> task = _continentByLanguageRepo.GetHRCountriesByContinentByLanguageAsync(region, languageID))
+                {
+                    await task;
+                    return task.Result;
+                }
+            }
         }
     }
 }

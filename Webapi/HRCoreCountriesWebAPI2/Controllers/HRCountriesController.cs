@@ -1,7 +1,6 @@
-﻿using HRBordersAndCountriesWebAPI2.Utils;
-using HRCommonModel;
+﻿using HRCommonModel;
 using HRCommonModels;
-using HRCommonTools;
+using HRControllersForker.Interface;
 using HRCoreCountriesServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -118,6 +117,11 @@ namespace HRCoreCountriesWebAPI2.Controllers
                     }
                     else
                     {
+                        if (_logger != null)
+                        {
+                            _logger.LogError("Ca marche po");
+                        }
+
                         return StatusCode(result.Result.Item1);
                     }
                 }

@@ -1,13 +1,13 @@
-using HRBordersAndCountriesWebAPI2.Utils;
 using HRCommonModel;
-using HRCoreCountriesWebAPI2.Controllers;
+using HRControllersForker;
+using HRControllersForker.Interface;
 using Microsoft.AspNetCore.Http;
 using QuickType;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using TemporaryStubsToMoveInXUnitStubs;
 using Xunit;
-using XUnitTestControllers.MockAndStubs;
 
 namespace XUnitTestControllers
 {
@@ -18,7 +18,7 @@ namespace XUnitTestControllers
         /// Test that GetByID with an unknow ID return status code 404 and a HRBorder null.
         /// </summary>
         [Fact]
-        public async void HRCountriesControllerOnGetByIDUnknownExpectStatusCode404()
+        public async void HRCountriesController_On_GetByID_Unknown_Expect_StatusCode_404()
         {
             List<String> list = new List<String>() {
                 "FR",
@@ -38,7 +38,7 @@ namespace XUnitTestControllers
         /// This case can not happen with the WebAPI microsoft as this query is processes by Get(PagingParam)
         /// </summary>
         [Fact]
-        public async void HRCountriesControllerOnGetByIDNullExpectStatus400BadRequest()
+        public async void HRCountriesController_On_GetByID_Null_Expect_Status400_BadRequest()
         {
             List<String> list = new List<String>() {
                 "FR",
@@ -58,7 +58,7 @@ namespace XUnitTestControllers
         /// Test that GetID return status code 500 if his _service is null (problem with DI)
         /// </summary>
         [Fact]
-        public async void HRCountriesControllerOnGetByIDWithNullServiceExpectStatus500InternalServerError()
+        public async void HRCountriesController_On_GetByID_With_Null_Service_Expect_Status500_InternalServerError()
         {
             IHRCommonForkerUtils util = new HRCommonForkerUtilsStub() { CanOrderReturn = true };
             HRCountriesControllersForker forker = new HRCountriesControllersForker(util);
@@ -76,7 +76,7 @@ namespace XUnitTestControllers
         /// Test that GetID return status code 500 and HRBorder Null in case of any exception raised by service
         /// </summary>
         [Fact]
-        public async void HRCountriesControllerOnGetByIDWithExceptionThrownByServiceExpectStatus500InternalServerError()
+        public async void HRCountriesController_On_GetByID_With_Exception_Thrown_By_Service_Expect_Status500_InternalServerError()
         {
             List<String> list = new List<String>() {
                 "FR",
@@ -97,7 +97,7 @@ namespace XUnitTestControllers
         /// Test that consistant call of GetByID return the Expected result HRBorder and a http status code of 200
         /// </summary>
         [Fact]
-        public async void HRCountriesControllerOnGetByIDWithExistingItemExpectItemAndCodeStatus200()
+        public async void HRCountriesController_On_GetByID_With_Existing_Item_Expect_Item_And_CodeStatus_200()
         {
             List<String> list = new List<String>() {"FR",  "US" };
             IHRCommonForkerUtils util = new HRCommonForkerUtilsStub() { CanOrderReturn = true };
@@ -118,7 +118,7 @@ namespace XUnitTestControllers
         /// Test that an invalid PagingIn on GetAll return a http status 416 and a null result.
         /// </summary>
         [Fact]
-        public async void HRCountriesControllerOnGetAllWithInvalidPagingInExpectStatus416RequestedRangeNotSatisfiable()
+        public async void HRCountriesController_On_GetAll_With_Invalid_PagingIn_Expect_Status416_RequestedRangeNotSatisfiable()
         {
             List<String> list = new List<String>() {
                 "FR",
@@ -144,7 +144,7 @@ namespace XUnitTestControllers
         /// Test that a call to GetAll with any exception raised by his service return a 500 http status code and a null result.
         /// </summary>
         [Fact]
-        public async void HRCountriesControllerOnGetAllWithExceptionThrownByServiceExpectStatus500InternalServerError()
+        public async void HRCountriesController_On_GetAll_With_Exception_Thrown_By_Service_Expect_Status500_InternalServerError()
         {
             List<String> list = new List<String>() {
                 "FR",
@@ -170,7 +170,7 @@ namespace XUnitTestControllers
         /// Test normal condition Success and partial result returned.
         /// </summary>
         [Fact]
-        public async void HRCountriesControllerOnGetAllWithValidPagingInExpectItemsAndCodeStatus200()
+        public async void HRCountriesController_On_GetAll_With_Valid_PagingIn_Expect_Items_And_Code_Status200()
         {
             List<String> list = new List<String>() {
                 "FR",

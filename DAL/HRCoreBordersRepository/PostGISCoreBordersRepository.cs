@@ -9,6 +9,7 @@ using HRCoreRepository.Interface;
 using log4net;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
+using QuickType;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -116,6 +117,28 @@ namespace HRCoreBordersRepository
         }
 
         /// <summary>
+        /// TODO
+        /// </summary>
+        /// <param name="borderIDs"></param>
+        /// <returns></returns>
+        public async Task<IEnumerable<HRBorder>> GetAsync(IEnumerable<string> borderIDs)
+        {
+            using (Task<IEnumerable<HRBorder>> bordersAction = ReadBordersMultiWithDapperAsync(borderIDs))
+            {
+                await bordersAction;
+                if (bordersAction.Status == TaskStatus.RanToCompletion)
+                {
+                    return bordersAction.Result;
+                }
+                else 
+                {
+                    throw new Exception("Something get wrong in PostGisrepository : GetAsync(IEnumerable<string> borderIDs)");
+                }
+            }
+        }
+
+
+        /// <summary>
         /// Mapping from DataBase with Dapper
         /// </summary>
         /// <param name="borderID">a BorderID</param>
@@ -133,7 +156,14 @@ namespace HRCoreBordersRepository
                     using (Task<IEnumerable<HRBorder>> retourTask = conn.QueryAsync<HRBorder>(GetSQLQuery(true, borderID, null)))
                     {
                         await retourTask;
-                        retour = retourTask.Result;
+                        if (retourTask.IsCompleted)
+                        {
+                            retour = retourTask.Result;
+                        }
+                        else
+                        {
+                            throw new Exception("ReadBordersWithDapperAsync : Can not complete Task.");
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -147,6 +177,97 @@ namespace HRCoreBordersRepository
             }
             return retour;
         }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="borderIDs"></param>
+        /// <returns></returns>
+        private async Task<IEnumerable<HRBorder>> ReadBordersMultiWithDapperAsync(IEnumerable<string> borderIDs)
+        {
+            IEnumerable<HRBorder> retour = null;
+            String cxString = _config.GetConnectionString(CONNECTION_STRING_KEY);
+            cxString = String.Format(cxString, _config[_DBUSER], _config[_DBPASSWORD]);
+            using (var conn = new NpgsqlConnection(cxString))
+            {
+                conn.Open();
+                try
+                {
+                    using (Task<IEnumerable<HRBorder>> retourTask = conn.QueryAsync<HRBorder>(GetSQLQueryMulti(true, borderIDs)))
+                    {
+                        await retourTask;
+                        if (retourTask.IsCompleted)
+                        {
+                            retour = retourTask.Result;
+                        }
+                        else
+                        {
+                            throw new Exception("ReadBordersWithDapperAsync : Can not complete Task.");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    if (_logger != null)
+                    {
+                        _logger.Error(ex.Message);
+                    }
+                    throw;
+                }
+            }
+            return retour;
+
+        }
+
+        /// <summary>
+        /// TODO : Badass !! copy paste from sigle sql .. 
+        /// </summary>
+        /// <param name="v"></param>
+        /// <param name="borderIDs"></param>
+        /// <param name="p"></param>
+        /// <returns></returns>
+        private string GetSQLQueryMulti(bool isforDapper, IEnumerable<string> borderIDs)
+        {
+            StringBuilder sb = new StringBuilder();
+            if (isforDapper)
+            {
+                sb.Append(SQLQUERYFORDAPPER);
+            }
+            else
+            {
+                sb.Append(SQLQUERY);
+            }
+            if(borderIDs != null)
+            {
+                int bordersCount = borderIDs.Count<string>();
+                int i = 0;
+                if (bordersCount > 0)
+                {
+                    sb.Append("WHERE ISO2 IN (");
+                    foreach (String iter in borderIDs)
+                    {
+                        if (!String.IsNullOrEmpty(iter)
+                            && iter.Length == 2)
+                        {
+                            sb.Append("'");
+                            //Cheat Code to avoid SQL injection. Indeed pbm with SQL Command and SQLParameters on GeometryColumn with postgis.
+                            sb.Append(iter.Substring(0, 2).ToUpper());
+                            sb.Append("'");
+                            if (i != (bordersCount - 1))
+                            {
+                                sb.Append(",");
+                            }
+                            i++;
+                        }
+                    }
+                    sb.Append(")");
+                }
+            }
+            return sb.ToString();
+       }
+
+
 
         /// <summary>
         /// Generate SQLQuery with WHERE clause if necessary on borderID and create ORder BY Clause.
@@ -171,15 +292,15 @@ namespace HRCoreBordersRepository
             if (!String.IsNullOrEmpty(borderID)
                 && borderID.Length == 2)
             {
-                sb.Append("WHERE FIPS = '");
+                sb.Append("WHERE ISO2 = '");
                 //Cheat Code to avoid SQL injection. Indeed pbm with SQL Command and SQLParameters on GeometryColumn with postgis.
-                sb.Append(borderID.Substring(0, 2));
+                sb.Append(borderID.Substring(0, 2).ToUpper());
                 sb.Append("'");
             }
             if (pageInModel != null && orderBy == null)
             {
                 //Set default order by as pagination required order by 
-                orderBy = new HRSortingParamModel() { OrderBy = "FIPS;ASC" };
+                orderBy = new HRSortingParamModel() { OrderBy = "ISO2;ASC" };
             }
             if (orderBy != null)
             {

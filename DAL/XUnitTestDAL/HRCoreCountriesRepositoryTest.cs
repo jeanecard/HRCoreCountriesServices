@@ -11,14 +11,13 @@ namespace XUnitTestDAL
         /// <summary>
         /// Test that GetAsync return null when id is null or Empty
         /// </summary>
-        [Fact]
-        public async void TestGetAsyncReturnNullWithIDNullOrEmpty()
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        public async void MongoDBCountriesRepository_GetAsync_With_ID_Null_Or_Empty_Expect_Return_Null(String idCountry)
         {
             MongoDBCountriesRepository repo = new MongoDBCountriesRepository(null, null);
-            Task<HRCountry> task = repo.GetAsync(null);
-            await task;
-            Assert.Null(task.Result);
-            task = repo.GetAsync(String.Empty);
+            Task<HRCountry> task = repo.GetAsync(idCountry);
             await task;
             Assert.Null(task.Result);
         }
