@@ -3,6 +3,8 @@ using ControllersForkerTools.Utils;
 using ControllersForkerTools.Utils.Interface;
 using GeonameServices.Interface;
 using GeonameSrvices;
+using HRBirdServices;
+using HRBirdsRepository;
 using HRCommon;
 using HRCommon.Interface;
 using HRCommonTools;
@@ -76,11 +78,18 @@ namespace HRCoreCountriesWebAPI2
             services.AddSingleton<IHRCoreRepository<HRCountry>, MongoDBCountriesRepository>();
             services.AddSingleton<IHRCountryByContinentByLanguageRepository, MongoDBCountryByContinentByLanguageRepository>();
 
-
-
             services.AddTransient<ICoreCountriesService, CoreCountriesService>();
             services.AddTransient<ICoreBordersService, HRCoreBordersService>();
             services.AddTransient<IHRGeonameService, HRGeonameService>();
+
+            services.AddTransient<IHRBirdService, HRBirdService>();
+            services.AddTransient<IHRBirdControllersForker, HRBirdControllersForker>();
+            services.AddTransient<IHRBirdRepository, HRBirdRepository>();
+
+
+
+
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
             // Register the Swagger services
             services.AddSwaggerDocument(swagger => {

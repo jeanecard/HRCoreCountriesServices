@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Models\HRBirdsModel\HRBirdsModel\HRBirdsModel.csproj" />
     <ProjectReference Include="..\..\Models\HRCommonModels\HRCommonModels.csproj" />
     <ProjectReference Include="..\..\Models\HRCoreCountriesModel\HRCoreCountriesModel.csproj" />
     <ProjectReference Include="..\..\Tools\HRCommonTools\HRCommonTools.csproj" />
