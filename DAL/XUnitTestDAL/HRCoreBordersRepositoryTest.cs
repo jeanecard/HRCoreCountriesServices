@@ -10,7 +10,7 @@ namespace XUnitTestDAL
 {
     public class HRCoreBordersRepositoryTest
     {
-        private readonly PostGISCoreBordersRepository _repo = null;
+        PostGISCoreBordersRepository _repo = null;
         public HRCoreBordersRepositoryTest()
         {
             _repo = new PostGISCoreBordersRepository(null, new HRPaginer<HRBorder>());
