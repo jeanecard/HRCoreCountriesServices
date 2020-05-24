@@ -21,8 +21,7 @@
     <ProjectReference Include="..\..\DAL\HRCoreCountriesRepository\HRCoreCountriesRepository.csproj" />
     <ProjectReference Include="..\..\Models\HRCommonModels\HRCommonModels.csproj" />
     <ProjectReference Include="..\..\Models\HRCoreBordersModel\HRCoreBordersModel.csproj" />
-    <ProjectReference Include="..\..\Models\HRGeonameModel\HRGeonameModel.csproj" />
-    <ProjectReference Include="..\..\Services\GeonameSrvices\GeonameServices.csproj" />
+    <ProjectReference Include="..\..\Services\GeonameServices\GeonameServices\GeonameServices.csproj" />
     <ProjectReference Include="..\..\Services\HRBirdServices\HRBirdService\HRBirdService.csproj" />
     <ProjectReference Include="..\..\Services\HRCoreBordersServices\HRCoreBordersServices.csproj" />
     <ProjectReference Include="..\..\Services\HRCoreCountriesServices\HRCoreCountriesServices.csproj" />

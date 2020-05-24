@@ -27,7 +27,6 @@ namespace HRBordersAndCountriesWebAPI2.Controllers
         private readonly ILogger<HRBirdController> _logger = null;
         private readonly IHRBirdService _birdService = null;
         private readonly IConfiguration _config = null;
-        private readonly static ushort _maxPageSize = 50;
         private readonly IHRBirdControllersForker _util = null;
 
         private HRBirdController()

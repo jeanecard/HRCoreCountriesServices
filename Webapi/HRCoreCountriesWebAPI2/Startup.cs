@@ -1,8 +1,6 @@
 ﻿using ControllersForkerTools;
 using ControllersForkerTools.Utils;
 using ControllersForkerTools.Utils.Interface;
-using GeonameServices.Interface;
-using GeonameSrvices;
 using HRBirdServices;
 using HRBirdsRepository;
 using HRCommon;
@@ -18,6 +16,8 @@ using HRCoreCountriesRepository;
 using HRCoreCountriesRepository.Interface;
 using HRCoreCountriesServices;
 using HRCoreRepository.Interface;
+using HRGeoLocator.Services;
+using HRGeoLocator.Services.Interface;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -80,7 +80,9 @@ namespace HRCoreCountriesWebAPI2
 
             services.AddTransient<ICoreCountriesService, CoreCountriesService>();
             services.AddTransient<ICoreBordersService, HRCoreBordersService>();
+
             services.AddTransient<IHRGeonameService, HRGeonameService>();
+            services.AddTransient<IWebCamService, WebCamService>();
 
             services.AddTransient<IHRBirdService, HRBirdService>();
             services.AddTransient<IHRBirdControllersForker, HRBirdControllersForker>();
