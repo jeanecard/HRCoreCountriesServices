@@ -1,0 +1,1 @@
+﻿dotnet ef dbcontext scaffold "host = db.qgiscloud.com; Username = jean; Password = saucisse; Database = gxxawt_obddnf" Npgsql.EntityFrameworkCore.PostgreSQL -o Models

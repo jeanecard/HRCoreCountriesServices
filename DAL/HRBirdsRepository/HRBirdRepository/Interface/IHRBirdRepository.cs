@@ -11,5 +11,6 @@ namespace HRBirdsRepository
     public interface IHRBirdRepository
     {
         Task<PagingParameterOutModel<HRBirdMainOutput>> GetMainRecordsAsync(HRBirdMainInput query, PagingParameterInModel pageModel, HRSortingParamModel orderBy);
+        Task<IEnumerable<String>> GetMatchingVernacularNamesAsync(string pattern);
     }
 }

@@ -1,12 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\..\DAL\HRBirdsRepository\HRBirdRepository\HRBirdRepository.csproj" />
-    <ProjectReference Include="..\..\..\Models\HRBirdsModel\HRBirdsModel\HRBirdsModel.csproj" />
     <ProjectReference Include="..\..\..\Models\HRCommonModels\HRCommonModels.csproj" />
   </ItemGroup>
 

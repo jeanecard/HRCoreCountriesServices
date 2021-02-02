@@ -66,9 +66,7 @@ namespace HRBirdServices
         /// <returns></returns>
         private PagingParameterInModel GetDefaultMainPagination()
         {
-            PagingParameterInModel retour = new PagingParameterInModel();
-            retour.PageNumber = 0;
-            retour.PageSize = 20;
+            PagingParameterInModel retour = new PagingParameterInModel() { PageNumber = 0, PageSize = 20 };
             return retour;
         }
         /// <summary>

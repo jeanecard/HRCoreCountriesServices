@@ -3,6 +3,7 @@ using HRCommonModels;
 using HRControllersForker.Interface;
 using HRCoreBordersModel;
 using HRCoreBordersServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -18,6 +19,7 @@ namespace HRCoreCountriesWebAPI2.Controllers
     [Produces("application/json")]
     [Route("api/v1.0/[controller]")]
     [ApiController]
+    [Authorize]
     public class HRBordersController : ControllerBase
     {
         private readonly ILogger<HRBordersController> _logger = null;

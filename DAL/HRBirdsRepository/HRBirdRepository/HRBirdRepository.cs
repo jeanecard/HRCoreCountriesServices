@@ -25,6 +25,9 @@ namespace HRBirdsRepository
         public static string SQLQUERY { get; } = " SELECT sumup, name, language, scientificName, mainPicture, mainSound FROM public.\"V_MAIN_RECORDS\" WHERE language = '{0}' ";
         public static string SQLQUERY_COUNT { get; } = " SELECT COUNT(*) FROM public.\"V_MAIN_RECORDS\" WHERE language = '{0}' ";
 
+        public static string SQLQUERY_VERNACULAR_NAMES { get; } = " SELECT DISTINCT id_bird FROM public.\"HRNames\" WHERE id_bird iLIKE @Pattern ORDER BY id_bird DESC  ";
+
+
         private HRBirdRepository()
         {
             //Dummy for DI
@@ -189,6 +192,45 @@ namespace HRBirdsRepository
                 throw new ArgumentNullException("Lang_Iso_Code not set.");
             }
             return String.Format(SQLQUERY_COUNT, query.Lang_Iso_Code.ToLower());
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pattern"></param>
+        /// <returns></returns>
+        public async Task<IEnumerable<string>> GetMatchingVernacularNamesAsync(string pattern)
+        {
+            String cxString = _config.GetConnectionString(CONNECTION_STRING_KEY);
+            cxString = String.Format(cxString, _config[_DBUSER], _config[_DBPASSWORD]);
+            using (var conn = new NpgsqlConnection(cxString))
+            {
+                conn.Open();
+                try
+                {
+
+                    using (var taskNames = conn.QueryAsync<String>(SQLQUERY_VERNACULAR_NAMES, new { Pattern = "%" + pattern + "%"}))
+                    {
+                        await taskNames;
+                        if (taskNames.IsCompleted)
+                        {
+                            return taskNames.Result;
+                        }
+                        else
+                        {
+                            throw new Exception("GetSQLQueryVernacularNames : Can not complete Task.");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    if (_logger != null)
+                    {
+                        _logger.LogError(ex.Message);
+                    }
+                    throw;
+                }
+            }
+
         }
 
     }
