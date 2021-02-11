@@ -115,7 +115,7 @@ namespace HRCoreCountriesWebAPI2
             //services.AddSingleton(mapper);
 
             services.AddDbContext<gxxawt_obddnfContext>(options =>
-            options.UseNpgsql("host = db.qgiscloud.com; Username = gxxawt_obddnf; Password = 8d2b58e2; Database = gxxawt_obddnf"));
+            options.UseNpgsql("host = db.qgiscloud.com; Username = ; Password = ; Database = "));// TODO !!
             //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
             // Register the Swagger services
             services.AddSwaggerDocument(swagger => {

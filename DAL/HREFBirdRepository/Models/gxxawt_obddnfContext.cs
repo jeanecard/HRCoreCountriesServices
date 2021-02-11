@@ -37,7 +37,7 @@ namespace HREFBirdRepository.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseNpgsql("host = db.qgiscloud.com; Username = gxxawt_obddnf; Password = 8d2b58e2; Database = gxxawt_obddnf");
+                optionsBuilder.UseNpgsql("host = db.qgiscloud.com; Username = canard; ");
             }
         }
 

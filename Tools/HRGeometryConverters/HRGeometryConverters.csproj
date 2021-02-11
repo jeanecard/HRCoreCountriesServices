@@ -6,14 +6,14 @@
 
 
   <ItemGroup>
-  <PackageReference Include="GeoJSON.Net" Version="1.1.72" />
-  <PackageReference Include="MongoDB.Driver" Version="2.8.1" />
-  <PackageReference Include="MongoDB.Driver.Core" Version="2.8.1" />
-  <PackageReference Include="MongoDB.BSon" Version="2.8.1" />
-  <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+  <PackageReference Include="GeoJSON.Net" Version="1.2.19" />
+  <PackageReference Include="MongoDB.Driver" Version="2.11.6" />
+  <PackageReference Include="MongoDB.Driver.Core" Version="2.11.6" />
+  <PackageReference Include="MongoDB.BSon" Version="2.11.6" />
+  <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   <PackageReference Include="Newtonsoft.Json.Bson" Version="1.0.2" />
-  <PackageReference Include="Npgsql" Version="4.0.7" />
-  <PackageReference Include="Npgsql.LegacyPostgis" Version="4.0.7" />
-  <PackageReference Include="NetTopologySuite" Version="1.15.2" />
+  <PackageReference Include="Npgsql" Version="5.0.3" />
+  <PackageReference Include="Npgsql.LegacyPostgis" Version="5.0.3" />
+  <PackageReference Include="NetTopologySuite" Version="2.1.0" />
   </ItemGroup>
 </Project>
