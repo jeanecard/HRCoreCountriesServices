@@ -135,7 +135,8 @@ namespace HRCoreCountriesWebAPI2
                 {
                     builder.WithOrigins("https://hrnithoonfirebase.firebaseapp.com",
                                         "https://hrcorebordersservicesv-3-1.azurewebsites.net/",
-                                        "http://localhost:4200");
+                                        "http://localhost:4200",
+                                        "https://hrnithoonfirebase.web.app");
                 });
             });
             services.AddControllers();
