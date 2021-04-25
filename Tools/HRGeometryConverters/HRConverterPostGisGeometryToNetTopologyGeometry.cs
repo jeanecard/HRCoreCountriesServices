@@ -1,10 +1,10 @@
-﻿using GeoAPI.Geometries;
-using HRConverters.Interfaces;
+﻿using HRConverters.Interfaces;
 using NetTopologySuite.Geometries; //C'est la geometrie se rapprochant le plus du standard dans le mode .net
 using Npgsql.LegacyPostgis;
 using Npgsql.PostgresTypes;
 using System;
 using System.Collections.Generic;
+using Coordinate = NetTopologySuite.Geometries.Coordinate;
 
 namespace HRConverters
 {
@@ -190,7 +190,7 @@ namespace HRConverters
                 //1-
                 for (int i = 0; i < ringCount; i++)
                 {
-                    Coordinate[] netTopoCoord = ConvertCoordinates2D(geometry[i]);
+                    NetTopologySuite.Geometries.Coordinate[] netTopoCoord = ConvertCoordinates2D(geometry[i]);
                     //1.1-
                     if (i == 0)
                     {
@@ -298,7 +298,7 @@ namespace HRConverters
             {
                 //1-
                 int pointCount = geometry.PointCount;
-                Coordinate[] coords = new Coordinate[pointCount];
+                NetTopologySuite.Geometries.Coordinate[] coords = new NetTopologySuite.Geometries.Coordinate[pointCount];
 
                 for (int i = 0; i < pointCount; i++)
                 {
@@ -327,7 +327,7 @@ namespace HRConverters
             if (geometry != null)
             {
                 //1-
-                List<IPoint> arrpoints = new List<IPoint>();
+                List<Point> arrpoints = new List<Point>();
                 int pointCount = geometry.PointCount;
                 for (int i = 0; i < pointCount; i++)
                 {
@@ -356,7 +356,7 @@ namespace HRConverters
             {
                 //1-
                 int polygonCount = geometry.PolygonCount;
-                IPolygon[] netTopoPolygons = new Polygon[polygonCount];
+                Polygon[] netTopoPolygons = new Polygon[polygonCount];
                 for (int i = 0; i < polygonCount; i++)
                 {
                     netTopoPolygons[i] = (Polygon)ProcessPolygon(geometry[i]);

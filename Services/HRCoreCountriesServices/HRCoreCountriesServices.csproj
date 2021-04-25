@@ -13,6 +13,7 @@
     <ProjectReference Include="..\..\DAL\HRCoreCountriesRepository\HRCoreCountriesRepository.csproj" />
     <ProjectReference Include="..\..\Tools\HRCommonTools\HRCommonTools.csproj" />
     <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="GeoAPI.Core" Version="1.7.5" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
   </ItemGroup>
 </Project>

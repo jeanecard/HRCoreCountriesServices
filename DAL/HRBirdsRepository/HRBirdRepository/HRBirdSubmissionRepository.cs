@@ -15,6 +15,7 @@ namespace HRBirdRepository
         /// <returns></returns>
         public async Task<IEnumerable<string>> GetMatchingVernacularNamesAsync(string pattern)
         {
+            await Task.Delay(1);
             return new List<String>() { "oiseau bouchon 1", "oiseau bouchon 2"};
         }
     }
