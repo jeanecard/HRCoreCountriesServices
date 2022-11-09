@@ -11,6 +11,8 @@ The Rest service is fully documented via Swagger at the following link :
 For Continuous Integration : https://fullcoreservices-ci.azurewebsites.net/swagger/index.html
 For Candiate Release : https://fullcoreservices-release.azurewebsites.net/swagger/index.html
 
+Update : My Azure free account is currently down how I need to pay for it now. It will coming soon ;-) and sorry for the temporary 403
+
 
 This project is integrated in Azure Dev ops for Continuous integration and Release and for continuous delivery.
 
