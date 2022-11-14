@@ -9,7 +9,7 @@ Project description.net Core access to countries data and boundaries
 
 The Rest service is fully documented via Swagger at the following link : 
 For Continuous Integration : moving on a new Free Azure account ...
-For Candiate Release : https://fullcoreservices-release.azurewebsites.net/swagger/index.html
+For Candiate Release : moving on a new Free Azure account ...
 
 Update : My Azure free account is currently down how I need to pay for it now. It will coming soon ;-) and sorry for the temporary 403
 
