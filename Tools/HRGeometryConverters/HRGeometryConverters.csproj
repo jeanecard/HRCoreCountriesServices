@@ -8,7 +8,7 @@
   <ItemGroup>
   <PackageReference Include="GeoAPI.Core" Version="1.7.5" />
   <PackageReference Include="GeoJSON.Net" Version="1.2.19" />
-  <PackageReference Include="MongoDB.Driver" Version="2.11.6" />
+  <PackageReference Include="MongoDB.Driver" Version="2.19.0" />
   <PackageReference Include="MongoDB.Driver.Core" Version="2.11.6" />
   <PackageReference Include="MongoDB.BSon" Version="2.11.6" />
   <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
